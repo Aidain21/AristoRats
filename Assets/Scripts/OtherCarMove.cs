@@ -15,7 +15,7 @@ public class OtherCarMove : MonoBehaviour
     void Update()
     {
         deathTimer += Time.deltaTime;
-        transform.Translate(-0.1f, 0, 0);
+        transform.Translate(Random.Range(-0.1f, -0.3f), 0, 0);
         
         if (deathTimer >= 10f)
         {
