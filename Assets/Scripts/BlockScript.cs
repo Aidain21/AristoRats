@@ -8,17 +8,15 @@ public class BlockScript : MonoBehaviour
     public IEnumerator move;
     public bool[] walls = { false, false, false, false }; //ULDR
     public GameObject player;
+    public int id = 0;
     // Start is called before the first frame update
     void Start()
     {
+        player = GameObject.Find("Player");
         moving = false;
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        walls = WallChecker();
-    }
     public IEnumerator Moving(Vector2 goal)
     {
         while (new Vector2(transform.position.x, transform.position.y) != goal)
@@ -33,7 +31,8 @@ public class BlockScript : MonoBehaviour
 
     public void Push(Vector3 direction)
     {
-        if((!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right))
+        walls = WallChecker();
+        if ((!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right))
         {
             StartCoroutine(Moving(transform.position + direction));
         }

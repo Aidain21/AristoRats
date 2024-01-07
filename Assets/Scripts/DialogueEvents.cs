@@ -21,5 +21,9 @@ public class DialogueEvents : MonoBehaviour
         {
             playerScript.currentTarget.GetComponent<SpriteRenderer>().color = Color.red;
         }
+        else if (dialogueData[0] == "PuzzleTrigger" && dialogueData[1] == "3")
+        {
+            playerScript.currentTarget.GetComponent<ImagePuzzleScript>().PuzzleSetUp();
+        }
     }
 }
