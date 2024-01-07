@@ -40,6 +40,5 @@ public class ImagePuzzleScript : MonoBehaviour
             piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i]-1];
             piece.GetComponent<Transform>().position = new Vector2(transform.position.x + (i-(6+(i%4)))/2, transform.position.y+(i%4)*2+3);
         }
-        Debug.Log(string.Join(", ", norm));
     }
 }

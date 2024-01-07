@@ -187,7 +187,11 @@ public class PlayerScript2D : MonoBehaviour
         switch (target.tag)
         {
             case "Sign":
-                dialogueManager.StartDialogue(target.GetComponent<SignTextScript>().dialogueName, target.GetComponent<SignTextScript>().dialogue);
+                dialogueManager.StartDialogue(target.GetComponent<SignTextScript>().dialogueName, target.GetComponent<SignTextScript>().dialogue, target.GetComponent<SignTextScript>().talkCounter);
+                if (dialogueManager.hasMoreText)
+                {
+                    target.GetComponent<SignTextScript>().talkCounter += 1;
+                }
                 break;
             case "Block":
                 if (target.GetComponent<BlockScript>().id != 0) 
