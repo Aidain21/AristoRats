@@ -190,6 +190,10 @@ public class PlayerScript2D : MonoBehaviour
                 dialogueManager.StartDialogue(target.GetComponent<SignTextScript>().dialogueName, target.GetComponent<SignTextScript>().dialogue);
                 break;
             case "Block":
+                if (target.GetComponent<BlockScript>().id != 0) 
+                {
+                    Debug.Log(target.GetComponent<BlockScript>().id);
+                }
                 if (!target.GetComponent<BlockScript>().moving)
                 {
                     target.GetComponent<BlockScript>().Push(direction);
@@ -197,6 +201,7 @@ public class PlayerScript2D : MonoBehaviour
                 break;
             case "OnOff":
                 target.GetComponent<SwitchScript>().UseSwitch();
+                Destroy(gameObject);
                 break;
             default:
                 Debug.Log(target.name);

@@ -35,7 +35,7 @@ public class ImagePuzzleScript : MonoBehaviour
         }
         for (int i = 0; i < 16; i++)
         { 
-            GameObject piece = Instantiate(pushBlock, transform.position, Quaternion.identity);
+            GameObject piece = Instantiate(pushBlock, transform);
             piece.GetComponent<BlockScript>().id = norm[i];
             piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i]-1];
             piece.GetComponent<Transform>().position = new Vector2(transform.position.x + (i-(6+(i%4)))/2, transform.position.y+(i%4)*2+3);

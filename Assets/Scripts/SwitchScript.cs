@@ -6,8 +6,9 @@ public class SwitchScript : MonoBehaviour
 {
     public string switchType;
     public string switchEffect;
+    public int switchId;
     public bool onValue;
-    public GameObject[] affectedObjects;
+    public GameObject[] affectedObjects = new GameObject[1];
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +48,9 @@ public class SwitchScript : MonoBehaviour
                         } 
                     }
                     break;
+                case "insert": //for puzzles
+                    item.GetComponent<BlockScript>().inserted = true;
+                    break;
             }
         }
         //what happens to the switch
@@ -70,7 +74,15 @@ public class SwitchScript : MonoBehaviour
     {
         if (collision.tag == "Block" && switchType == "floor")
         {
-            UseSwitch();
+            if(switchId == 0)
+            {
+                UseSwitch();
+            }
+            else if (switchId == collision.GetComponent<BlockScript>().id)
+            {
+                affectedObjects[0] = collision.gameObject;
+                UseSwitch();
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class BlockScript : MonoBehaviour
 {
     public bool moving;
+    public bool inserted;
     public IEnumerator move;
     public bool[] walls = { false, false, false, false }; //ULDR
     public GameObject player;
@@ -27,6 +28,12 @@ public class BlockScript : MonoBehaviour
         }
         transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0);
         moving = false;
+        if (inserted)
+        {
+            transform.position += new Vector3(0,0,1);
+            Destroy(GetComponent<BoxCollider2D>());
+            Destroy(GetComponent<BlockScript>());
+        }
     }
 
     public void Push(Vector3 direction)
