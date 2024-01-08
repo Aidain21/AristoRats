@@ -51,6 +51,7 @@ public class SwitchScript : MonoBehaviour
                     break;
                 case "insert": //for puzzles
                     item.GetComponent<BlockScript>().inserted = true;
+                    Destroy(gameObject);
                     break;
                 case "warp":
                     //DontDestroyOnLoad(item);  makes two players, but we need this at some point to keep stats possibly

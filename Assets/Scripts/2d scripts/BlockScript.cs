@@ -32,7 +32,6 @@ public class BlockScript : MonoBehaviour
         {
             if (id > 0 && id < 17)
             {
-                Debug.Log("hi");
                 transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
             }
             transform.position += new Vector3(0,0,1);
