@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SwitchScript : MonoBehaviour
 {
@@ -51,6 +52,10 @@ public class SwitchScript : MonoBehaviour
                 case "insert": //for puzzles
                     item.GetComponent<BlockScript>().inserted = true;
                     break;
+                case "warp":
+                    //DontDestroyOnLoad(item);  makes two players, but we need this at some point to keep stats possibly
+                    SceneManager.LoadScene(switchId);
+                    break;
             }
         }
         //what happens to the switch
@@ -83,6 +88,14 @@ public class SwitchScript : MonoBehaviour
                 affectedObjects[0] = collision.gameObject;
                 UseSwitch();
             }
+        }
+        if (collision.tag == "Player" && switchType == "pressurePlate")
+        {
+            if (switchEffect == "warp")
+            {
+                affectedObjects[0] = collision.gameObject;
+            }
+            UseSwitch();
         }
     }
 }

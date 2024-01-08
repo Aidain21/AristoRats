@@ -205,7 +205,6 @@ public class PlayerScript2D : MonoBehaviour
                 break;
             case "OnOff":
                 target.GetComponent<SwitchScript>().UseSwitch();
-                Destroy(gameObject);
                 break;
             default:
                 Debug.Log(target.name);

@@ -36,7 +36,7 @@ public class DialogueManager : MonoBehaviour
             int index = 0;
             for (int ctr = 0; ctr < sentence.Length; ctr++)
             {
-                if (Char.IsLetter(sentence[ctr]))
+                if (!Char.IsDigit(sentence[ctr]))
                 {
                     index = ctr;
                     break;

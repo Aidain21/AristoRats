@@ -424,6 +424,7 @@ MonoBehaviour:
   spaceText: {fileID: 7040888999087382125}
   typing: 0
   typingSpeed: 0.05
+  hasMoreText: 0
   playerScript: {fileID: 7819647501052969531}
   eventScript: {fileID: 2112590002134000536}
   textBox: {fileID: 651645792049097564}
@@ -443,6 +444,7 @@ MonoBehaviour:
   playerScript: {fileID: 7819647501052969531}
   dialogueData:
   - ' '
+  - 0
   - 0
 --- !u!1 &5084446433875565649
 GameObject:
@@ -836,7 +838,7 @@ GameObject:
   - component: {fileID: 7938383530957215042}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -855,9 +857,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8324019883555684044}
+  - {fileID: 1139160887964480926}
   - {fileID: 336816473096895760}
   - {fileID: 9062779362169977879}
-  - {fileID: 1139160887964480926}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8149756731364421844
@@ -943,7 +945,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6997520163577216977}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
