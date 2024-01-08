@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SwitchScript : MonoBehaviour
 {
     public string switchType;
     public string switchEffect;
+    public int switchId;
     public bool onValue;
-    public GameObject[] affectedObjects;
+    public GameObject[] affectedObjects = new GameObject[1];
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +49,13 @@ public class SwitchScript : MonoBehaviour
                         } 
                     }
                     break;
+                case "insert": //for puzzles
+                    item.GetComponent<BlockScript>().inserted = true;
+                    break;
+                case "warp":
+                    //DontDestroyOnLoad(item);  makes two players, but we need this at some point to keep stats possibly
+                    SceneManager.LoadScene(switchId);
+                    break;
             }
         }
         //what happens to the switch
@@ -70,6 +79,22 @@ public class SwitchScript : MonoBehaviour
     {
         if (collision.tag == "Block" && switchType == "floor")
         {
+            if(switchId == 0)
+            {
+                UseSwitch();
+            }
+            else if (switchId == collision.GetComponent<BlockScript>().id)
+            {
+                affectedObjects[0] = collision.gameObject;
+                UseSwitch();
+            }
+        }
+        if (collision.tag == "Player" && switchType == "pressurePlate")
+        {
+            if (switchEffect == "warp")
+            {
+                affectedObjects[0] = collision.gameObject;
+            }
             UseSwitch();
         }
     }

@@ -10,6 +10,7 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text spaceText;
     public bool typing;
     public float typingSpeed = 0.03f;
+    public bool hasMoreText;
     public PlayerScript2D playerScript;
     public DialogueEvents eventScript;
     public Canvas textBox;
@@ -21,24 +22,46 @@ public class DialogueManager : MonoBehaviour
         sentences = new Queue<string>();
     }
 
-    public void StartDialogue(string dialogueName, string[] dialogue)
+    public void StartDialogue(string dialogueName, string[] dialogue, int talkCounter)
     {
+        hasMoreText = false;
         sentences.Clear();
         playerScript.inDialogue = true;
         eventScript.dialogueData[0] = dialogueName;
-        eventScript.dialogueData[1] = "-1";
+        eventScript.dialogueData[1] = talkCounter.ToString();
+        eventScript.dialogueData[2] = "-1";
         textBox.GetComponent<Canvas>().enabled = true;
         foreach (string sentence in dialogue)
         {
-            sentences.Enqueue(sentence);
+            int index = 0;
+            for (int ctr = 0; ctr < sentence.Length; ctr++)
+            {
+                if (!Char.IsDigit(sentence[ctr]))
+                {
+                    index = ctr;
+                    break;
+                }
+            }
+            if (index == 0)
+            {
+                sentences.Enqueue("Aidan:Fix up the formatting of the text plz something is missing the talk counter :P");
+                break;
+            }
+            else if (Int32.Parse(sentence.Substring(0, index)) == talkCounter)
+            {
+                sentences.Enqueue(sentence.Substring(index));
+            }
+            if (Int32.Parse(sentence.Substring(0, index)) == talkCounter + 1)
+            {
+                hasMoreText = true;
+            }
         }
-
         DisplayNextSentence();
     }
 
     public void DisplayNextSentence()
     {
-        eventScript.dialogueData[1] = (Int32.Parse(eventScript.dialogueData[1]) + 1).ToString();
+        eventScript.dialogueData[2] = (Int32.Parse(eventScript.dialogueData[2]) + 1).ToString();
         spaceText.text = "";
         if (sentences.Count == 0)
         {
@@ -49,8 +72,16 @@ public class DialogueManager : MonoBehaviour
         string sentence = sentences.Dequeue();
         StopAllCoroutines();
         nameText.text = sentence.Substring(0,sentence.IndexOf(":")+1);
-        eventScript.EventTrigger();
-        StartCoroutine(TypeSentence(sentence.Substring(sentence.IndexOf(":")+1)));
+        if (nameText.text == "")
+        {
+            nameText.text = "Aidan:";
+            StartCoroutine(TypeSentence("Fix up the formatting of the text plz its missing the semicolon after the name :P"));
+        }
+        else
+        {
+            eventScript.EventTrigger();
+            StartCoroutine(TypeSentence(sentence.Substring(sentence.IndexOf(":") + 1)));
+        }
     }
 
     public IEnumerator TypeSentence(string sentence)
