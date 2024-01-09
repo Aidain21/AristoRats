@@ -18,6 +18,7 @@ public class PlayerScript2D : MonoBehaviour
     public GameObject directionTracker;
     //lets the player start dialogue
     public DialogueManager dialogueManager;
+    public InventoryManager invManager;
     //Tracks current dialogue instance and place in dialogue. dialogueData[0] is name, dialogueData[1] is position
     public GameObject currentTarget;
 
@@ -55,7 +56,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
-                //inventory
+                invManager.OpenInventory();
             }
             if (Input.GetKeyDown(KeyCode.M))
             {
@@ -81,12 +82,22 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 else
                 {
-                    aboveTalker = transform.position.y > currentTarget.transform.position.y;
+                    if (currentTarget != null)
+                    {
+                        aboveTalker = transform.position.y > currentTarget.transform.position.y;
+                    }
                     dialogueManager.DisplayNextSentence();
                 }
                 
             }
             
+        }
+        else if (inInventory)
+        {
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                invManager.CloseInventory();
+            }
         }
         else if (inJournal) //yeah you get it
         {
@@ -96,10 +107,7 @@ public class PlayerScript2D : MonoBehaviour
         {
 
         }
-        else if (inInventory)
-        {
-
-        }
+        
     }
     public void GetPlayerMovement()
     {
@@ -207,10 +215,39 @@ public class PlayerScript2D : MonoBehaviour
             case "OnOff":
                 target.GetComponent<SwitchScript>().UseSwitch();
                 break;
+            case "Item":
+                invManager.inventory.Add(target);
+                ItemScript itemScript = target.GetComponent<ItemScript>();
+                dialogueManager.StartDialogue(itemScript.itemName, itemScript.pickupText, 0, itemScript.itemImage);
+                target.SetActive(false);
+                break;
             default:
                 Debug.Log(target.name);
                 break;
         }
         
+    }
+
+    public bool HasItem(string name)
+    {
+        foreach (GameObject g in invManager.inventory)
+        {
+            if (g.GetComponent<ItemScript>().itemName == name)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public bool HasItem(int name)
+    {
+        foreach (GameObject g in invManager.inventory)
+        {
+            if (g.GetComponent<ItemScript>().itemId == name)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

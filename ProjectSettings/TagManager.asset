@@ -8,6 +8,7 @@ TagManager:
   - OnOff
   - Sign
   - RedWall
+  - Item
   layers:
   - Default
   - TransparentFX
