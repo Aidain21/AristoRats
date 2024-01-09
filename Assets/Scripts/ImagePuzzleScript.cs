@@ -34,7 +34,7 @@ public class ImagePuzzleScript : MonoBehaviour
                 GetComponent<SignTextScript>().dialogue[8] = "3Puzzle Dude:It took you this time: " + puzzleTimer;
             }
             GetComponent<SignTextScript>().talkCounter = 3;
-            dialogueManager.StartDialogue(GetComponent<SignTextScript>().dialogueName, GetComponent<SignTextScript>().dialogue, 3);
+            dialogueManager.StartDialogue(GetComponent<SignTextScript>().dialogueName, GetComponent<SignTextScript>().dialogue, 3, GetComponent<SignTextScript>().talkerImage);
         }
     }
 

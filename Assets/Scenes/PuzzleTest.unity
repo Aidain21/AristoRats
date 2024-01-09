@@ -566,6 +566,7 @@ MonoBehaviour:
   - 2TotallyNOTAwesomeSign:YOU FOOL! IMA TURN RED!!!!!!!!!!!!
   - 2TotallyNOTAwesomeSign:MUAHAHAHA!!!
   talkCounter: 0
+  talkerImage: {fileID: 0}
 --- !u!61 &1094717668
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1354,6 +1355,22 @@ PrefabInstance:
       propertyPath: dialogueData.Array.data[2]
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5105127137833425124, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5105127137833425124, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5105127137833425124, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5105127137833425124, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6997520163577216977, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1529,6 +1546,10 @@ PrefabInstance:
       value: Sign
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: talkerImage
+      value: 
+      objectReference: {fileID: 3348532550563196407, guid: 53db4a57ff7629349804eecdb3a698e1, type: 3}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogueName
       value: Testy
       objectReference: {fileID: 0}
@@ -1550,7 +1571,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[3]
-      value: 2???:soosy
+      value: 2???:Large Amount of Text test. REFGREWGregjiruhigfit4gwerwtguihuwerrhuiv
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[4]

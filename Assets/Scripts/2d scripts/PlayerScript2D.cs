@@ -26,6 +26,8 @@ public class PlayerScript2D : MonoBehaviour
     public bool inDialogue;
     public bool inInventory;
 
+    public bool aboveTalker;
+
     void Start()
     {
         directionTracker = transform.GetChild(0).gameObject;
@@ -79,6 +81,7 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 else
                 {
+                    aboveTalker = transform.position.y > currentTarget.transform.position.y;
                     dialogueManager.DisplayNextSentence();
                 }
                 
@@ -187,7 +190,9 @@ public class PlayerScript2D : MonoBehaviour
         switch (target.tag)
         {
             case "Sign":
-                dialogueManager.StartDialogue(target.GetComponent<SignTextScript>().dialogueName, target.GetComponent<SignTextScript>().dialogue, target.GetComponent<SignTextScript>().talkCounter);
+                aboveTalker = transform.position.y > target.transform.position.y;
+                SignTextScript signScript = target.GetComponent<SignTextScript>();
+                dialogueManager.StartDialogue(signScript.dialogueName, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
                 if (dialogueManager.hasMoreText)
                 {
                     target.GetComponent<SignTextScript>().talkCounter += 1;
