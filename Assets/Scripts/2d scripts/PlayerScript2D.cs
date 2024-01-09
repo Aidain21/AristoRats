@@ -199,10 +199,6 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 break;
             case "Block":
-                if (target.GetComponent<BlockScript>().id != 0) 
-                {
-                    Debug.Log(target.GetComponent<BlockScript>().id);
-                }
                 if (!target.GetComponent<BlockScript>().moving)
                 {
                     target.GetComponent<BlockScript>().Push(direction);
