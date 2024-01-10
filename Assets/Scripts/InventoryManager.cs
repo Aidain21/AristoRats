@@ -11,6 +11,8 @@ public class InventoryManager : MonoBehaviour
     public TMP_Text[] texts = new TMP_Text[6];
     public Image[] images = new Image[6];
     public PlayerScript2D playerScript;
+    public int selectorPos = 0;
+    public int prevSelect = 5;
 
     // Start is called before the first frame update
     void Start()
@@ -36,9 +38,23 @@ public class InventoryManager : MonoBehaviour
             images[i].color = new Color32(0,0,0,0);
             texts[i].text = "";
         }
+        UpdateSelector();
+
 
     }
-
+    public void UpdateSelector()
+    {
+        images[selectorPos].color = new Color32(255, 255, 255, 175);
+        if (prevSelect < inventory.Count)
+        {
+            images[prevSelect].color = new Color32(255, 255, 255, 255);
+        }
+        else
+        {
+            images[prevSelect].color = new Color32(255, 255, 255, 0);
+        }
+        
+    }
     public void CloseInventory()
     {
         inventoryBox.GetComponent<Canvas>().enabled = false;

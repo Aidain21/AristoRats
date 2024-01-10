@@ -98,6 +98,19 @@ public class PlayerScript2D : MonoBehaviour
             {
                 invManager.CloseInventory();
             }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                invManager.prevSelect = invManager.selectorPos;
+                if (invManager.selectorPos == 5)
+                {
+                    invManager.selectorPos = 0;
+                }
+                else
+                {
+                    invManager.selectorPos += 1;
+                }
+                invManager.UpdateSelector();
+            }
         }
         else if (inJournal) //yeah you get it
         {
