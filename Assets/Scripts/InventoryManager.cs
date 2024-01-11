@@ -18,6 +18,7 @@ public class InventoryManager : MonoBehaviour
     void Start()
     {
         inventoryBox.GetComponent<Canvas>().enabled = false;
+        prevSelect = 5;
     }
 
     // Update is called once per frame
@@ -28,32 +29,34 @@ public class InventoryManager : MonoBehaviour
         int curItems = 0;
         for (int i = 0; i < inventory.Count; i++)
         {
-            images[i].color = new Color32(255, 255, 255, 255);
+            images[i].color = Color.white;
             images[i].sprite = inventory[i].GetComponent<ItemScript>().itemImage;
             texts[i].text = inventory[i].GetComponent<ItemScript>().itemName;
             curItems++;
         }
         for (int i = curItems; i < 6; i++)
         {
+            images[i].sprite = null;
             images[i].color = new Color32(0,0,0,0);
             texts[i].text = "";
         }
         UpdateSelector();
-
-
     }
     public void UpdateSelector()
     {
-        images[selectorPos].color = new Color32(255, 255, 255, 175);
+        images[selectorPos].color = new Color32(255, 255, 255, 200);
+        texts[selectorPos].color = new Color32(255, 255, 0, 255);
+        texts[selectorPos].fontStyle = FontStyles.Bold;
         if (prevSelect < inventory.Count)
         {
-            images[prevSelect].color = new Color32(255, 255, 255, 255);
+            images[prevSelect].color = Color.white; 
         }
         else
         {
-            images[prevSelect].color = new Color32(255, 255, 255, 0);
+            images[prevSelect].color = new Color32(0, 0, 0, 0);
         }
-        
+        texts[prevSelect].color = Color.white;
+        texts[prevSelect].fontStyle = FontStyles.Normal;
     }
     public void CloseInventory()
     {

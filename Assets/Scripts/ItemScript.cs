@@ -9,5 +9,10 @@ public class ItemScript : MonoBehaviour
     public string[] itemLore;
     public int itemId;
     public Sprite itemImage;
-    
+
+    void Start()
+    {
+        GetComponent<SpriteRenderer>().sprite = itemImage;
+    }
+
 }
