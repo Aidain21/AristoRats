@@ -71,6 +71,18 @@ public class PlayerScript2D : MonoBehaviour
                     Interact(currentTarget);
                 }
             }
+            else if(Input.GetKey(KeyCode.E))
+            {
+                RaycastHit2D hitData = Physics2D.Raycast(transform.position + direction * 0.51f, direction, 0.5f);
+                if (hitData.collider != null && hitData.collider.gameObject.tag == "Block")
+                {
+                    if (!hitData.collider.gameObject.GetComponent<BlockScript>().moving)
+                    {
+                        hitData.collider.gameObject.GetComponent<BlockScript>().Push(direction);
+                    }
+                }
+                
+            }
         }
         else if (inDialogue) //Controls for in dialogue
         {
