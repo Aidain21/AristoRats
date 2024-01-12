@@ -13,6 +13,13 @@ public class ItemScript : MonoBehaviour
     void Start()
     {
         GetComponent<SpriteRenderer>().sprite = itemImage;
+        for (int i=0; i < GameObject.Find("Player").transform.childCount; i++)
+        {
+            if (GameObject.Find("Player").transform.GetChild(i).name.Equals(name))
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
 }
