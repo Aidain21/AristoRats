@@ -28,7 +28,20 @@ public class PlayerScript2D : MonoBehaviour
     public bool inInventory;
 
     public bool aboveTalker;
+    static PlayerScript2D instance;
 
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this; // In first scene, make us the singleton.
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject); // On reload, singleton already set, so destroy duplicate.
+        }
+    }
     void Start()
     {
         directionTracker = transform.GetChild(0).gameObject;
@@ -174,7 +187,9 @@ public class PlayerScript2D : MonoBehaviour
                 bool frontClear = (!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right);
                 if (invManager.selectorPos < invManager.inventory.Count && frontClear)
                 {
+                    
                     ItemScript itemScript = invManager.inventory[invManager.selectorPos].GetComponent<ItemScript>();
+                    itemScript.gameObject.transform.parent = GameObject.Find("LevelObjects").transform;
                     string[] temp = new string[] { "0You:Dropped the " + itemScript.itemName + "." };
                     itemScript.gameObject.SetActive(true);
                     itemScript.transform.position = transform.position + direction;
@@ -319,6 +334,7 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 else
                 {
+                    target.transform.parent = transform;
                     invManager.inventory.Add(target);
                     ItemScript itemScript = target.GetComponent<ItemScript>();
                     dialogueManager.StartDialogue(itemScript.itemName, itemScript.pickupText, 0, itemScript.itemImage);
