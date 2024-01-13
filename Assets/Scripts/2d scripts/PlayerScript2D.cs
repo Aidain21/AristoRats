@@ -28,6 +28,7 @@ public class PlayerScript2D : MonoBehaviour
     public bool inInventory;
 
     public bool aboveTalker;
+    public Vector2 spawnPoint;
     static PlayerScript2D instance;
 
     void Awake()

@@ -11,6 +11,7 @@ public class SwitchScript : MonoBehaviour
     public int switchId;
     public bool onValue;
     public GameObject[] affectedObjects = new GameObject[1];
+    public bool playerOnSpike = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,12 +20,20 @@ public class SwitchScript : MonoBehaviour
             onValue = true;
             UseSwitch();
         }
+        if (switchEffect == "spike")
+        {
+            StartCoroutine(SpikeAction());
+        }
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (switchEffect == "spike" && playerOnSpike)
+        {
+            UseSwitch();
+        }
     }
 
     public void UseSwitch()
@@ -73,7 +82,16 @@ public class SwitchScript : MonoBehaviour
                     item.GetComponent<PlayerScript2D>().StopAllCoroutines();
                     item.GetComponent<PlayerScript2D>().moving = false;
                     item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
+                    item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                     SceneManager.LoadScene(switchId);
+                    break;
+                case "spike":
+                    if (GetComponent<SpriteRenderer>().color == Color.red)
+                    {
+                        item.GetComponent<PlayerScript2D>().StopAllCoroutines();
+                        item.GetComponent<PlayerScript2D>().moving = false;
+                        item.transform.position = item.GetComponent<PlayerScript2D>().spawnPoint;
+                    }
                     break;
             }
         }
@@ -94,8 +112,28 @@ public class SwitchScript : MonoBehaviour
                 break;
         }
     }
+
+    public IEnumerator SpikeAction()
+    {
+        while (true)
+        {
+            GetComponent<SpriteRenderer>().color = Color.red;
+            yield return new WaitForSeconds(1);
+            GetComponent<SpriteRenderer>().color = Color.green;
+            yield return new WaitForSeconds(1);
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        string effect;
+        if (switchEffect.IndexOf(" ") != -1)
+        {
+            effect = switchEffect.Substring(0, switchEffect.IndexOf(" "));
+        }
+        else
+        {
+            effect = switchEffect;
+        }
         if (collision.tag == "Block" && switchType == "floor")
         {
             if(switchId == 0)
@@ -110,11 +148,36 @@ public class SwitchScript : MonoBehaviour
         }
         if (collision.tag == "Player" && switchType == "pressurePlate")
         {
-            if (switchEffect.Substring(0, switchEffect.IndexOf(" ")) == "warp")
+            if (effect == "warp")
             {
                 affectedObjects[0] = collision.gameObject;
             }
+            if (effect == "spike")
+            {
+                affectedObjects[0] = collision.gameObject;
+                playerOnSpike = true;
+            }
             UseSwitch();
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        string effect;
+        if (switchEffect.IndexOf(" ") != -1)
+        {
+            effect = switchEffect.Substring(0, switchEffect.IndexOf(" "));
+        }
+        else
+        {
+            effect = switchEffect;
+        }
+        if (collision.tag == "Player" && switchType == "pressurePlate")
+        {
+            if (effect == "spike")
+            {
+                affectedObjects[0] = collision.gameObject;
+                playerOnSpike = false;
+            }
         }
     }
 }
