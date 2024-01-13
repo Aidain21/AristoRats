@@ -18,6 +18,7 @@ public class PlayerScript2D : MonoBehaviour
     public GameObject directionTracker;
     //lets the player start dialogue
     public DialogueManager dialogueManager;
+    public InventoryManager invManager;
     //Tracks current dialogue instance and place in dialogue. dialogueData[0] is name, dialogueData[1] is position
     public GameObject currentTarget;
 
@@ -26,6 +27,21 @@ public class PlayerScript2D : MonoBehaviour
     public bool inDialogue;
     public bool inInventory;
 
+    public bool aboveTalker;
+    static PlayerScript2D instance;
+
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this; // In first scene, make us the singleton.
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject); // On reload, singleton already set, so destroy duplicate.
+        }
+    }
     void Start()
     {
         directionTracker = transform.GetChild(0).gameObject;
@@ -53,7 +69,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
-                //inventory
+                invManager.OpenInventory();
             }
             if (Input.GetKeyDown(KeyCode.M))
             {
@@ -68,6 +84,18 @@ public class PlayerScript2D : MonoBehaviour
                     Interact(currentTarget);
                 }
             }
+            else if(Input.GetKey(KeyCode.E))
+            {
+                RaycastHit2D hitData = Physics2D.Raycast(transform.position + direction * 0.51f, direction, 0.5f);
+                if (hitData.collider != null && hitData.collider.gameObject.tag == "Block")
+                {
+                    if (!hitData.collider.gameObject.GetComponent<BlockScript>().moving)
+                    {
+                        hitData.collider.gameObject.GetComponent<BlockScript>().Push(direction);
+                    }
+                }
+                
+            }
         }
         else if (inDialogue) //Controls for in dialogue
         {
@@ -79,11 +107,108 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 else
                 {
+                    if (currentTarget != null)
+                    {
+                        aboveTalker = transform.position.y > currentTarget.transform.position.y;
+                    }
                     dialogueManager.DisplayNextSentence();
                 }
                 
             }
             
+        }
+        else if (inInventory)
+        {
+            aboveTalker = invManager.selectorPos > 2;
+            if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                invManager.CloseInventory();
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                //Use
+            }
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S))
+            {
+                invManager.prevSelect = invManager.selectorPos;
+                if (invManager.selectorPos > 2)
+                {
+                    invManager.selectorPos -= 3;
+                }
+                else
+                {
+                    invManager.selectorPos += 3;
+                }
+                invManager.UpdateSelector();
+            }
+            else if (Input.GetKeyDown(KeyCode.A))
+            {
+                invManager.prevSelect = invManager.selectorPos;
+                if (invManager.selectorPos == 0 || invManager.selectorPos == 3)
+                {
+                    invManager.selectorPos += 2;
+                }
+                else
+                {
+                    invManager.selectorPos -= 1;
+                }
+                invManager.UpdateSelector();
+            }
+            else if (Input.GetKeyDown(KeyCode.D))
+            {
+                invManager.prevSelect = invManager.selectorPos;
+                if (invManager.selectorPos == 2 || invManager.selectorPos == 5)
+                {
+                    invManager.selectorPos -= 2;
+                }
+                else
+                {
+                    invManager.selectorPos += 1;
+                }
+                invManager.UpdateSelector();
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (invManager.selectorPos < invManager.inventory.Count)
+                {
+                    ItemScript itemScript = invManager.inventory[invManager.selectorPos].GetComponent<ItemScript>();
+                    dialogueManager.StartDialogue(itemScript.itemName, itemScript.itemLore, 0, GetComponent<SpriteRenderer>().sprite);
+                }
+                else
+                {
+                    string[] temp = new string[] { "0You:There's nothing here :(" };
+                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                }
+                
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                bool[] walls = WallChecker();
+                bool frontClear = (!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right);
+                if (invManager.selectorPos < invManager.inventory.Count && frontClear)
+                {
+                    
+                    ItemScript itemScript = invManager.inventory[invManager.selectorPos].GetComponent<ItemScript>();
+                    itemScript.gameObject.transform.parent = GameObject.Find("LevelObjects").transform;
+                    string[] temp = new string[] { "0You:Dropped the " + itemScript.itemName + "." };
+                    itemScript.gameObject.SetActive(true);
+                    itemScript.transform.position = transform.position + direction;
+                    invManager.inventory.Remove(itemScript.gameObject);
+                    invManager.OpenInventory();
+                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                }
+                else if (invManager.selectorPos >= invManager.inventory.Count)
+                {
+                    string[] temp = new string[] { "0You:Can't drop nothing :(" };
+                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                }
+                else
+                {
+                    string[] temp = new string[] { "0You:Not enough space to drop this. I should move to a better spot." };
+                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                }
+
+            }
         }
         else if (inJournal) //yeah you get it
         {
@@ -93,10 +218,7 @@ public class PlayerScript2D : MonoBehaviour
         {
 
         }
-        else if (inInventory)
-        {
-
-        }
+        
     }
     public void GetPlayerMovement()
     {
@@ -187,17 +309,15 @@ public class PlayerScript2D : MonoBehaviour
         switch (target.tag)
         {
             case "Sign":
-                dialogueManager.StartDialogue(target.GetComponent<SignTextScript>().dialogueName, target.GetComponent<SignTextScript>().dialogue, target.GetComponent<SignTextScript>().talkCounter);
+                aboveTalker = transform.position.y > target.transform.position.y;
+                SignTextScript signScript = target.GetComponent<SignTextScript>();
+                dialogueManager.StartDialogue(signScript.dialogueName, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
                 if (dialogueManager.hasMoreText)
                 {
                     target.GetComponent<SignTextScript>().talkCounter += 1;
                 }
                 break;
             case "Block":
-                if (target.GetComponent<BlockScript>().id != 0) 
-                {
-                    Debug.Log(target.GetComponent<BlockScript>().id);
-                }
                 if (!target.GetComponent<BlockScript>().moving)
                 {
                     target.GetComponent<BlockScript>().Push(direction);
@@ -206,10 +326,48 @@ public class PlayerScript2D : MonoBehaviour
             case "OnOff":
                 target.GetComponent<SwitchScript>().UseSwitch();
                 break;
+            case "Item":
+                if (invManager.inventory.Count == 6)
+                {
+                    string[] temp = new string[] { "0You:I don't have any room left to pick items up. I should drop or use one." };
+                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                }
+                else
+                {
+                    target.transform.parent = transform;
+                    invManager.inventory.Add(target);
+                    ItemScript itemScript = target.GetComponent<ItemScript>();
+                    dialogueManager.StartDialogue(itemScript.itemName, itemScript.pickupText, 0, itemScript.itemImage);
+                    target.SetActive(false);
+                }
+                break;
             default:
                 Debug.Log(target.name);
                 break;
         }
         
+    }
+
+    public bool HasItem(string name)
+    {
+        foreach (GameObject g in invManager.inventory)
+        {
+            if (g.GetComponent<ItemScript>().itemName == name)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public bool HasItem(int name)
+    {
+        foreach (GameObject g in invManager.inventory)
+        {
+            if (g.GetComponent<ItemScript>().itemId == name)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

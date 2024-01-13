@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,7 +32,20 @@ public class SwitchScript : MonoBehaviour
         //what the switch does
         foreach (GameObject item in affectedObjects)
         {
-            switch (switchEffect)
+            string effect;
+            string otherData;
+            if (switchEffect.IndexOf(" ") != -1)
+            {
+                otherData = switchEffect[(switchEffect.IndexOf(" ") + 1)..];
+                effect = switchEffect.Substring(0, switchEffect.IndexOf(" "));
+            }
+            else
+            {
+                otherData = "";
+                effect = switchEffect;
+            }
+            
+            switch (effect)
             {
                 case "activate":
                     item.SetActive(true);
@@ -54,7 +68,11 @@ public class SwitchScript : MonoBehaviour
                     Destroy(gameObject);
                     break;
                 case "warp":
-                    //DontDestroyOnLoad(item);  makes two players, but we need this at some point to keep stats possibly
+                    int x = Int32.Parse(otherData.Substring(0, otherData.IndexOf(" ")));
+                    int y = Int32.Parse(otherData[(otherData.IndexOf(" ") + 1)..]);
+                    item.GetComponent<PlayerScript2D>().StopAllCoroutines();
+                    item.GetComponent<PlayerScript2D>().moving = false;
+                    item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                     SceneManager.LoadScene(switchId);
                     break;
             }
@@ -92,7 +110,7 @@ public class SwitchScript : MonoBehaviour
         }
         if (collision.tag == "Player" && switchType == "pressurePlate")
         {
-            if (switchEffect == "warp")
+            if (switchEffect.Substring(0, switchEffect.IndexOf(" ")) == "warp")
             {
                 affectedObjects[0] = collision.gameObject;
             }

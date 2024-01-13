@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 public class DialogueManager : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class DialogueManager : MonoBehaviour
     public PlayerScript2D playerScript;
     public DialogueEvents eventScript;
     public Canvas textBox;
+    public GameObject background;
+    public Image imageFrame;
+    public Sprite currentImage; //just the talker for now
 
     public Queue<string> sentences;
     void Start()
@@ -22,7 +26,7 @@ public class DialogueManager : MonoBehaviour
         sentences = new Queue<string>();
     }
 
-    public void StartDialogue(string dialogueName, string[] dialogue, int talkCounter)
+    public void StartDialogue(string dialogueName, string[] dialogue, int talkCounter, Sprite talkerImage)
     {
         hasMoreText = false;
         sentences.Clear();
@@ -31,6 +35,8 @@ public class DialogueManager : MonoBehaviour
         eventScript.dialogueData[1] = talkCounter.ToString();
         eventScript.dialogueData[2] = "-1";
         textBox.GetComponent<Canvas>().enabled = true;
+        PositionBox();
+        currentImage = talkerImage;
         foreach (string sentence in dialogue)
         {
             int index = 0;
@@ -71,6 +77,7 @@ public class DialogueManager : MonoBehaviour
 
         string sentence = sentences.Dequeue();
         StopAllCoroutines();
+        imageFrame.sprite = currentImage;
         nameText.text = sentence.Substring(0,sentence.IndexOf(":")+1);
         if (nameText.text == "")
         {
@@ -108,5 +115,17 @@ public class DialogueManager : MonoBehaviour
     {
         playerScript.inDialogue = false;
         textBox.GetComponent<Canvas>().enabled = false;
+    }
+
+    public void PositionBox()
+    {
+        if (playerScript.aboveTalker)
+        {
+            background.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 25 , 125);
+        }
+        else
+        {
+            background.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, 25, 125);
+        }
     }
 }
