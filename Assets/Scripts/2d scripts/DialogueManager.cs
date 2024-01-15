@@ -55,7 +55,7 @@ public class DialogueManager : MonoBehaviour
             }
             else if (Int32.Parse(sentence.Substring(0, index)) == talkCounter)
             {
-                sentences.Enqueue(sentence.Substring(index));
+                sentences.Enqueue(sentence[index..]);
             }
             if (Int32.Parse(sentence.Substring(0, index)) == talkCounter + 1)
             {
@@ -77,17 +77,25 @@ public class DialogueManager : MonoBehaviour
 
         string sentence = sentences.Dequeue();
         StopAllCoroutines();
-        imageFrame.sprite = currentImage;
+        
         nameText.text = sentence.Substring(0,sentence.IndexOf(":")+1);
         if (nameText.text == "")
         {
             nameText.text = "Aidan:";
             StartCoroutine(TypeSentence("Fix up the formatting of the text plz its missing the semicolon after the name :P"));
         }
+        else if (nameText.text == "You:")
+        {
+            nameText.text = playerScript.playerName + ":";
+            imageFrame.sprite = playerScript.GetComponent<SpriteRenderer>().sprite;
+            eventScript.EventTrigger();
+            StartCoroutine(TypeSentence(sentence[(sentence.IndexOf(":") + 1)..]));
+        }
         else
         {
+            imageFrame.sprite = currentImage;
             eventScript.EventTrigger();
-            StartCoroutine(TypeSentence(sentence.Substring(sentence.IndexOf(":") + 1)));
+            StartCoroutine(TypeSentence(sentence[(sentence.IndexOf(":") + 1)..]));
         }
     }
 

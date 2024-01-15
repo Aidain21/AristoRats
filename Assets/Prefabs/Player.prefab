@@ -2570,6 +2570,8 @@ MonoBehaviour:
   inDialogue: 0
   inInventory: 0
   aboveTalker: 0
+  spawnPoint: {x: 0, y: 0}
+  playerName: Player
 --- !u!61 &7938383530957215042
 BoxCollider2D:
   m_ObjectHideFlags: 0

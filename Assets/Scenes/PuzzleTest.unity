@@ -3210,7 +3210,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
@@ -3226,14 +3226,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[3]
-      value: 2???:Large Amount of Text test. REFGREWGregjiruhigfit4gwerwtguihuwerrhuiv
+      value: 1You:no u.
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[4]
-      value: 2???:aight imma head out
+      value: 2???:Large Amount of Text test. REFGREWGregjiruhigfit4gwerwtguihuwerrhuiv
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[5]
+      value: 2???:aight imma head out
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[6]
       value: 3???:stop following me.
       objectReference: {fileID: 0}
     m_RemovedComponents: []
