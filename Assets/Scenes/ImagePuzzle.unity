@@ -13239,11 +13239,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1083203313887484989, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: switchId
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
+      propertyPath: switchData
+      value: PuzzleTest 9,0
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: switchEffect
-      value: warp 9 0
+      value: warp
       objectReference: {fileID: 0}
     - target: {fileID: 6522425729884833140, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: m_Name

@@ -1061,11 +1061,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6400448175617045446, guid: 02f8d91e88082f14cb58dac1f4b5dc73, type: 3}
   m_PrefabInstance: {fileID: 6340738694513181434}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &567637101 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 679948804315535499, guid: 6fb5e95fba39e284a8b28b66eb5dd20e, type: 3}
-  m_PrefabInstance: {fileID: 2040288035}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &595710510
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1456,6 +1451,7 @@ Transform:
   m_Children:
   - {fileID: 1215913905}
   - {fileID: 1664577938}
+  - {fileID: 1094717670}
   - {fileID: 53112490}
   - {fileID: 1228033978}
   - {fileID: 2020770030}
@@ -1463,7 +1459,6 @@ Transform:
   - {fileID: 1670216817}
   - {fileID: 1356024188}
   - {fileID: 1298489163}
-  - {fileID: 1094717670}
   - {fileID: 1515380128}
   - {fileID: 702807923}
   - {fileID: 470631588}
@@ -1877,8 +1872,12 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
+      propertyPath: switchData
+      value: ImagePuzzle -12,0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: switchEffect
-      value: warp -12 0
+      value: warp
       objectReference: {fileID: 0}
     - target: {fileID: 6522425729884833140, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: m_Name
@@ -2013,11 +2012,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   switchType: pressurePlate
   switchEffect: spike
+  switchData: 
   switchId: 0
   onValue: 0
+  playerOnSpike: 0
   affectedObjects:
   - {fileID: 0}
-  playerOnSpike: 0
 --- !u!61 &1356024191
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2406,6 +2406,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1713836095671770470, guid: 5368874a5d4190b488d31a4876dee186, type: 3}
   m_PrefabInstance: {fileID: 595710510}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1627439947 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1395275681453853138, guid: 5368874a5d4190b488d31a4876dee186, type: 3}
+  m_PrefabInstance: {fileID: 1333574694}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1664577938 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
@@ -2472,11 +2477,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   switchType: pressurePlate
   switchEffect: spike
+  switchData: 
   switchId: 0
   onValue: 0
+  playerOnSpike: 0
   affectedObjects:
   - {fileID: 0}
-  playerOnSpike: 0
 --- !u!61 &1670216815
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2589,6 +2595,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1090859356}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1699119862 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1395275681453853138, guid: 5368874a5d4190b488d31a4876dee186, type: 3}
+  m_PrefabInstance: {fileID: 595710510}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1817746989
 GameObject:
   m_ObjectHideFlags: 0
@@ -2719,6 +2730,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1840886341 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7186775875662769344, guid: 6e9797b8c34ca3e4ea16d969f4d03518, type: 3}
+  m_PrefabInstance: {fileID: 462771492}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1924803273
 GameObject:
   m_ObjectHideFlags: 0
@@ -2873,16 +2889,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8190527861168986493, guid: 6fb5e95fba39e284a8b28b66eb5dd20e, type: 3}
       propertyPath: affectedObjects.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8190527861168986493, guid: 6fb5e95fba39e284a8b28b66eb5dd20e, type: 3}
       propertyPath: affectedObjects.Array.data[0]
       value: 
-      objectReference: {fileID: 567637101}
+      objectReference: {fileID: 1840886341}
     - target: {fileID: 8190527861168986493, guid: 6fb5e95fba39e284a8b28b66eb5dd20e, type: 3}
       propertyPath: affectedObjects.Array.data[1]
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1627439947}
+    - target: {fileID: 8190527861168986493, guid: 6fb5e95fba39e284a8b28b66eb5dd20e, type: 3}
+      propertyPath: affectedObjects.Array.data[2]
+      value: 
+      objectReference: {fileID: 1699119862}
     - target: {fileID: 8230789747956807444, guid: 6fb5e95fba39e284a8b28b66eb5dd20e, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1

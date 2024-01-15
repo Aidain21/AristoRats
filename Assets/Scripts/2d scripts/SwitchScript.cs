@@ -8,10 +8,11 @@ public class SwitchScript : MonoBehaviour
 {
     public string switchType;
     public string switchEffect;
+    public string switchData;
     public int switchId;
     public bool onValue;
-    public GameObject[] affectedObjects = new GameObject[1];
     public bool playerOnSpike = false;
+    public GameObject[] affectedObjects = new GameObject[1];
     // Start is called before the first frame update
     void Start()
     {
@@ -41,49 +42,34 @@ public class SwitchScript : MonoBehaviour
         //what the switch does
         foreach (GameObject item in affectedObjects)
         {
-            string effect;
-            string otherData;
-            if (switchEffect.IndexOf(" ") != -1)
-            {
-                otherData = switchEffect[(switchEffect.IndexOf(" ") + 1)..];
-                effect = switchEffect.Substring(0, switchEffect.IndexOf(" "));
-            }
-            else
-            {
-                otherData = "";
-                effect = switchEffect;
-            }
-            
-            switch (effect)
+            switch (switchEffect)
             {
                 case "activate":
                     item.SetActive(true);
                     break;
                 case "onoff":
-                    foreach(Transform child in item.transform)
+                    if (item.gameObject.tag == "RedWall")
                     {
-                        if (child.gameObject.tag == "RedWall")
-                        {
-                            child.gameObject.SetActive(onValue);
-                        }
-                        else
-                        {
-                            child.gameObject.SetActive(!onValue);
-                        } 
+                        item.gameObject.SetActive(onValue);
                     }
+                    else
+                    {
+                        item.gameObject.SetActive(!onValue);
+                    } 
                     break;
                 case "insert": //for puzzles
                     item.GetComponent<BlockScript>().inserted = true;
                     Destroy(gameObject);
                     break;
                 case "warp":
-                    int x = Int32.Parse(otherData.Substring(0, otherData.IndexOf(" ")));
-                    int y = Int32.Parse(otherData[(otherData.IndexOf(" ") + 1)..]);
+                    string scene = switchData.Substring(0, switchData.IndexOf(" "));
+                    int x = Int32.Parse(switchData.Substring(switchData.IndexOf(" ") + 1, switchData.IndexOf(",") - switchData.IndexOf(" ") -1));
+                    int y = Int32.Parse(switchData[(switchData.IndexOf(",") + 1)..]);
                     item.GetComponent<PlayerScript2D>().StopAllCoroutines();
                     item.GetComponent<PlayerScript2D>().moving = false;
                     item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                     item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
-                    SceneManager.LoadScene(switchId);
+                    SceneManager.LoadScene(scene);
                     break;
                 case "spike":
                     if (GetComponent<SpriteRenderer>().color == Color.red)
@@ -125,15 +111,6 @@ public class SwitchScript : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        string effect;
-        if (switchEffect.IndexOf(" ") != -1)
-        {
-            effect = switchEffect.Substring(0, switchEffect.IndexOf(" "));
-        }
-        else
-        {
-            effect = switchEffect;
-        }
         if (collision.tag == "Block" && switchType == "floor")
         {
             if(switchId == 0)
@@ -148,11 +125,11 @@ public class SwitchScript : MonoBehaviour
         }
         if (collision.tag == "Player" && switchType == "pressurePlate")
         {
-            if (effect == "warp")
+            if (switchEffect == "warp")
             {
                 affectedObjects[0] = collision.gameObject;
             }
-            if (effect == "spike")
+            if (switchEffect == "spike")
             {
                 affectedObjects[0] = collision.gameObject;
                 playerOnSpike = true;
@@ -162,18 +139,9 @@ public class SwitchScript : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        string effect;
-        if (switchEffect.IndexOf(" ") != -1)
-        {
-            effect = switchEffect.Substring(0, switchEffect.IndexOf(" "));
-        }
-        else
-        {
-            effect = switchEffect;
-        }
         if (collision.tag == "Player" && switchType == "pressurePlate")
         {
-            if (effect == "spike")
+            if (switchEffect == "spike")
             {
                 affectedObjects[0] = collision.gameObject;
                 playerOnSpike = false;
