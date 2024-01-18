@@ -9,7 +9,7 @@ public class SwitchScript : MonoBehaviour
     public string switchType;
     public string switchEffect;
     public string switchData;
-    public int switchId;
+    public Transform warpEnd;
     public bool onValue;
     public bool playerOnSpike = false;
     public GameObject[] affectedObjects = new GameObject[1];
@@ -62,14 +62,24 @@ public class SwitchScript : MonoBehaviour
                     Destroy(gameObject);
                     break;
                 case "warp":
-                    string scene = switchData.Substring(0, switchData.IndexOf(" "));
-                    int x = Int32.Parse(switchData.Substring(switchData.IndexOf(" ") + 1, switchData.IndexOf(",") - switchData.IndexOf(" ") -1));
-                    int y = Int32.Parse(switchData[(switchData.IndexOf(",") + 1)..]);
-                    item.GetComponent<PlayerScript2D>().StopAllCoroutines();
-                    item.GetComponent<PlayerScript2D>().moving = false;
-                    item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
-                    item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
-                    SceneManager.LoadScene(scene);
+                    if (switchData.Length == 0)
+                    {
+                        item.GetComponent<PlayerScript2D>().StopAllCoroutines();
+                        item.GetComponent<PlayerScript2D>().moving = false;
+                        item.transform.position = new Vector3(warpEnd.position.x, warpEnd.position.y, 0) + item.GetComponent<PlayerScript2D>().direction;
+                        item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(warpEnd.position.x, warpEnd.position.y, 0) + item.GetComponent<PlayerScript2D>().direction;
+                    }
+                    else
+                    {
+                        string scene = switchData.Substring(0, switchData.IndexOf(" "));
+                        int x = Int32.Parse(switchData.Substring(switchData.IndexOf(" ") + 1, switchData.IndexOf(",") - switchData.IndexOf(" ") - 1));
+                        int y = Int32.Parse(switchData[(switchData.IndexOf(",") + 1)..]);
+                        item.GetComponent<PlayerScript2D>().StopAllCoroutines();
+                        item.GetComponent<PlayerScript2D>().moving = false;
+                        item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
+                        item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
+                        SceneManager.LoadScene(scene);
+                    }
                     break;
                 case "spike":
                     if (GetComponent<SpriteRenderer>().color == Color.red)
@@ -113,11 +123,11 @@ public class SwitchScript : MonoBehaviour
     {
         if (collision.tag == "Block" && switchType == "floor")
         {
-            if(switchId == 0)
+            if(switchData == "")
             {
                 UseSwitch();
             }
-            else if (switchId == collision.GetComponent<BlockScript>().id)
+            else if (switchData == collision.GetComponent<BlockScript>().id.ToString())
             {
                 affectedObjects[0] = collision.gameObject;
                 UseSwitch();
