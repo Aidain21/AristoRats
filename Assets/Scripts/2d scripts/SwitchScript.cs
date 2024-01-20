@@ -89,6 +89,10 @@ public class SwitchScript : MonoBehaviour
                         item.transform.position = item.GetComponent<PlayerScript2D>().spawnPoint;
                     }
                     break;
+                case "talk":
+                    SignTextScript signScript = GetComponent<SignTextScript>();
+                    item.GetComponent<PlayerScript2D>().dialogueManager.StartDialogue(signScript.dialogueName, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
+                    break;
             }
         }
         //what happens to the switch
@@ -105,6 +109,9 @@ public class SwitchScript : MonoBehaviour
                     onValue = !onValue;
                     GetComponent<SpriteRenderer>().color = new Color32(255, 0, 100, 255);
                 }
+                break;
+            case "pressurePlate+":
+                Destroy(gameObject);
                 break;
         }
     }
@@ -133,7 +140,7 @@ public class SwitchScript : MonoBehaviour
                 UseSwitch();
             }
         }
-        if (collision.tag == "Player" && switchType == "pressurePlate")
+        if (collision.tag == "Player" && (switchType == "pressurePlate" || switchType == "pressurePlate+"))
         {
             if (switchEffect == "warp")
             {
@@ -143,6 +150,10 @@ public class SwitchScript : MonoBehaviour
             {
                 affectedObjects[0] = collision.gameObject;
                 playerOnSpike = true;
+            }
+            if (switchEffect == "talk")
+            {
+                affectedObjects[0] = collision.gameObject;
             }
             UseSwitch();
         }
