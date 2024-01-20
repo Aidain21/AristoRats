@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class TileScreenButtons : MonoBehaviour
 {
 
-    public int counter;
+
     public Button startButton;
     public Button optionsButton;
     public Button quitButton;
@@ -16,7 +16,7 @@ public class TileScreenButtons : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        counter = 0;
+
     }
 
     // Update is called once per frame
@@ -35,18 +35,8 @@ public class TileScreenButtons : MonoBehaviour
 
     public void ButtonPressed()
     {
-        if (counter == 1)
-        {
-            Debug.Log("Start");
-            SceneManager.LoadScene("ComputerUi");
-            counter = 0;
-
-        }
-        else
-        {
-            counter += 1;
-        }
-
+        SceneManager.LoadScene("TextingScene");
+          
     }
 
 

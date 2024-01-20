@@ -14,7 +14,7 @@ public class DialogueEvents : MonoBehaviour
     // Update is called once per frame
     public void EventTrigger()
     {
-        if (Enumerable.SequenceEqual(dialogueData, new string[] {"Testy", "2", "1"}))
+        if (Enumerable.SequenceEqual(dialogueData, new string[] {"HelperMouse", "2", "1"}))
         {
             StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up*10, 4f));
         }
