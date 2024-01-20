@@ -19,6 +19,7 @@ public class PlayerScript2D : MonoBehaviour
     //lets the player start dialogue
     public DialogueManager dialogueManager;
     public InventoryManager invManager;
+    public JournalManager journalManager;
     //Tracks current dialogue instance and place in dialogue. dialogueData[0] is name, dialogueData[1] is position
     public GameObject currentTarget;
 
@@ -68,7 +69,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.J))
             {
-                //journal
+                journalManager.OpenJournal();
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
@@ -215,7 +216,62 @@ public class PlayerScript2D : MonoBehaviour
         }
         else if (inJournal) //yeah you get it
         {
-
+            if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                journalManager.CloseJournal();
+            }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                journalManager.prevSelect = journalManager.selectorPos;
+                if (journalManager.selectorPos.y > 0)
+                {
+                    journalManager.selectorPos.y -= 1;
+                }
+                else
+                {
+                    journalManager.selectorPos.y += 4;
+                }
+                journalManager.UpdateSelector();
+            }
+            else if (Input.GetKeyDown(KeyCode.A))
+            {
+                journalManager.prevSelect = journalManager.selectorPos;
+                if (journalManager.selectorPos.x > 0)
+                {
+                    journalManager.selectorPos.x -= 1;
+                }
+                else
+                {
+                    journalManager.selectorPos.x += 4;
+                }
+                journalManager.UpdateSelector();
+            }
+            else if (Input.GetKeyDown(KeyCode.S))
+            {
+                journalManager.prevSelect = journalManager.selectorPos;
+                if (journalManager.selectorPos.y < 4)
+                {
+                    journalManager.selectorPos.y += 1;
+                }
+                else
+                {
+                    journalManager.selectorPos.y -= 4;
+                }
+                journalManager.UpdateSelector();
+            }
+            else if (Input.GetKeyDown(KeyCode.D))
+            {
+                journalManager.prevSelect = journalManager.selectorPos;
+                if (journalManager.selectorPos.x < 4)
+                {
+                    journalManager.selectorPos.x += 1;
+                }
+                else
+                {
+                    journalManager.selectorPos.x -= 4;
+                }
+                journalManager.UpdateSelector();
+            }
         }
         else if (inMap)
         {
