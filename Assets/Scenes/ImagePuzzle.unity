@@ -136,6 +136,10 @@ PrefabInstance:
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchEffect
       value: insert
       objectReference: {fileID: 0}
@@ -201,6 +205,10 @@ PrefabInstance:
       value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchEffect
       value: insert
       objectReference: {fileID: 0}
@@ -263,6 +271,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchId
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
       value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
@@ -529,6 +541,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchEffect
       value: insert
       objectReference: {fileID: 0}
@@ -594,6 +610,10 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchEffect
       value: insert
       objectReference: {fileID: 0}
@@ -656,6 +676,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchId
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
@@ -12437,6 +12461,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchEffect
       value: insert
       objectReference: {fileID: 0}
@@ -12642,6 +12670,10 @@ PrefabInstance:
       value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchEffect
       value: insert
       objectReference: {fileID: 0}
@@ -12800,6 +12832,10 @@ PrefabInstance:
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchEffect
       value: insert
       objectReference: {fileID: 0}
@@ -12862,6 +12898,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchId
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
       value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
@@ -12932,6 +12972,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchId
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
@@ -13039,6 +13083,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchId
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
@@ -13239,11 +13287,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1083203313887484989, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: switchId
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
+      propertyPath: switchData
+      value: PuzzleTest 9,0
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: switchEffect
-      value: warp 9 0
+      value: warp
       objectReference: {fileID: 0}
     - target: {fileID: 6522425729884833140, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: m_Name
@@ -13316,6 +13368,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchEffect
       value: insert
       objectReference: {fileID: 0}
@@ -13378,6 +13434,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchId
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
@@ -13497,6 +13557,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchId
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
@@ -13893,6 +13957,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
       propertyPath: switchId
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
+      propertyPath: switchData
       value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}

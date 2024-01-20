@@ -31,6 +31,8 @@ public class PlayerScript2D : MonoBehaviour
     public Vector2 spawnPoint;
     static PlayerScript2D instance;
 
+    public string playerName;
+
     void Awake()
     {
         if (instance == null)

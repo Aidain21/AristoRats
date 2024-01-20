@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6522425729884833140
+--- !u!1 &2040134343306533210
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8431808016095115378}
-  - component: {fileID: 8476477144905226280}
-  - component: {fileID: 8918843541480017808}
-  - component: {fileID: 1083203313887484989}
-  - component: {fileID: 864846978952022817}
+  - component: {fileID: 3735595647753577564}
+  - component: {fileID: 3708208281663046662}
+  - component: {fileID: 4400672381032403902}
+  - component: {fileID: 5322132606243897363}
+  - component: {fileID: 5392147384958080783}
   m_Layer: 0
-  m_Name: SceneWarp
+  m_Name: Warp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8431808016095115378
+--- !u!4 &3735595647753577564
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6522425729884833140}
+  m_GameObject: {fileID: 2040134343306533210}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9, y: 0, z: 1}
+  m_LocalPosition: {x: -7, y: -3, z: 1}
   m_LocalScale: {x: 0.8, y: 2.6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &8476477144905226280
+--- !u!212 &3708208281663046662
 SpriteRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6522425729884833140}
+  m_GameObject: {fileID: 2040134343306533210}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -77,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 2476339019224497277, guid: 53db4a57ff7629349804eecdb3a698e1, type: 3}
-  m_Color: {r: 0.8199634, g: 0.24405126, b: 0.85660374, a: 1}
+  m_Color: {r: 0.012310382, g: 0.36967131, b: 0.93207544, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -87,13 +87,13 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &8918843541480017808
+--- !u!61 &4400672381032403902
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6522425729884833140}
+  m_GameObject: {fileID: 2040134343306533210}
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
@@ -132,13 +132,13 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1083203313887484989
+--- !u!114 &5322132606243897363
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6522425729884833140}
+  m_GameObject: {fileID: 2040134343306533210}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 291af93e789281b4794a5692ef78d3f5, type: 3}
@@ -146,21 +146,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   switchType: pressurePlate
   switchEffect: warp
-  switchData: SceneName x,y
+  switchData: 
   switchId: 0
   warpEnd: {fileID: 0}
   onValue: 0
   playerOnSpike: 0
   affectedObjects:
   - {fileID: 0}
---- !u!50 &864846978952022817
+--- !u!50 &5392147384958080783
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6522425729884833140}
+  m_GameObject: {fileID: 2040134343306533210}
   m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
