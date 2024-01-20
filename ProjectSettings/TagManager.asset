@@ -9,6 +9,7 @@ TagManager:
   - Sign
   - RedWall
   - Item
+  - interactable
   layers:
   - Default
   - TransparentFX
