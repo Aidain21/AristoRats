@@ -23,4 +23,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TextingScene.unity
     guid: 6341907c6690245e689ebe7fe4907a70
+  - enabled: 1
+    path: Assets/Scenes/ComputerUi.unity
+    guid: 6b314a7d40a6e484897aa5f23506497a
+  - enabled: 1
+    path: Assets/Scenes/HouseScene.unity
+    guid: 4c7518f3d516a4bc8ae20e249be670f4
   m_configObjects: {}
