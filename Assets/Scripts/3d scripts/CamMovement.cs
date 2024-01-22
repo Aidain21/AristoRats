@@ -15,8 +15,8 @@ public class CamMovement : MonoBehaviour
     private void Start()
     {
         yRotation = -90f;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
     }
 
     private void Update()
