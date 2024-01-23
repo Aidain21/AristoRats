@@ -4,17 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+
 public class DemoBu : MonoBehaviour
 {
 
     public int counter;
     public Button gameButton;
+    
 
 
     // Start is called before the first frame update
     void Start()
     {
         counter = 0;
+      
     }
 
     // Update is called once per frame
@@ -32,8 +35,7 @@ public class DemoBu : MonoBehaviour
             counter = 0;
 
         }
-        else
-        {
+        else{
             counter += 1;
         }
 
