@@ -7,7 +7,6 @@ public class ItemScript : MonoBehaviour
     public string itemName;
     public string[] pickupText;
     public string[] itemLore;
-    public int itemId;
     public Sprite itemImage;
 
     void Start()

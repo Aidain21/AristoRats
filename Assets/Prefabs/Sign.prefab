@@ -143,11 +143,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4990cb1561d8dc943a21ba7ee8fd555c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueName: Testy
+  dialogueName: 
   dialogue:
-  - 0Example Name:Example Text
-  - 0Spelling Check:It IS "Dialogue", not "Dialouge".
-  - 0xxx_rAtgOdGAmER37_xxx:Give me your hair, you don't deserve it.
-  - 0Sign:Aight ima head out
+  - 0???:Give me some dialogue!!!
+  - 0You:Yeah I probably should do that.
+  - 1???:If you're a Default Sign and you know it, clap your hands! *clap* *clap*
   talkCounter: 0
   talkerImage: {fileID: 0}

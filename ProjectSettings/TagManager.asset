@@ -10,6 +10,7 @@ TagManager:
   - RedWall
   - Item
   - interactable
+  - Note
   layers:
   - Default
   - TransparentFX

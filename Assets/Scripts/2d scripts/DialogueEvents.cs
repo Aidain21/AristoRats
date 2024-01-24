@@ -8,6 +8,7 @@ public class DialogueEvents : MonoBehaviour
     public GameObject player;
     public PlayerScript2D playerScript;
     public string[] dialogueData = new string[3];
+    public Sprite norm;
     //current targeted item 
     // Start is called before the first frame update
 
@@ -26,14 +27,32 @@ public class DialogueEvents : MonoBehaviour
         {
             playerScript.currentTarget.GetComponent<ImagePuzzleScript>().PuzzleSetUp();
         }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Rat Guard", "0", "1" }))
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "darkDude", "2", "0" }))
         {
-            if (playerScript.HasItem("Key"))
+            if (playerScript.HasItem("TestKey"))
             {
-                playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = 3;
-                StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up*10, 4f));
-
+                playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = 5;
+                playerScript.dialogueManager.hasMoreText = false;
+                playerScript.invManager.inventory.Remove(playerScript.GetItem("TestKey"));
             }
+        }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "darkDude", "3", "0" }))
+        {
+            playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = 0;
+        }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "tre", "1", "2" }))
+        {
+            playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite = norm;
+            StartCoroutine(Grow());
+        }
+    }
+
+    public IEnumerator Grow()
+    {
+        while (true)
+        {
+            playerScript.currentTarget.transform.localScale += new Vector3(0.01f, 0.01f, 0);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }

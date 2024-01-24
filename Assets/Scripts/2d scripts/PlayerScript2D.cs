@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerScript2D : MonoBehaviour
 {
@@ -19,6 +21,7 @@ public class PlayerScript2D : MonoBehaviour
     //lets the player start dialogue
     public DialogueManager dialogueManager;
     public InventoryManager invManager;
+    public JournalManager journalManager;
     //Tracks current dialogue instance and place in dialogue. dialogueData[0] is name, dialogueData[1] is position
     public GameObject currentTarget;
 
@@ -68,7 +71,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.J))
             {
-                //journal
+                journalManager.OpenJournal();
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
@@ -215,7 +218,77 @@ public class PlayerScript2D : MonoBehaviour
         }
         else if (inJournal) //yeah you get it
         {
-
+            if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                journalManager.CloseJournal();
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (journalManager.selection != journalManager.selectorPos)
+                {
+                    journalManager.prevSelection = journalManager.selection;
+                    journalManager.selection = journalManager.selectorPos;
+                    journalManager.UpdateSelector();
+                    journalManager.UpdateRightSide();
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                journalManager.CloseJournal();
+                NoteWarp();
+            }
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                journalManager.prevSelectorPos = journalManager.selectorPos;
+                if (journalManager.selectorPos.y > 0)
+                {
+                    journalManager.selectorPos.y -= 1;
+                }
+                else
+                {
+                    journalManager.selectorPos.y += 4;
+                }
+                journalManager.UpdateSelector();
+            }
+            else if (Input.GetKeyDown(KeyCode.A))
+            {
+                journalManager.prevSelectorPos = journalManager.selectorPos;
+                if (journalManager.selectorPos.x > 0)
+                {
+                    journalManager.selectorPos.x -= 1;
+                }
+                else
+                {
+                    journalManager.selectorPos.x += 4;
+                }
+                journalManager.UpdateSelector();
+            }
+            else if (Input.GetKeyDown(KeyCode.S))
+            {
+                journalManager.prevSelectorPos = journalManager.selectorPos;
+                if (journalManager.selectorPos.y < 4)
+                {
+                    journalManager.selectorPos.y += 1;
+                }
+                else
+                {
+                    journalManager.selectorPos.y -= 4;
+                }
+                journalManager.UpdateSelector();
+            }
+            else if (Input.GetKeyDown(KeyCode.D))
+            {
+                journalManager.prevSelectorPos = journalManager.selectorPos;
+                if (journalManager.selectorPos.x < 4)
+                {
+                    journalManager.selectorPos.x += 1;
+                }
+                else
+                {
+                    journalManager.selectorPos.x -= 4;
+                }
+                journalManager.UpdateSelector();
+            }
         }
         else if (inMap)
         {
@@ -344,11 +417,53 @@ public class PlayerScript2D : MonoBehaviour
                     target.SetActive(false);
                 }
                 break;
+            case "Note":
+                if (journalManager.HasNote(target.GetComponent<NoteScript>().noteId))
+                {
+                    string[] temp = new string[] { "0Aidan:Uh-oh. You can't have multiple notes with the same Id. Probably should change one of them." };
+                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                }
+                else
+                {
+                    journalManager.notes.Add(target.GetComponent<NoteScript>());
+                    NoteScript note = journalManager.notes[journalManager.notes.IndexOf(target.GetComponent<NoteScript>())];
+                    target.transform.parent = transform;
+                    target.SetActive(false);
+                    string[] temp = new string[] { "0You:Found Note #" + (note.noteId + 1).ToString() + " - " + note.noteTitle + ". I should read it in my Journal later." };
+                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                }
+                break;
             default:
                 Debug.Log(target.name);
                 break;
         }
         
+    }
+    public void NoteWarp()
+    {
+        NoteScript curNote = journalManager.GetNote(Mathf.RoundToInt(journalManager.selection.y) * 5 + Mathf.RoundToInt(journalManager.selection.x));
+        if (curNote == null)
+        {
+            string[] temp = new string[] { "0You:I can't travel to a place that I haven't found yet." };
+            dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+        }
+        else if (curNote.scene == SceneManager.GetActiveScene().name && Vector3.Distance(transform.position, curNote.pos) <= 10)
+        {
+            string[] temp = new string[] { "0You:I'm too close to where I found the note to justify traveling there." };
+            dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+        }
+        else
+        {
+            StopAllCoroutines();
+            moving = false;
+            transform.position = curNote.pos;
+            spawnPoint = curNote.pos;
+            if(curNote.scene != SceneManager.GetActiveScene().name)
+            {
+                SceneManager.LoadScene(curNote.scene);
+            }
+            
+        }
     }
 
     public bool HasItem(string name)
@@ -362,15 +477,15 @@ public class PlayerScript2D : MonoBehaviour
         }
         return false;
     }
-    public bool HasItem(int name)
+    public GameObject GetItem(string name)
     {
         foreach (GameObject g in invManager.inventory)
         {
-            if (g.GetComponent<ItemScript>().itemId == name)
+            if (g.GetComponent<ItemScript>().itemName == name)
             {
-                return true;
+                return g;
             }
         }
-        return false;
+        return null;
     }
 }

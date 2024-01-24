@@ -66,7 +66,17 @@ public class SwitchScript : MonoBehaviour
                     {
                         item.GetComponent<PlayerScript2D>().StopAllCoroutines();
                         item.GetComponent<PlayerScript2D>().moving = false;
-                        item.transform.position = new Vector3(warpEnd.position.x, warpEnd.position.y, 0) + item.GetComponent<PlayerScript2D>().direction;
+                        float test;
+                        if (item.GetComponent<PlayerScript2D>().direction == Vector3.up || item.GetComponent<PlayerScript2D>().direction == Vector3.down)
+                        {
+                            test = item.transform.InverseTransformPoint(transform.position).x;
+                            item.transform.position = new Vector3(warpEnd.position.x - test, warpEnd.position.y, 0) + item.GetComponent<PlayerScript2D>().direction;
+                        }
+                        else
+                        {
+                            test = item.transform.InverseTransformPoint(transform.position).y;
+                            item.transform.position = new Vector3(warpEnd.position.x, warpEnd.position.y - test, 0) + item.GetComponent<PlayerScript2D>().direction;
+                        }
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(warpEnd.position.x, warpEnd.position.y, 0) + item.GetComponent<PlayerScript2D>().direction;
                     }
                     else
