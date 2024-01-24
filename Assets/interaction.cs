@@ -19,6 +19,6 @@ public class interaction : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        SceneManager.LoadScene("ComputerUi");
+        SceneManager.LoadScene("ApartmentScene");
     }
 }

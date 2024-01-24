@@ -45,6 +45,15 @@ public class DialogueEvents : MonoBehaviour
             playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite = norm;
             StartCoroutine(Grow());
         }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Rat Guard", "0", "1" }))
+        {
+            if (playerScript.HasItem("Key"))
+            {
+                playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = 3;
+                StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up*10, 4f));
+
+            }
+        }
     }
 
     public IEnumerator Grow()
