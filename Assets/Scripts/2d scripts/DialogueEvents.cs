@@ -27,6 +27,13 @@ public class DialogueEvents : MonoBehaviour
         {
             playerScript.currentTarget.GetComponent<ImagePuzzleScript>().PuzzleSetUp();
         }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "0", "1" }))
+        {
+            if (playerScript.HasItem("Key"))
+            {
+                Destroy(playerScript.currentTarget);
+            }
+        }
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "darkDude", "2", "0" }))
         {
             if (playerScript.HasItem("TestKey"))
