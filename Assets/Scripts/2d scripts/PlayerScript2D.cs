@@ -122,7 +122,13 @@ public class PlayerScript2D : MonoBehaviour
                     {
                         aboveTalker = transform.position.y > currentTarget.transform.position.y;
                     }
-                    dialogueManager.DisplayNextSentence();
+                    dialogueManager.sentences.RemoveAt(0);
+                    dialogueManager.eventScript.EndEventTrigger();
+                    if (!dialogueManager.changed)
+                    {
+                        dialogueManager.DisplayNextSentence();
+                    }
+                    dialogueManager.changed = false;
                 }
                 
             }
@@ -393,10 +399,6 @@ public class PlayerScript2D : MonoBehaviour
                 aboveTalker = transform.position.y > target.transform.position.y;
                 SignTextScript signScript = target.GetComponent<SignTextScript>();
                 dialogueManager.StartDialogue(signScript.dialogueName, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
-                if (dialogueManager.hasMoreText)
-                {
-                    target.GetComponent<SignTextScript>().talkCounter += 1;
-                }
                 break;
             case "Block":
                 if (!target.GetComponent<BlockScript>().moving)
