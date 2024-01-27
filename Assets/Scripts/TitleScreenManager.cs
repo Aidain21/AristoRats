@@ -31,7 +31,12 @@ public class TileScreenButtons : MonoBehaviour
         SceneManager.LoadScene("NameInputScene");
     }
 
-    
+    public void QuitButtonPressed()
+    {
+        Debug.Log("Quit");
+        Application.Quit();
+    }
+
 
     public void ButtonPressed()
     {

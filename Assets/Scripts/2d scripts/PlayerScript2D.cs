@@ -24,6 +24,7 @@ public class PlayerScript2D : MonoBehaviour
     public JournalManager journalManager;
     //Tracks current dialogue instance and place in dialogue. dialogueData[0] is name, dialogueData[1] is position
     public GameObject currentTarget;
+    public GameObject backpackMenu;
 
     public bool inMap;
     public bool inJournal;
@@ -72,6 +73,10 @@ public class PlayerScript2D : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.J))
             {
                 journalManager.OpenJournal();
+            }
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                backpackMenu.SetActive(true);
             }
             if (Input.GetKeyDown(KeyCode.I))
             {
