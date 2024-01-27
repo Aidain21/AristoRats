@@ -27,38 +27,36 @@ public class DialogueEvents : MonoBehaviour
         {
             playerScript.currentTarget.GetComponent<ImagePuzzleScript>().PuzzleSetUp();
         }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "0", "1" }))
-        {
-            if (playerScript.HasItem("Key"))
-            {
-                Destroy(playerScript.currentTarget);
-            }
-        }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "darkDude", "2", "0" }))
-        {
-            if (playerScript.HasItem("TestKey"))
-            {
-                playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = 5;
-                playerScript.dialogueManager.hasMoreText = false;
-                playerScript.invManager.inventory.Remove(playerScript.GetItem("TestKey"));
-            }
-        }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "darkDude", "3", "0" }))
-        {
-            playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = 0;
-        }
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "tre", "1", "2" }))
         {
             playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite = norm;
             StartCoroutine(Grow());
         }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Rat Guard", "0", "1" }))
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "3", "1" }))
+        {
+            StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.left * 3, 1f));
+        }
+    }
+    public void EndEventTrigger()
+    {
+        if (Enumerable.SequenceEqual(dialogueData, new string[] { "darkDude", "1", "0" }))
+        {
+            if (playerScript.HasItem("TestKey"))
+            {
+                playerScript.dialogueManager.ChangeDialogue(5, true);
+                playerScript.invManager.inventory.Remove(playerScript.GetItem("TestKey"));
+            }
+        }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "darkDude", "2", "0" }))
+        {
+            playerScript.dialogueManager.ChangeDialogue(0, false);
+        }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "0", "0" }) || Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "1", "0" }))
         {
             if (playerScript.HasItem("Key"))
-            {
-                playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = 3;
-                StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up*10, 4f));
-
+            { 
+                playerScript.dialogueManager.ChangeDialogue(3, true);
+                playerScript.invManager.inventory.Remove(playerScript.GetItem("Key"));
             }
         }
     }

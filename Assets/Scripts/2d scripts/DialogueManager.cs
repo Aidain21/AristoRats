@@ -10,6 +10,7 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text nameText;
     public TMP_Text spaceText;
     public bool typing;
+    public bool changed;
     public float typingSpeed = 0.03f;
     public bool hasMoreText;
     public PlayerScript2D playerScript;
@@ -19,11 +20,11 @@ public class DialogueManager : MonoBehaviour
     public Image imageFrame;
     public Sprite currentImage; //just the talker for now
 
-    public Queue<string> sentences;
+    public List<string> sentences;
     void Start()
     {
         textBox.GetComponent<Canvas>().enabled = false;
-        sentences = new Queue<string>();
+        sentences = new List<string>();
     }
 
     public void StartDialogue(string dialogueName, string[] dialogue, int talkCounter, Sprite talkerImage)
@@ -50,12 +51,12 @@ public class DialogueManager : MonoBehaviour
             }
             if (index == 0)
             {
-                sentences.Enqueue("Aidan:Fix up the formatting of the text plz something is missing the talk counter :P");
+                sentences.Add("Aidan:Fix up the formatting of the text plz something is missing the talk counter :P");
                 break;
             }
             else if (Int32.Parse(sentence.Substring(0, index)) == talkCounter)
             {
-                sentences.Enqueue(sentence[index..]);
+                sentences.Add(sentence[index..]);
             }
             if (Int32.Parse(sentence.Substring(0, index)) == talkCounter + 1)
             {
@@ -75,7 +76,7 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        string sentence = sentences.Dequeue();
+        string sentence = sentences[0];
         StopAllCoroutines();
         
         nameText.text = sentence.Substring(0,sentence.IndexOf(":")+1);
@@ -96,6 +97,17 @@ public class DialogueManager : MonoBehaviour
             imageFrame.sprite = currentImage;
             eventScript.EventTrigger();
             StartCoroutine(TypeSentence(sentence[(sentence.IndexOf(":") + 1)..]));
+        }
+    }
+    public void ChangeDialogue(int talkCounter, bool keepTalking)
+    {
+        EndDialogue();
+        playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = talkCounter;
+        eventScript.dialogueData[2] = "-1";
+        if (keepTalking)
+        {
+            changed = true;
+            StartDialogue(eventScript.dialogueData[0], playerScript.currentTarget.GetComponent<SignTextScript>().dialogue, talkCounter, currentImage);
         }
     }
 
@@ -121,6 +133,10 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
+        if (hasMoreText)
+        {
+            playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter += 1;
+        }
         playerScript.inDialogue = false;
         textBox.GetComponent<Canvas>().enabled = false;
     }
