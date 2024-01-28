@@ -257,7 +257,7 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 else
                 {
-                    journalManager.selectorPos.y += 4;
+                    journalManager.selectorPos.y += journalManager.textArray.GetLength(0) - 1;
                 }
                 journalManager.UpdateSelector();
             }
@@ -270,33 +270,33 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 else
                 {
-                    journalManager.selectorPos.x += 4;
+                    journalManager.selectorPos.x += journalManager.textArray.GetLength(1) - 1;
                 }
                 journalManager.UpdateSelector();
             }
             else if (Input.GetKeyDown(KeyCode.S))
             {
                 journalManager.prevSelectorPos = journalManager.selectorPos;
-                if (journalManager.selectorPos.y < 4)
+                if (journalManager.selectorPos.y < journalManager.textArray.GetLength(0) - 1)
                 {
                     journalManager.selectorPos.y += 1;
                 }
                 else
                 {
-                    journalManager.selectorPos.y -= 4;
+                    journalManager.selectorPos.y -= journalManager.textArray.GetLength(0) - 1;
                 }
                 journalManager.UpdateSelector();
             }
             else if (Input.GetKeyDown(KeyCode.D))
             {
                 journalManager.prevSelectorPos = journalManager.selectorPos;
-                if (journalManager.selectorPos.x < 4)
+                if (journalManager.selectorPos.x < journalManager.textArray.GetLength(1) - 1)
                 {
                     journalManager.selectorPos.x += 1;
                 }
                 else
                 {
-                    journalManager.selectorPos.x -= 4;
+                    journalManager.selectorPos.x -= journalManager.textArray.GetLength(1) - 1;
                 }
                 journalManager.UpdateSelector();
             }
@@ -448,7 +448,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     public void NoteWarp()
     {
-        NoteScript curNote = journalManager.GetNote(Mathf.RoundToInt(journalManager.selection.y) * 5 + Mathf.RoundToInt(journalManager.selection.x));
+        NoteScript curNote = journalManager.GetNote(Mathf.RoundToInt(journalManager.selection.y) * journalManager.textArray.GetLength(1) + Mathf.RoundToInt(journalManager.selection.x));
         if (curNote == null)
         {
             string[] temp = new string[] { "0You:I can't travel to a place that I haven't found yet." };

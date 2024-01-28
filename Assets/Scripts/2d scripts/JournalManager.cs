@@ -9,7 +9,7 @@ public class JournalManager : MonoBehaviour
     public Vector2 prevSelectorPos;
     public Vector2 selection;
     public Vector2 prevSelection;
-    public TMP_Text[,] textArray = new TMP_Text[5, 5];
+    public TMP_Text[,] textArray = new TMP_Text[11, 5];
     public List<NoteScript> notes;
     public GameObject TextArray;
     public TMP_Text def;
@@ -27,13 +27,13 @@ public class JournalManager : MonoBehaviour
         selection = Vector2.zero;
         prevSelectorPos = Vector2.up;
         prevSelection = Vector2.up;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < textArray.GetLength(0); i++)
         {
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < textArray.GetLength(1); j++)
             {
                 TMP_Text text = Instantiate(def, TextArray.transform);
-                text.rectTransform.localPosition = new Vector2(55 * j, -45 * i);
-                text.name = (i * 5 + j + 1).ToString();
+                text.rectTransform.localPosition = new Vector2(150 * j, -75 * i);
+                text.name = (i * textArray.GetLength(1) + j + 1).ToString();
                 textArray[i, j] = text;
             }
         }
@@ -43,11 +43,11 @@ public class JournalManager : MonoBehaviour
     {
         journal.GetComponent<Canvas>().enabled = true;
         playerScript.inJournal = true;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < textArray.GetLength(0); i++)
         {
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < textArray.GetLength(1); j++)
             {
-                if (HasNote(i * 5 + j))
+                if (HasNote(i * textArray.GetLength(1) + j))
                 {
                     textArray[i, j].text = "#" + textArray[i, j].name;
                 }
@@ -77,7 +77,7 @@ public class JournalManager : MonoBehaviour
     }
     public void UpdateRightSide()
     {
-        NoteScript curNote = GetNote(Mathf.RoundToInt(selection.y) * 5 + Mathf.RoundToInt(selection.x));
+        NoteScript curNote = GetNote(Mathf.RoundToInt(selection.y) * textArray.GetLength(1) + Mathf.RoundToInt(selection.x));
         if (curNote != null)
         {
             noteTitle.text = "#" + (curNote.noteId + 1) + " - " + curNote.noteTitle;
@@ -85,7 +85,7 @@ public class JournalManager : MonoBehaviour
         }
         else
         {
-            noteTitle.text = "#?? - ?????";
+            noteTitle.text = "#?? - Missing Note";
             noteLore.text = "I don't have this note yet.";
         }
     }

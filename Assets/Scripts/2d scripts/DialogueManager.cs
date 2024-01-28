@@ -145,11 +145,13 @@ public class DialogueManager : MonoBehaviour
     {
         if (playerScript.aboveTalker)
         {
-            background.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 25 , 125);
+            background.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 75, 300);
+            imageFrame.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 75, 300);
         }
         else
         {
-            background.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, 25, 125);
+            background.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, 75, 300);
+            imageFrame.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, 75, 300);
         }
     }
 }
