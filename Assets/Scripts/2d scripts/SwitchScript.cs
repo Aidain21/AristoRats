@@ -58,10 +58,24 @@ public class SwitchScript : MonoBehaviour
                     } 
                     break;
                 case "insert": //for puzzles
-                    item.GetComponent<BlockScript>().inserted = true;
-                    Destroy(gameObject);
+                    if (item.tag == "Block")
+                    {
+                        item.GetComponent<BlockScript>().inserted = true;
+                        Destroy(gameObject);
+                        break;
+                    }
+                    else if (item.tag  == "Item")
+                    {
+                        transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                        item.transform.position += new Vector3(0, 0, 1);
+                        Destroy(item.GetComponent<BoxCollider2D>());
+                        Destroy(item.GetComponent<ItemScript>());
+                        Destroy(gameObject);
+                        break;
+                    }
                     break;
                 case "warp":
+                    item.GetComponent<PlayerScript2D>().invManager.RemovePuzzleStuff();
                     if (switchData.Length == 0)
                     {
                         item.GetComponent<PlayerScript2D>().StopAllCoroutines();
@@ -102,6 +116,9 @@ public class SwitchScript : MonoBehaviour
                 case "talk":
                     SignTextScript signScript = GetComponent<SignTextScript>();
                     item.GetComponent<PlayerScript2D>().dialogueManager.StartDialogue(signScript.dialogueName, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
+                    break;
+                case "puzzle":
+                    item.GetComponent<ImagePuzzleScript>().PuzzleSetUp();
                     break;
             }
         }
@@ -149,6 +166,11 @@ public class SwitchScript : MonoBehaviour
                 affectedObjects[0] = collision.gameObject;
                 UseSwitch();
             }
+        }
+        if (collision.tag == "Item" && switchType == "floor" && switchData == collision.name)
+        {
+            affectedObjects[0] = collision.gameObject;
+            UseSwitch();
         }
         if (collision.tag == "Player" && (switchType == "pressurePlate" || switchType == "pressurePlate+"))
         {

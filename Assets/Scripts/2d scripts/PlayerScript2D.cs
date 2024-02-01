@@ -8,16 +8,18 @@ public class PlayerScript2D : MonoBehaviour
 {
     //if the player is going between tiles
     public bool moving;
+    public float spinTimer;
+    public bool spinning;
     //a vector of the player's current direciton
     public Vector3 direction;
     //Closer to 0, the faster the move speed (default 0.3)
+    public bool sameDir;
+    public Vector3 prevDir;
     public float timeBetweenTiles;
     //made so the player can turn in spot without moving
     public float holdTimer;
     //current walls next to player
     public bool[] wallTouchList;
-    //we can remove this once we have a character with different facing directions.
-    public GameObject directionTracker;
     //lets the player start dialogue
     public DialogueManager dialogueManager;
     public InventoryManager invManager;
@@ -36,6 +38,7 @@ public class PlayerScript2D : MonoBehaviour
     static PlayerScript2D instance;
 
     public string playerName;
+    public Sprite[] idleSprites;
 
     void Awake()
     {
@@ -51,11 +54,29 @@ public class PlayerScript2D : MonoBehaviour
     }
     void Start()
     {
-        directionTracker = transform.GetChild(0).gameObject;
         timeBetweenTiles = 0.3f;
+        prevDir = Vector3.zero;
     }
     void Update()
     {
+        if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && holdTimer == 0)
+        {
+            spinTimer += Time.deltaTime;
+        }
+        else
+        {
+            spinTimer = 0;
+            if (spinning)
+            {
+                StopCoroutine(IdleSpin(direction));
+                spinning = false;
+            }
+            
+        }
+        if (spinTimer > 10 && !spinning)
+        {
+            StartCoroutine(IdleSpin(direction));
+        }
         if (!inDialogue && !inMap && !inJournal && !inInventory) //Controls for overworld
         {
             if (!moving)
@@ -64,7 +85,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                timeBetweenTiles = 0.15f;
+                timeBetweenTiles = 0.15f;   
             }
             else
             {
@@ -313,44 +334,64 @@ public class PlayerScript2D : MonoBehaviour
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.up;
-            directionTracker.transform.localPosition = new Vector3(0, 0.25f, -1);
             wallTouchList = WallChecker();
             if (!wallTouchList[0] && holdTimer > 0.1f)
             {
-                StartCoroutine(GridMove(gameObject,transform.position + direction, timeBetweenTiles));
+                sameDir = prevDir == Vector3.up && !sameDir;
+                prevDir = direction;
+                StartCoroutine(GridMove(gameObject,transform.position + direction, timeBetweenTiles, "Up"));
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().sprite = idleSprites[0];
             }
         }
         else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.left;
-            directionTracker.transform.localPosition = new Vector3(-0.25f, 0, -1);
             wallTouchList = WallChecker();
             if (!wallTouchList[1] && holdTimer > 0.1f)
             {
-                StartCoroutine(GridMove(gameObject,transform.position + direction, timeBetweenTiles));
+                sameDir = prevDir == Vector3.left && !sameDir;
+                prevDir = direction;
+                StartCoroutine(GridMove(gameObject,transform.position + direction, timeBetweenTiles, "Left"));
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().sprite = idleSprites[1];
             }
         }
         else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.down;
-            directionTracker.transform.localPosition = new Vector3(0, -0.25f, -1);
             wallTouchList = WallChecker();
             if (!wallTouchList[2] && holdTimer > 0.1f)
             {
-                StartCoroutine(GridMove(gameObject,transform.position + direction, timeBetweenTiles));
+                sameDir = prevDir == Vector3.down && !sameDir;
+                prevDir = direction;
+                StartCoroutine(GridMove(gameObject,transform.position + direction, timeBetweenTiles, "Down"));
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().sprite = idleSprites[2];
             }
         }
         else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.right;
-            directionTracker.transform.localPosition = new Vector3(0.25f, 0, -1);
             wallTouchList = WallChecker();
             if (!wallTouchList[3] && holdTimer > 0.1f)
             {
-                StartCoroutine(GridMove(gameObject,transform.position + direction, timeBetweenTiles));
+                sameDir = prevDir == Vector3.right && !sameDir;
+                prevDir = direction;
+                StartCoroutine(GridMove(gameObject,transform.position + direction, timeBetweenTiles, "Right"));
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().sprite = idleSprites[3];
             }
         }
         else
@@ -358,10 +399,27 @@ public class PlayerScript2D : MonoBehaviour
             holdTimer = 0;
         }
     }
-    public IEnumerator GridMove(GameObject mover, Vector3 end, float seconds)
+    public IEnumerator GridMove(GameObject mover, Vector3 end, float seconds, string anim = "")
     {
         if (mover.name == "Player")
         {
+            GetComponent<Animator>().enabled = true;
+            if (timeBetweenTiles == 0.15f)
+            {
+                GetComponent<Animator>().speed = 2;
+            }
+            else
+            {
+                GetComponent<Animator>().speed = 1;
+            }
+            if (sameDir)
+            {
+                GetComponent<Animator>().Play(anim, 0, 0.5f);
+            }
+            else
+            {
+                GetComponent<Animator>().Play(anim, 0, 0);
+            }
             moving = true;
         }
         Vector3 start = mover.transform.position;
@@ -375,7 +433,38 @@ public class PlayerScript2D : MonoBehaviour
         mover.transform.position = new Vector3(Mathf.Round(mover.transform.position.x), Mathf.Round(mover.transform.position.y), 0);
         if (mover.name == "Player")
         {
+            GetComponent<Animator>().enabled = false;
             moving = false;
+        }
+    }
+    public IEnumerator IdleSpin(Vector3 start)
+    {
+        spinning = true;
+        int i = 0;
+        if(start == Vector3.left)
+        {
+            i = 1;
+        }
+        else if (start == Vector3.down)
+        {
+            i = 2;
+        }
+        else if (start == Vector3.right)
+        {
+            i = 3;
+        }
+        while (spinning)
+        {
+            GetComponent<SpriteRenderer>().sprite = idleSprites[i];
+            yield return new WaitForSeconds(0.5f);
+            if (i == 3)
+            {
+                i = 0;
+            }
+            else
+            {
+                i++;
+            }
         }
     }
     public bool[] WallChecker()
@@ -423,6 +512,13 @@ public class PlayerScript2D : MonoBehaviour
                     dialogueManager.StartDialogue(itemScript.itemName, itemScript.pickupText, 0, itemScript.itemImage);
                     target.SetActive(false);
                 }
+                break;
+            case "Cheese":
+                target.transform.parent = transform;
+                invManager.cheese += target.GetComponent<CheeseScript>().amount;
+                string[] cheesy = new string[] { "0You:I just found " + target.GetComponent<CheeseScript>().amount + " pieces of cheese."};
+                dialogueManager.StartDialogue("Player", cheesy, 0, GetComponent<SpriteRenderer>().sprite);
+                target.SetActive(false);
                 break;
             case "Note":
                 if (journalManager.HasNote(target.GetComponent<NoteScript>().noteId))

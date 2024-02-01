@@ -15,17 +15,13 @@ public class DialogueEvents : MonoBehaviour
     // Update is called once per frame
     public void EventTrigger()
     {
-        if (Enumerable.SequenceEqual(dialogueData, new string[] {"Testy", "2", "1"}))
+        if (Enumerable.SequenceEqual(dialogueData, new string[] { "Testy", "2", "1" }))
         {
-            StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up*10, 4f));
+            StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up * 10, 4f));
         }
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "RedSign", "2", "0" }))
         {
             playerScript.currentTarget.GetComponent<SpriteRenderer>().color = Color.red;
-        }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleTrigger", "0", "3" }))
-        {
-            playerScript.currentTarget.GetComponent<ImagePuzzleScript>().PuzzleSetUp();
         }
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "tre", "1", "2" }))
         {
