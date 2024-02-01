@@ -526,6 +526,8 @@ MonoBehaviour:
   - {fileID: 1733809879849225511}
   - {fileID: 4647415053469446894}
   - {fileID: 3627187955730414981}
+  cheese: 0
+  cheeseText: {fileID: 8112901593375761083}
   images:
   - {fileID: 2233123555945205821}
   - {fileID: 2818403527942114732}
@@ -2956,7 +2958,7 @@ GameObject:
   - component: {fileID: 4751190429202501281}
   - component: {fileID: 8112901593375761083}
   m_Layer: 5
-  m_Name: Text6 (1)
+  m_Name: CheeseText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

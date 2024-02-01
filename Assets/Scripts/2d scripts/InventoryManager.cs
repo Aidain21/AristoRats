@@ -9,6 +9,8 @@ public class InventoryManager : MonoBehaviour
     public List<GameObject> inventory;
     public Canvas inventoryBox;
     public TMP_Text[] texts = new TMP_Text[6];
+    public int cheese;
+    public TMP_Text cheeseText;
     public Image[] images = new Image[6];
     public PlayerScript2D playerScript;
     public int selectorPos = 0;
@@ -19,6 +21,7 @@ public class InventoryManager : MonoBehaviour
     {
         inventoryBox.GetComponent<Canvas>().enabled = false;
         prevSelect = 5;
+        cheese = 0;
     }
 
     // Update is called once per frame
@@ -40,6 +43,7 @@ public class InventoryManager : MonoBehaviour
             images[i].color = new Color32(0,0,0,0);
             texts[i].text = "";
         }
+        cheeseText.text = "Cheese: " + cheese.ToString();
         UpdateSelector();
     }
     public void UpdateSelector()
@@ -62,5 +66,28 @@ public class InventoryManager : MonoBehaviour
     {
         inventoryBox.GetComponent<Canvas>().enabled = false;
         playerScript.inInventory = false;
+    }
+
+    public void RemovePuzzleStuff()
+    {
+        for (int i = 0; i < inventory.Count; i++)
+        {
+            if (inventory[i].GetComponent<ItemScript>().itemName == "Puzzle Piece")
+            {
+                inventory.Remove(inventory[i]);
+                i--;
+            }
+            
+        }
+        for (int i = 0; i < playerScript.transform.childCount; i++)
+        {
+            if (playerScript.transform.GetChild(i).tag == "Item")
+            {
+                if (playerScript.transform.GetChild(i).GetComponent<ItemScript>().itemName == "Puzzle Piece")
+                {
+                    Destroy(playerScript.transform.GetChild(i).gameObject);
+                }
+            }
+        }
     }
 }

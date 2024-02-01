@@ -8,6 +8,8 @@ public class PlayerScript2D : MonoBehaviour
 {
     //if the player is going between tiles
     public bool moving;
+    public float spinTimer;
+    public bool spinning;
     //a vector of the player's current direciton
     public Vector3 direction;
     //Closer to 0, the faster the move speed (default 0.3)
@@ -57,6 +59,24 @@ public class PlayerScript2D : MonoBehaviour
     }
     void Update()
     {
+        if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && holdTimer == 0)
+        {
+            spinTimer += Time.deltaTime;
+        }
+        else
+        {
+            spinTimer = 0;
+            if (spinning)
+            {
+                StopCoroutine(IdleSpin(direction));
+                spinning = false;
+            }
+            
+        }
+        if (spinTimer > 10 && !spinning)
+        {
+            StartCoroutine(IdleSpin(direction));
+        }
         if (!inDialogue && !inMap && !inJournal && !inInventory) //Controls for overworld
         {
             if (!moving)
@@ -417,6 +437,36 @@ public class PlayerScript2D : MonoBehaviour
             moving = false;
         }
     }
+    public IEnumerator IdleSpin(Vector3 start)
+    {
+        spinning = true;
+        int i = 0;
+        if(start == Vector3.left)
+        {
+            i = 1;
+        }
+        else if (start == Vector3.down)
+        {
+            i = 2;
+        }
+        else if (start == Vector3.right)
+        {
+            i = 3;
+        }
+        while (spinning)
+        {
+            GetComponent<SpriteRenderer>().sprite = idleSprites[i];
+            yield return new WaitForSeconds(0.5f);
+            if (i == 3)
+            {
+                i = 0;
+            }
+            else
+            {
+                i++;
+            }
+        }
+    }
     public bool[] WallChecker()
     {
         RaycastHit2D hitData = Physics2D.Raycast(transform.position + Vector3.up * 0.51f, Vector2.up, 0.5f);
@@ -462,6 +512,13 @@ public class PlayerScript2D : MonoBehaviour
                     dialogueManager.StartDialogue(itemScript.itemName, itemScript.pickupText, 0, itemScript.itemImage);
                     target.SetActive(false);
                 }
+                break;
+            case "Cheese":
+                target.transform.parent = transform;
+                invManager.cheese += target.GetComponent<CheeseScript>().amount;
+                string[] cheesy = new string[] { "0You:I just found " + target.GetComponent<CheeseScript>().amount + " pieces of cheese."};
+                dialogueManager.StartDialogue("Player", cheesy, 0, GetComponent<SpriteRenderer>().sprite);
+                target.SetActive(false);
                 break;
             case "Note":
                 if (journalManager.HasNote(target.GetComponent<NoteScript>().noteId))
