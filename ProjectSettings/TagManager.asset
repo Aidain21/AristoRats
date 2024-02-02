@@ -12,6 +12,7 @@ TagManager:
   - interactable
   - Note
   - Cheese
+  - Switch
   layers:
   - Default
   - TransparentFX

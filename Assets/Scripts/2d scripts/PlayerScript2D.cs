@@ -40,6 +40,14 @@ public class PlayerScript2D : MonoBehaviour
     public string playerName;
     public Sprite[] idleSprites;
 
+    //data for puzzle generation
+    public Texture2D puzzleImage;
+    public Vector2 puzzleDims;
+    public string puzzleType;
+    public GameObject reward;
+    public string entryScene;
+    public Vector2 entryPos;
+
     void Awake()
     {
         if (instance == null)
