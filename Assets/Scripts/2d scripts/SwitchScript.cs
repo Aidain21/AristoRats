@@ -12,6 +12,7 @@ public class SwitchScript : MonoBehaviour
     public Transform warpEnd;
     public bool onValue;
     public bool playerOnSpike = false;
+    public Texture2D puzzleImage;
     public GameObject[] affectedObjects = new GameObject[1];
     // Start is called before the first frame update
     void Start()
@@ -48,13 +49,13 @@ public class SwitchScript : MonoBehaviour
                     item.SetActive(true);
                     break;
                 case "onoff":
-                    if (item.gameObject.tag == "RedWall")
+                    if (item.tag == "RedWall")
                     {
-                        item.gameObject.SetActive(onValue);
+                        item.SetActive(onValue);
                     }
                     else
                     {
-                        item.gameObject.SetActive(!onValue);
+                        item.SetActive(!onValue);
                     } 
                     break;
                 case "insert": //for puzzles
@@ -80,6 +81,7 @@ public class SwitchScript : MonoBehaviour
                     {
                         item.GetComponent<PlayerScript2D>().StopAllCoroutines();
                         item.GetComponent<PlayerScript2D>().moving = false;
+                        item.GetComponent<Animator>().enabled = false;
                         float test;
                         if (item.GetComponent<PlayerScript2D>().direction == Vector3.up || item.GetComponent<PlayerScript2D>().direction == Vector3.down)
                         {
@@ -100,6 +102,7 @@ public class SwitchScript : MonoBehaviour
                         int y = Int32.Parse(switchData[(switchData.IndexOf(",") + 1)..]);
                         item.GetComponent<PlayerScript2D>().StopAllCoroutines();
                         item.GetComponent<PlayerScript2D>().moving = false;
+                        item.GetComponent<Animator>().enabled = false;
                         item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         SceneManager.LoadScene(scene);
@@ -118,7 +121,31 @@ public class SwitchScript : MonoBehaviour
                     item.GetComponent<PlayerScript2D>().dialogueManager.StartDialogue(signScript.dialogueName, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
                     break;
                 case "puzzle":
-                    item.GetComponent<ImagePuzzleScript>().PuzzleSetUp();
+                    PlayerScript2D player = affectedObjects[2].GetComponent<PlayerScript2D>();
+                    if (item.name == "Puzzle Box")
+                    {
+                        item.GetComponent<ImagePuzzleScript>().fullImage = player.puzzleImage;
+                        item.GetComponent<ImagePuzzleScript>().width = Mathf.RoundToInt(player.puzzleDims.x);
+                        item.GetComponent<ImagePuzzleScript>().height = Mathf.RoundToInt(player.puzzleDims.y);
+                        item.GetComponent<ImagePuzzleScript>().reward = player.reward;
+                        item.GetComponent<ImagePuzzleScript>().mode = player.puzzleType;
+                        item.GetComponent<ImagePuzzleScript>().PuzzleSetUp();
+                    }
+                    if (item.name == "SceneWarp")
+                    {
+                        item.GetComponent<SwitchScript>().switchData = player.entryScene + " " + player.entryPos.x + "," + player.entryPos.y;
+                    }
+                    break;
+                case "puzzleData":
+                    item.GetComponent<PlayerScript2D>().puzzleImage = puzzleImage;
+                    string type = switchData.Substring(0, switchData.IndexOf(" "));
+                    int x2 = Int32.Parse(switchData.Substring(switchData.IndexOf(" ") + 1, switchData.IndexOf(",") - switchData.IndexOf(" ") - 1));
+                    int y2 = Int32.Parse(switchData[(switchData.IndexOf(",") + 1)..]);
+                    item.GetComponent<PlayerScript2D>().puzzleType = type;
+                    item.GetComponent<PlayerScript2D>().puzzleDims = new Vector2(x2, y2);
+                    item.GetComponent<PlayerScript2D>().reward = null;
+                    item.GetComponent<PlayerScript2D>().entryPos = transform.position;
+                    item.GetComponent<PlayerScript2D>().entryScene = SceneManager.GetActiveScene().name;
                     break;
             }
         }
@@ -174,7 +201,7 @@ public class SwitchScript : MonoBehaviour
         }
         if (collision.tag == "Player" && (switchType == "pressurePlate" || switchType == "pressurePlate+"))
         {
-            if (switchEffect == "warp")
+            if (switchEffect == "warp" || switchEffect == "talk" || switchEffect == "puzzleData")
             {
                 affectedObjects[0] = collision.gameObject;
             }
@@ -183,9 +210,12 @@ public class SwitchScript : MonoBehaviour
                 affectedObjects[0] = collision.gameObject;
                 playerOnSpike = true;
             }
-            if (switchEffect == "talk")
+            if (switchEffect == "puzzle")
             {
-                affectedObjects[0] = collision.gameObject;
+                affectedObjects = new GameObject[3];
+                affectedObjects[0] = GameObject.Find("Puzzle Box");
+                affectedObjects[1] = GameObject.Find("SceneWarp");
+                affectedObjects[2] = collision.gameObject;
             }
             UseSwitch();
         }
