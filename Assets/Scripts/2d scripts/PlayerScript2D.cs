@@ -47,6 +47,7 @@ public class PlayerScript2D : MonoBehaviour
     public GameObject reward;
     public string entryScene;
     public Vector2 entryPos;
+    public Vector3 entryDirection;
 
     void Awake()
     {
@@ -501,6 +502,23 @@ public class PlayerScript2D : MonoBehaviour
                 if (!target.GetComponent<BlockScript>().moving)
                 {
                     target.GetComponent<BlockScript>().Push(direction);
+                }
+                if (target.GetComponent<BlockScript>().id != 0)
+                {
+                    for(int i = 0; i < target.transform.parent.childCount; i++)
+                    {
+                        if (target.transform.parent.GetChild(i).name.Equals("FloorSwitch(Clone)"))
+                        {
+                            if (target.transform.parent.GetChild(i).GetComponent<SwitchScript>().switchData == target.GetComponent<BlockScript>().id.ToString() && target.transform.parent.GetChild(i).GetComponent<SpriteRenderer>().color == Color.cyan)
+                            {
+                                target.transform.parent.GetChild(i).GetComponent<SpriteRenderer>().color = Color.red;
+                            }
+                            else if(target.transform.parent.GetChild(i).GetComponent<SwitchScript>().switchData != target.GetComponent<BlockScript>().id.ToString() && target.transform.parent.GetChild(i).GetComponent<SpriteRenderer>().color == Color.red)
+                            {
+                                target.transform.parent.GetChild(i).GetComponent<SpriteRenderer>().color = Color.cyan;
+                            }
+                        }
+                    }
                 }
                 break;
             case "OnOff":

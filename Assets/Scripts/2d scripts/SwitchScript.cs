@@ -103,6 +103,15 @@ public class SwitchScript : MonoBehaviour
                         item.GetComponent<PlayerScript2D>().StopAllCoroutines();
                         item.GetComponent<PlayerScript2D>().moving = false;
                         item.GetComponent<Animator>().enabled = false;
+                        if (scene == "ImagePuzzle")
+                        {
+                            item.GetComponent<PlayerScript2D>().direction = Vector3.right;
+                        }
+                        else if (item.GetComponent<PlayerScript2D>().entryDirection != Vector3.zero)
+                        {
+                            item.GetComponent<PlayerScript2D>().direction = -item.GetComponent<PlayerScript2D>().entryDirection;
+                            item.GetComponent<PlayerScript2D>().entryDirection = Vector3.zero;
+                        }
                         item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         SceneManager.LoadScene(scene);
@@ -144,8 +153,9 @@ public class SwitchScript : MonoBehaviour
                     item.GetComponent<PlayerScript2D>().puzzleType = type;
                     item.GetComponent<PlayerScript2D>().puzzleDims = new Vector2(x2, y2);
                     item.GetComponent<PlayerScript2D>().reward = null;
-                    item.GetComponent<PlayerScript2D>().entryPos = transform.position;
+                    item.GetComponent<PlayerScript2D>().entryPos = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
                     item.GetComponent<PlayerScript2D>().entryScene = SceneManager.GetActiveScene().name;
+                    item.GetComponent<PlayerScript2D>().entryDirection = item.GetComponent<PlayerScript2D>().direction;
                     break;
             }
         }
