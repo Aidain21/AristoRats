@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ImagePuzzleScript : MonoBehaviour
 {
+    public int width;
+    public int height;
     public Sprite[] pieces;
     public string mode;
     public GameObject pushBlock;
@@ -13,12 +15,23 @@ public class ImagePuzzleScript : MonoBehaviour
     public float puzzleTimer = 0;
     public bool timerOn;
     public GameObject reward;
+    public Texture2D fullImage;
     // Start is called before the first frame update
     void Start()
     {
         reward.SetActive(false);
         timerOn = false;
-        piecesLeft = 16;
+        piecesLeft = width * height;
+        pieces = new Sprite[width * height];
+        float pheight = (float) fullImage.height / width;
+        float pwidth = (float) fullImage.width / height;
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; i < width; i++)
+            {
+                pieces[i] = Sprite.Create(fullImage, new Rect(i * pwidth, j * pheight, pwidth, pheight), new Vector2(0.5f, 0.5f));
+            }
+        }
     }
 
     // Update is called once per frame
@@ -41,8 +54,8 @@ public class ImagePuzzleScript : MonoBehaviour
 
     public void PuzzleSetUp()
     {
-        int[] norm = new int[16];
-        for (int i = 0; i < 16; i++)
+        int[] norm = new int[width*height];
+        for (int i = 0; i < width * height; i++)
         {
             norm[i] = i + 1;
         }
@@ -56,16 +69,16 @@ public class ImagePuzzleScript : MonoBehaviour
         switch (mode)
         {
             case "Blocks":
-                for (int i = 0; i < 16; i++)
+                for (int i = 0; i < width * height; i++)
                 {
                     GameObject piece = Instantiate(pushBlock, transform);
                     piece.GetComponent<BlockScript>().id = norm[i];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
-                    piece.GetComponent<Transform>().localPosition = new Vector2(i%4,(i-(i%4))/4);
+                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width);
                     GameObject place = Instantiate(floorSwitch, transform);
                     place.GetComponent<SwitchScript>().switchData = (i+1).ToString();
                     place.GetComponent<SwitchScript>().switchEffect = "insert";
-                    place.GetComponent<Transform>().localPosition = new Vector3(i % 4, 8 - ((i - (i % 4)) / 4), 1);
+                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height * 2 - (i/width), 1);
                 }
                 timerOn = true;
                 break;
