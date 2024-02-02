@@ -19,17 +19,16 @@ public class ImagePuzzleScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        fullImage = Resize(fullImage, width * 100, height * 100);
         reward.SetActive(false);
         timerOn = false;
         piecesLeft = width * height;
         pieces = new Sprite[width * height];
-        float pheight = (float) fullImage.height / width;
-        float pwidth = (float) fullImage.width / height;
-        for (int i = 0; i < height; i++)
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; i < width; i++)
+            for (int j = 0; j < height; j++)
             {
-                pieces[i] = Sprite.Create(fullImage, new Rect(i * pwidth, j * pheight, pwidth, pheight), new Vector2(0.5f, 0.5f));
+                pieces[(j * width) + i] = Sprite.Create(fullImage, new Rect(i * 100, (fullImage.height-100) - (j * 100), 100, 100), new Vector2(0.5f, 0.5f));
             }
         }
     }
@@ -100,6 +99,21 @@ public class ImagePuzzleScript : MonoBehaviour
                 break;
 
         }
+
         
+    }
+    public Texture2D Resize(Texture2D source, int newWidth, int newHeight)
+    {
+        source.filterMode = FilterMode.Point;
+        RenderTexture rt = RenderTexture.GetTemporary(newWidth, newHeight);
+        rt.filterMode = FilterMode.Point;
+        RenderTexture.active = rt;
+        Graphics.Blit(source, rt);
+        Texture2D nTex = new Texture2D(newWidth, newHeight);
+        nTex.ReadPixels(new Rect(0, 0, newWidth, newHeight), 0, 0);
+        nTex.Apply();
+        RenderTexture.active = null;
+        RenderTexture.ReleaseTemporary(rt);
+        return nTex;
     }
 }

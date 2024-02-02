@@ -30,7 +30,7 @@ public class BlockScript : MonoBehaviour
         moving = false;
         if (inserted)
         {
-            if (id > 0 && id < 17)
+            if (id > 0)
             {
                 transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
             }
