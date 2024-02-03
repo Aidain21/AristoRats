@@ -77,11 +77,12 @@ public class ImagePuzzleScript : MonoBehaviour
                     GameObject piece = Instantiate(pushBlock, transform);
                     piece.GetComponent<BlockScript>().id = norm[i];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
-                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width);
+                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
                     GameObject place = Instantiate(floorSwitch, transform);
-                    place.GetComponent<SwitchScript>().switchData = (i+1).ToString();
+                    place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
                     place.GetComponent<SwitchScript>().switchEffect = "insert";
-                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height * 2 - (i/width), 1);
+                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
+                    place.GetComponent<SpriteRenderer>().color = Color.cyan;
                 }
                 timerOn = true;
                 break;
@@ -91,20 +92,19 @@ public class ImagePuzzleScript : MonoBehaviour
                     GameObject piece = Instantiate(item, transform);
                     piece.name = norm[i].ToString();
                     piece.GetComponent<ItemScript>().itemName = "Puzzle Piece";
-                    piece.GetComponent<ItemScript>().itemLore = new string[] { "0You:Piece of the Puzzle. What? Did you expect me to say anything else? How rude of you.", "0You:The Rat King is trying to steal my hair, my friend is missing, and I have to do this stupid puzzle, and yet you have the nerve to ask me to describe the puzzle piece in more detail.", "0You:You know what? Fine. I'll tell you more. " + piece.name + ". That's all I got, now leave me alone."};
+                    piece.GetComponent<ItemScript>().itemLore = new string[] { "0You:Piece of the Puzzle. What? Did you expect me to say anything else? How rude of you.", "0You:The Rat King is trying to steal my hair, my friend is missing, and I have to do this stupid puzzle, and yet you have the nerve to ask me to describe the puzzle piece in more detail.", "0You:You know what? Fine. I'll tell you more. " + piece.name + ". That's all I got, now leave me alone." };
                     piece.GetComponent<ItemScript>().itemImage = pieces[norm[i] - 1];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
-                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width);
+                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
                     GameObject place = Instantiate(floorSwitch, transform);
                     place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
                     place.GetComponent<SwitchScript>().switchEffect = "insert";
-                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height * 2 - (i / width), 1);
+                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
+                    place.GetComponent<SpriteRenderer>().color = Color.cyan;
                 }
                 break;
 
         }
-
-        
     }
     public Texture2D Resize(Texture2D source, int newWidth, int newHeight)
     {

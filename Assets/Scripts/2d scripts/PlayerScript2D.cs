@@ -47,17 +47,26 @@ public class PlayerScript2D : MonoBehaviour
     public GameObject reward;
     public string entryScene;
     public Vector2 entryPos;
+    public Vector3 entryDirection;
+
+    public List<AudioClip> sfx;
+    public List<AudioClip> songs;
 
     void Awake()
     {
         if (instance == null)
         {
-            instance = this; // In first scene, make us the singleton.
+            instance = this; 
+            if (PlayerPrefs.HasKey("name"))
+            {
+                playerName = PlayerPrefs.GetString("name");
+                PlayerPrefs.DeleteAll();
+            }
             DontDestroyOnLoad(gameObject);
         }
         else if (instance != this)
         {
-            Destroy(gameObject); // On reload, singleton already set, so destroy duplicate.
+            Destroy(gameObject); 
         }
     }
     void Start()
@@ -131,6 +140,7 @@ public class PlayerScript2D : MonoBehaviour
                 {
                     if (!hitData.collider.gameObject.GetComponent<BlockScript>().moving)
                     {
+                        GetComponent<AudioSource>().PlayOneShot(sfx[0]);
                         hitData.collider.gameObject.GetComponent<BlockScript>().Push(direction);
                     }
                 }
@@ -500,7 +510,25 @@ public class PlayerScript2D : MonoBehaviour
             case "Block":
                 if (!target.GetComponent<BlockScript>().moving)
                 {
+                    GetComponent<AudioSource>().PlayOneShot(sfx[0]);
                     target.GetComponent<BlockScript>().Push(direction);
+                }
+                if (target.GetComponent<BlockScript>().id != 0)
+                {
+                    for(int i = 0; i < target.transform.parent.childCount; i++)
+                    {
+                        if (target.transform.parent.GetChild(i).name.Equals("FloorSwitch(Clone)"))
+                        {
+                            if (target.transform.parent.GetChild(i).GetComponent<SwitchScript>().switchData == target.GetComponent<BlockScript>().id.ToString() && target.transform.parent.GetChild(i).GetComponent<SpriteRenderer>().color == Color.cyan)
+                            {
+                                target.transform.parent.GetChild(i).GetComponent<SpriteRenderer>().color = Color.red;
+                            }
+                            else if(target.transform.parent.GetChild(i).GetComponent<SwitchScript>().switchData != target.GetComponent<BlockScript>().id.ToString() && target.transform.parent.GetChild(i).GetComponent<SpriteRenderer>().color == Color.red)
+                            {
+                                target.transform.parent.GetChild(i).GetComponent<SpriteRenderer>().color = Color.cyan;
+                            }
+                        }
+                    }
                 }
                 break;
             case "OnOff":
@@ -576,7 +604,19 @@ public class PlayerScript2D : MonoBehaviour
             
         }
     }
-
+    public void SwitchSong(string scene)
+    {
+        switch (scene)
+        {
+            case "ImagePuzzle":
+                GetComponent<AudioSource>().clip = songs[1];
+                break;
+            case "PuzzleTest":
+                GetComponent<AudioSource>().clip = songs[0];
+                break;
+        }
+        GetComponent<AudioSource>().Play();
+    }
     public bool HasItem(string name)
     {
         foreach (GameObject g in invManager.inventory)

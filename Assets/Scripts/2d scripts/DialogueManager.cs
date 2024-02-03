@@ -90,13 +90,27 @@ public class DialogueManager : MonoBehaviour
             nameText.text = playerScript.playerName + ":";
             imageFrame.sprite = playerScript.GetComponent<SpriteRenderer>().sprite;
             eventScript.EventTrigger();
-            StartCoroutine(TypeSentence(sentence[(sentence.IndexOf(":") + 1)..]));
+            if (sentence[sentence.IndexOf(":") + 1] == ' ')
+            {
+                StartCoroutine(TypeSentence(sentence[(sentence.IndexOf(":") + 2)..]));
+            }
+            else
+            {
+                StartCoroutine(TypeSentence(sentence[(sentence.IndexOf(":") + 1)..]));
+            }  
         }
         else
         {
             imageFrame.sprite = currentImage;
             eventScript.EventTrigger();
-            StartCoroutine(TypeSentence(sentence[(sentence.IndexOf(":") + 1)..]));
+            if (sentence[sentence.IndexOf(":") + 1] == ' ')
+            {
+                StartCoroutine(TypeSentence(sentence[(sentence.IndexOf(":") + 2)..]));
+            }
+            else
+            {
+                StartCoroutine(TypeSentence(sentence[(sentence.IndexOf(":") + 1)..]));
+            }
         }
     }
     public void ChangeDialogue(int talkCounter, bool keepTalking)
