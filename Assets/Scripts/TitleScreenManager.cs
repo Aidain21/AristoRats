@@ -17,13 +17,13 @@ public class TileScreenButtons : MonoBehaviour
         {
             PlayerPrefs.SetString("name", input.text);
             PlayerPrefs.Save();
-            SceneManager.LoadScene("TextingScene");
+            SceneManager.LoadScene("SampleScene");
         }
         else
         {
             PlayerPrefs.SetString("name", "WhyDidn'tYouEnterAName?");
             PlayerPrefs.Save();
-            SceneManager.LoadScene("TextingScene");
+            SceneManager.LoadScene("SampleScene");
         }
     }
     public void QuitButtonPressed()
