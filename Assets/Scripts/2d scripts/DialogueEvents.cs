@@ -55,6 +55,10 @@ public class DialogueEvents : MonoBehaviour
                 playerScript.invManager.inventory.Remove(playerScript.GetItem("Key"));
             }
         }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "trash", "0", "3" }))
+        {
+            Destroy(playerScript.currentTarget);
+        }
     }
 
     public IEnumerator Grow()
