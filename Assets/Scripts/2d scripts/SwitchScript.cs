@@ -114,6 +114,7 @@ public class SwitchScript : MonoBehaviour
                         }
                         item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
+                        item.GetComponent<PlayerScript2D>().SwitchSong(scene);
                         SceneManager.LoadScene(scene);
                     }
                     break;
