@@ -3,48 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class TileScreenButtons : MonoBehaviour
 {
-
-
     public Button startButton;
     public Button optionsButton;
     public Button quitButton;
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        startButton.interactable = true;
-    }
-
+    public TMP_InputField input;
     public void StartButtonPressed()
     {
-        Debug.Log("Start");
-        SceneManager.LoadScene("NameInputScene");
+        if (input.text.Length > 0)
+        {
+            PlayerPrefs.SetString("name", input.text);
+            PlayerPrefs.Save();
+            SceneManager.LoadScene("TextingScene");
+        }
+        else
+        {
+            PlayerPrefs.SetString("name", "WhyDidn'tYouEnterAName?");
+            PlayerPrefs.Save();
+            SceneManager.LoadScene("TextingScene");
+        }
     }
-
     public void QuitButtonPressed()
     {
-        Debug.Log("Quit");
         Application.Quit();
     }
-
-
-    public void ButtonPressed()
-    {
-        SceneManager.LoadScene("TextingScene");
-          
-    }
-
-
-
-
 }
+    

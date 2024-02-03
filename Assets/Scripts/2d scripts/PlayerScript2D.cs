@@ -54,6 +54,11 @@ public class PlayerScript2D : MonoBehaviour
         if (instance == null)
         {
             instance = this; // In first scene, make us the singleton.
+            if (PlayerPrefs.HasKey("name"))
+            {
+                playerName = PlayerPrefs.GetString("name");
+                PlayerPrefs.DeleteAll();
+            }
             DontDestroyOnLoad(gameObject);
         }
         else if (instance != this)
