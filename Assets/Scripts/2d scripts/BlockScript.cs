@@ -53,7 +53,24 @@ public class BlockScript : MonoBehaviour
             if ((!pwalls[0] && direction == Vector3.down) || (!pwalls[1] && direction == Vector3.right) || (!pwalls[2] && direction == Vector3.up) || (!pwalls[3] && direction == Vector3.left))
             {
                 StartCoroutine(Moving(transform.position - direction));
-                StartCoroutine(player.GetComponent<PlayerScript2D>().GridMove(player, player.transform.position - direction, 0.3f));
+                string temp;
+                if (direction == Vector3.up)
+                {
+                    temp = "Up";
+                }
+                else if (direction == Vector3.left)
+                {
+                    temp = "Left";
+                }
+                else if (direction == Vector3.down)
+                {
+                    temp = "Down";
+                }
+                else
+                {
+                    temp = "Right";
+                }
+                StartCoroutine(player.GetComponent<PlayerScript2D>().GridMove(player, player.transform.position - direction, 0.3f, temp));
             }
             
         }

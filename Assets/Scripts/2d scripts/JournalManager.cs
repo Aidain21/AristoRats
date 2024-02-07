@@ -3,13 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class JournalManager : MonoBehaviour
+public class Selector
 {
     public Vector2 selectorPos;
     public Vector2 prevSelectorPos;
     public Vector2 selection;
     public Vector2 prevSelection;
-    public TMP_Text[,] textArray = new TMP_Text[11, 5];
+    public TMP_Text[][] textArray;
+    public int width;
+    public int height;
+    public Selector(int x, int y)
+    {
+        selectorPos = Vector2.zero;
+        selection = Vector2.zero;
+        prevSelectorPos = Vector2.up;
+        prevSelection = Vector2.up;
+        textArray = new TMP_Text[x][];
+        width = x;
+        height = y;
+        for (int i = 0; i < textArray.Length; i++)
+        {
+            textArray[i] = new TMP_Text[y];
+        }
+    }
+    public void UpdateSelector()
+    {
+        textArray[Mathf.RoundToInt(selectorPos.y)][Mathf.RoundToInt(selectorPos.x)].text = "<mark color=#FFFFFF50 padding=15,15,15,15>" + textArray[Mathf.RoundToInt(selectorPos.y)][Mathf.RoundToInt(selectorPos.x)].text;
+        textArray[Mathf.RoundToInt(prevSelectorPos.y)][Mathf.RoundToInt(prevSelectorPos.x)].text = textArray[Mathf.RoundToInt(prevSelectorPos.y)][Mathf.RoundToInt(prevSelectorPos.x)].text.Replace("<mark color=#FFFFFF50 padding=15,15,15,15>", "");
+        textArray[Mathf.RoundToInt(selection.y)][Mathf.RoundToInt(selection.x)].color = Color.yellow;
+        textArray[Mathf.RoundToInt(selection.y)][Mathf.RoundToInt(selection.x)].fontStyle = FontStyles.Bold;
+        textArray[Mathf.RoundToInt(prevSelection.y)][Mathf.RoundToInt(prevSelection.x)].color = Color.white;
+        textArray[Mathf.RoundToInt(prevSelection.y)][Mathf.RoundToInt(prevSelection.x)].fontStyle = FontStyles.Normal;
+    }
+}
+
+public class JournalManager : MonoBehaviour
+{
+    public Selector selector = new Selector(11, 5);
     public List<NoteScript> notes;
     public GameObject TextArray;
     public TMP_Text def;
@@ -23,18 +53,14 @@ public class JournalManager : MonoBehaviour
     {
         journal.GetComponent<Canvas>().enabled = false;
 
-        selectorPos = Vector2.zero;
-        selection = Vector2.zero;
-        prevSelectorPos = Vector2.up;
-        prevSelection = Vector2.up;
-        for (int i = 0; i < textArray.GetLength(0); i++)
+        for (int i = 0; i < selector.textArray.GetLength(0); i++)
         {
-            for (int j = 0; j < textArray.GetLength(1); j++)
+            for (int j = 0; j < selector.textArray[i].GetLength(0); j++)
             {
                 TMP_Text text = Instantiate(def, TextArray.transform);
                 text.rectTransform.localPosition = new Vector2(150 * j, -75 * i);
-                text.name = (i * textArray.GetLength(1) + j + 1).ToString();
-                textArray[i, j] = text;
+                text.name = (i * selector.textArray[i].GetLength(0) + j + 1).ToString();
+                selector.textArray[i][j] = text;
             }
         }
         Destroy(def);
@@ -43,21 +69,21 @@ public class JournalManager : MonoBehaviour
     {
         journal.GetComponent<Canvas>().enabled = true;
         playerScript.inJournal = true;
-        for (int i = 0; i < textArray.GetLength(0); i++)
+        for (int i = 0; i < selector.textArray.GetLength(0); i++)
         {
-            for (int j = 0; j < textArray.GetLength(1); j++)
+            for (int j = 0; j < selector.textArray[i].GetLength(0); j++)
             {
-                if (HasNote(i * textArray.GetLength(1) + j))
+                if (HasNote(i * selector.textArray[i].GetLength(0) + j))
                 {
-                    textArray[i, j].text = "#" + textArray[i, j].name;
+                    selector.textArray[i][j].text = "#" + selector.textArray[i][j].name;
                 }
                 else
                 {
-                    textArray[i, j].text = "???";
+                    selector.textArray[i][j].text = "???";
                 }
             }
         }
-        UpdateSelector();
+        selector.UpdateSelector();
         UpdateRightSide();
     }
 
@@ -66,18 +92,9 @@ public class JournalManager : MonoBehaviour
         journal.GetComponent<Canvas>().enabled = false;
         playerScript.inJournal = false;
     }
-    public void UpdateSelector()
-    {
-        textArray[Mathf.RoundToInt(selectorPos.y), Mathf.RoundToInt(selectorPos.x)].text = "<mark color=#FFFFFF50 padding=15,15,15,15>" + textArray[Mathf.RoundToInt(selectorPos.y), Mathf.RoundToInt(selectorPos.x)].text;
-        textArray[Mathf.RoundToInt(prevSelectorPos.y), Mathf.RoundToInt(prevSelectorPos.x)].text = textArray[Mathf.RoundToInt(prevSelectorPos.y), Mathf.RoundToInt(prevSelectorPos.x)].text.Replace("<mark color=#FFFFFF50 padding=15,15,15,15>","");
-        textArray[Mathf.RoundToInt(selection.y), Mathf.RoundToInt(selection.x)].color = Color.yellow;
-        textArray[Mathf.RoundToInt(selection.y), Mathf.RoundToInt(selection.x)].fontStyle = FontStyles.Bold;
-        textArray[Mathf.RoundToInt(prevSelection.y), Mathf.RoundToInt(prevSelection.x)].color = Color.white;
-        textArray[Mathf.RoundToInt(prevSelection.y), Mathf.RoundToInt(prevSelection.x)].fontStyle = FontStyles.Normal;
-    }
     public void UpdateRightSide()
     {
-        NoteScript curNote = GetNote(Mathf.RoundToInt(selection.y) * textArray.GetLength(1) + Mathf.RoundToInt(selection.x));
+        NoteScript curNote = GetNote(Mathf.RoundToInt(selector.selection.y) * selector.textArray[0].GetLength(0) + Mathf.RoundToInt(selector.selection.x));
         if (curNote != null)
         {
             noteTitle.text = "#" + (curNote.noteId + 1) + " - " + curNote.noteTitle;
