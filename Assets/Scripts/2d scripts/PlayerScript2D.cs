@@ -24,6 +24,7 @@ public class PlayerScript2D : MonoBehaviour
     public DialogueManager dialogueManager;
     public InventoryManager invManager;
     public JournalManager journalManager;
+    public MenuMapManager menuManager;
     //Tracks current dialogue instance and place in dialogue. dialogueData[0] is name, dialogueData[1] is position
     public GameObject currentTarget;
     public GameObject backpackMenu;
@@ -32,6 +33,8 @@ public class PlayerScript2D : MonoBehaviour
     public bool inJournal;
     public bool inDialogue;
     public bool inInventory;
+    public bool inMenu;
+    public bool inOptions;
 
     public bool aboveTalker;
     public Vector2 spawnPoint;
@@ -54,6 +57,7 @@ public class PlayerScript2D : MonoBehaviour
 
     void Awake()
     {
+        //Cursor.visible = false;
         if (instance == null)
         {
             instance = this; 
@@ -76,7 +80,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     void Update()
     {
-        if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && holdTimer == 0)
+        if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && holdTimer == 0)
         {
             spinTimer += Time.deltaTime;
         }
@@ -94,7 +98,7 @@ public class PlayerScript2D : MonoBehaviour
         {
             StartCoroutine(IdleSpin(direction));
         }
-        if (!inDialogue && !inMap && !inJournal && !inInventory) //Controls for overworld
+        if (!inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu) //Controls for overworld
         {
             if (!moving)
             {
@@ -102,7 +106,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                timeBetweenTiles = 0.15f;   
+                timeBetweenTiles = 0.15f;
             }
             else
             {
@@ -111,6 +115,10 @@ public class PlayerScript2D : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.J))
             {
                 journalManager.OpenJournal();
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                menuManager.OpenMenu();
             }
             if (Input.GetKeyDown(KeyCode.B))
             {
@@ -133,10 +141,10 @@ public class PlayerScript2D : MonoBehaviour
                     Interact(currentTarget);
                 }
             }
-            else if(Input.GetKey(KeyCode.E))
+            else if (Input.GetKey(KeyCode.E))
             {
                 RaycastHit2D hitData = Physics2D.Raycast(transform.position + direction * 0.51f, direction, 0.5f);
-                if (hitData.collider != null && hitData.collider.gameObject.tag == "Block")
+                if (hitData.collider != null && hitData.collider.gameObject.CompareTag("Block"))
                 {
                     if (!hitData.collider.gameObject.GetComponent<BlockScript>().moving)
                     {
@@ -144,7 +152,7 @@ public class PlayerScript2D : MonoBehaviour
                         hitData.collider.gameObject.GetComponent<BlockScript>().Push(direction);
                     }
                 }
-                
+
             }
         }
         else if (inDialogue) //Controls for in dialogue
@@ -169,9 +177,9 @@ public class PlayerScript2D : MonoBehaviour
                     }
                     dialogueManager.changed = false;
                 }
-                
+
             }
-            
+
         }
         else if (inInventory)
         {
@@ -213,7 +221,7 @@ public class PlayerScript2D : MonoBehaviour
                 bool frontClear = (!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right);
                 if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count && frontClear)
                 {
-                    
+
                     ItemScript itemScript = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)].GetComponent<ItemScript>();
                     itemScript.gameObject.transform.parent = GameObject.Find("LevelObjects").transform;
                     string[] temp = new string[] { "0You:Dropped the " + itemScript.itemName + "." };
@@ -259,6 +267,14 @@ public class PlayerScript2D : MonoBehaviour
             }
             GetSelectorMovement(journalManager.selector);
         }
+        else if (inMenu)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                menuManager.CloseMenu();
+            }
+            GetSelectorMovement(menuManager.menuSelector);
+        }
         else if (inMap)
         {
 
@@ -273,10 +289,15 @@ public class PlayerScript2D : MonoBehaviour
             if (selector.selectorPos.y > 0)
             {
                 selector.selectorPos.y -= 1;
+                
             }
             else
             {
                 selector.selectorPos.y += selector.textArray.Length - 1;
+            }
+            if (selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1 < selector.selectorPos.x)
+            {
+                selector.selectorPos.x = selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1;
             }
             selector.UpdateSelector();
         }
@@ -289,7 +310,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             else
             {
-                selector.selectorPos.x += selector.textArray[Mathf.RoundToInt(selector.selectorPos.x)].Length - 1;
+                selector.selectorPos.x += selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1;
             }
             selector.UpdateSelector();
         }
@@ -299,23 +320,28 @@ public class PlayerScript2D : MonoBehaviour
             if (selector.selectorPos.y < selector.textArray.Length - 1)
             {
                 selector.selectorPos.y += 1;
+                
             }
             else
             {
                 selector.selectorPos.y -= selector.textArray.Length - 1;
+            }
+            if (selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1 < selector.selectorPos.x)
+            {
+                selector.selectorPos.x = selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1;
             }
             selector.UpdateSelector();
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
             selector.prevSelectorPos = selector.selectorPos;
-            if (selector.selectorPos.x < selector.textArray[Mathf.RoundToInt(selector.selectorPos.x)].Length - 1)
+            if (selector.selectorPos.x < selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1)
             {
                 selector.selectorPos.x += 1;
             }
             else
             {
-                selector.selectorPos.x -= selector.textArray[Mathf.RoundToInt(selector.selectorPos.x)].Length - 1;
+                selector.selectorPos.x -= selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1;
             }
             selector.UpdateSelector();
         }
@@ -509,7 +535,7 @@ public class PlayerScript2D : MonoBehaviour
                 target.GetComponent<SwitchScript>().UseSwitch();
                 break;
             case "Item":
-                if (invManager.inventory.Count == 6)
+                if (invManager.inventory.Count == invManager.selector.width * invManager.selector.height)
                 {
                     string[] temp = new string[] { "0You:I don't have any room left to pick items up. I should drop or use one." };
                     dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
@@ -554,7 +580,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     public void NoteWarp()
     {
-        NoteScript curNote = journalManager.GetNote(Mathf.RoundToInt(journalManager.selector.selection.y) * journalManager.selector.textArray[0].GetLength(0) + Mathf.RoundToInt(journalManager.selector.selection.x));
+        NoteScript curNote = journalManager.GetNote(Mathf.RoundToInt(journalManager.selector.selection.y) * journalManager.selector.textArray[0].Length + Mathf.RoundToInt(journalManager.selector.selection.x));
         if (curNote == null)
         {
             string[] temp = new string[] { "0You:I can't travel to a place that I haven't found yet." };

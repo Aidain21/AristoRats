@@ -49,7 +49,7 @@ public class SwitchScript : MonoBehaviour
                     item.SetActive(true);
                     break;
                 case "onoff":
-                    if (item.tag == "RedWall")
+                    if (item.CompareTag("RedWall"))
                     {
                         item.SetActive(onValue);
                     }
@@ -59,13 +59,13 @@ public class SwitchScript : MonoBehaviour
                     } 
                     break;
                 case "insert": //for puzzles
-                    if (item.tag == "Block")
+                    if (item.CompareTag("Block"))
                     {
                         item.GetComponent<BlockScript>().inserted = true;
                         Destroy(gameObject);
                         break;
                     }
-                    else if (item.tag  == "Item")
+                    else if (item.CompareTag("Item"))
                     {
                         transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
                         item.transform.position += new Vector3(0, 0, 1);
@@ -193,7 +193,7 @@ public class SwitchScript : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Block" && switchType == "floor")
+        if (collision.CompareTag("Block") && switchType == "floor")
         {
             if(switchData == "")
             {
@@ -205,12 +205,12 @@ public class SwitchScript : MonoBehaviour
                 UseSwitch();
             }
         }
-        if (collision.tag == "Item" && switchType == "floor" && switchData == collision.name)
+        if (collision.CompareTag("Item") && switchType == "floor" && switchData == collision.name)
         {
             affectedObjects[0] = collision.gameObject;
             UseSwitch();
         }
-        if (collision.tag == "Player" && (switchType == "pressurePlate" || switchType == "pressurePlate+"))
+        if (collision.CompareTag("Player") && (switchType == "pressurePlate" || switchType == "pressurePlate+"))
         {
             if (switchEffect == "warp" || switchEffect == "talk" || switchEffect == "puzzleData")
             {
@@ -233,7 +233,7 @@ public class SwitchScript : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Player" && switchType == "pressurePlate")
+        if (collision.CompareTag("Player") && switchType == "pressurePlate")
         {
             if (switchEffect == "spike")
             {

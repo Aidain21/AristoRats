@@ -16,13 +16,7 @@ public class ImagePuzzleScript : MonoBehaviour
     public bool timerOn;
     public GameObject reward;
     public Texture2D fullImage;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
         if (timerOn)
@@ -113,7 +107,7 @@ public class ImagePuzzleScript : MonoBehaviour
         rt.filterMode = FilterMode.Point;
         RenderTexture.active = rt;
         Graphics.Blit(source, rt);
-        Texture2D nTex = new Texture2D(newWidth, newHeight);
+        Texture2D nTex = new(newWidth, newHeight);
         nTex.ReadPixels(new Rect(0, 0, newWidth, newHeight), 0, 0);
         nTex.Apply();
         RenderTexture.active = null;

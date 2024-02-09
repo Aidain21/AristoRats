@@ -5,30 +5,56 @@ using TMPro;
 
 public class MenuMapManager : MonoBehaviour
 {
-    public Vector2 selectorPos;
-    public Vector2 prevSelectorPos;
-    public Vector2 selection;
-    public Vector2 prevSelection;
-    public int[] settings;
+    public Selector menuSelector = new(1,4);
+    public Selector optionSelector;
+    public string[] menuChoices;
     public Canvas menu;
     public Canvas options;
     public Canvas map;
-    public TMP_Text[,] textArray;
-    // Start is called before the first frame update
+    public GameObject TextArray;
+    public TMP_Text def;
+    public PlayerScript2D playerScript;
     void Start()
     {
-        
+        menuChoices = new string[] { "Continue", "Options", "god mode (real)", "Save and Quit" };
+        menu.GetComponent<Canvas>().enabled = false;
+        //options.GetComponent<Canvas>().enabled = false;
+        int count = 0;
+        for (int i = 0; i < menuSelector.textArray.Length; i++)
+        {
+            for (int j = 0; j < menuSelector.textArray[i].Length; j++)
+            {
+                count += 1;
+                TMP_Text text = Instantiate(def, TextArray.transform);
+                text.rectTransform.localPosition = new Vector2(0 * j, -100 * i);
+                text.name = count.ToString();
+                text.text = menuChoices[count - 1];
+                menuSelector.textArray[i][j] = text;
+            }
+        }
+        Destroy(def);
+    }
+    public void OpenMenu()
+    {
+        menu.GetComponent<Canvas>().enabled = true;
+        playerScript.inMenu = true;
+        menuSelector.UpdateSelector();
+    }
+    public void CloseMenu()
+    {
+        menu.GetComponent<Canvas>().enabled = false;
+        playerScript.inMenu = false;
     }
 
-    // Update is called once per frame
-    
-    public void UpdateSelector()
+    public void OpenOptions()
     {
-        textArray[Mathf.RoundToInt(selectorPos.y), Mathf.RoundToInt(selectorPos.x)].text = "<mark color=#FFFFFF50 padding=15,15,15,15>" + textArray[Mathf.RoundToInt(selectorPos.y), Mathf.RoundToInt(selectorPos.x)].text;
-        textArray[Mathf.RoundToInt(prevSelectorPos.y), Mathf.RoundToInt(prevSelectorPos.x)].text = textArray[Mathf.RoundToInt(prevSelectorPos.y), Mathf.RoundToInt(prevSelectorPos.x)].text.Replace("<mark color=#FFFFFF50 padding=15,15,15,15>", "");
-        textArray[Mathf.RoundToInt(selection.y), Mathf.RoundToInt(selection.x)].color = Color.yellow;
-        textArray[Mathf.RoundToInt(selection.y), Mathf.RoundToInt(selection.x)].fontStyle = FontStyles.Bold;
-        textArray[Mathf.RoundToInt(prevSelection.y), Mathf.RoundToInt(prevSelection.x)].color = Color.white;
-        textArray[Mathf.RoundToInt(prevSelection.y), Mathf.RoundToInt(prevSelection.x)].fontStyle = FontStyles.Normal;
+        options.GetComponent<Canvas>().enabled = true;
+        playerScript.inOptions = true;
+        optionSelector.UpdateSelector();
+    }
+    public void CloseOptions()
+    {
+        options.GetComponent<Canvas>().enabled = false;
+        playerScript.inOptions = false;
     }
 }

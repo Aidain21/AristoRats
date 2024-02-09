@@ -18,28 +18,48 @@ public class Selector
         selection = Vector2.zero;
         prevSelectorPos = Vector2.up;
         prevSelection = Vector2.up;
-        textArray = new TMP_Text[x][];
+        textArray = new TMP_Text[y][];
         width = x;
         height = y;
         for (int i = 0; i < textArray.Length; i++)
         {
-            textArray[i] = new TMP_Text[y];
+            textArray[i] = new TMP_Text[x];
         }
+    }
+    public Selector(int[] x, int y)
+    {
+        selectorPos = Vector2.zero;
+        selection = Vector2.zero;
+        prevSelectorPos = Vector2.up;
+        prevSelection = Vector2.up;
+        textArray = new TMP_Text[y][];
+        
+        height = y;
+        for (int i = 0; i < textArray.Length; i++)
+        {
+            textArray[i] = new TMP_Text[x[i]];
+        }
+        width = textArray[0].Length;
     }
     public void UpdateSelector()
     {
         textArray[Mathf.RoundToInt(selectorPos.y)][Mathf.RoundToInt(selectorPos.x)].text = "<mark color=#FFFFFF50 padding=15,15,15,15>" + textArray[Mathf.RoundToInt(selectorPos.y)][Mathf.RoundToInt(selectorPos.x)].text;
-        textArray[Mathf.RoundToInt(prevSelectorPos.y)][Mathf.RoundToInt(prevSelectorPos.x)].text = textArray[Mathf.RoundToInt(prevSelectorPos.y)][Mathf.RoundToInt(prevSelectorPos.x)].text.Replace("<mark color=#FFFFFF50 padding=15,15,15,15>", "");
+        if (prevSelectorPos != selectorPos)
+        {
+            textArray[Mathf.RoundToInt(prevSelectorPos.y)][Mathf.RoundToInt(prevSelectorPos.x)].text = textArray[Mathf.RoundToInt(prevSelectorPos.y)][Mathf.RoundToInt(prevSelectorPos.x)].text.Replace("<mark color=#FFFFFF50 padding=15,15,15,15>", "");
+        }
+        ;
         textArray[Mathf.RoundToInt(selection.y)][Mathf.RoundToInt(selection.x)].color = Color.yellow;
         textArray[Mathf.RoundToInt(selection.y)][Mathf.RoundToInt(selection.x)].fontStyle = FontStyles.Bold;
         textArray[Mathf.RoundToInt(prevSelection.y)][Mathf.RoundToInt(prevSelection.x)].color = Color.white;
         textArray[Mathf.RoundToInt(prevSelection.y)][Mathf.RoundToInt(prevSelection.x)].fontStyle = FontStyles.Normal;
+        width = textArray[Mathf.RoundToInt(selectorPos.y)].Length;
     }
 }
 
 public class JournalManager : MonoBehaviour
 {
-    public Selector selector = new Selector(11, 5);
+    public Selector selector = new(5, 11);
     public List<NoteScript> notes;
     public GameObject TextArray;
     public TMP_Text def;
@@ -52,14 +72,16 @@ public class JournalManager : MonoBehaviour
     void Start()
     {
         journal.GetComponent<Canvas>().enabled = false;
-
-        for (int i = 0; i < selector.textArray.GetLength(0); i++)
+        int count = 0;
+        for (int i = 0; i < selector.textArray.Length; i++)
         {
-            for (int j = 0; j < selector.textArray[i].GetLength(0); j++)
+            for (int j = 0; j < selector.textArray[i].Length; j++)
             {
+                count += 1;
                 TMP_Text text = Instantiate(def, TextArray.transform);
                 text.rectTransform.localPosition = new Vector2(150 * j, -75 * i);
-                text.name = (i * selector.textArray[i].GetLength(0) + j + 1).ToString();
+
+                text.name = count.ToString();
                 selector.textArray[i][j] = text;
             }
         }
@@ -69,11 +91,11 @@ public class JournalManager : MonoBehaviour
     {
         journal.GetComponent<Canvas>().enabled = true;
         playerScript.inJournal = true;
-        for (int i = 0; i < selector.textArray.GetLength(0); i++)
+        for (int i = 0; i < selector.textArray.Length; i++)
         {
-            for (int j = 0; j < selector.textArray[i].GetLength(0); j++)
+            for (int j = 0; j < selector.textArray[i].Length; j++)
             {
-                if (HasNote(i * selector.textArray[i].GetLength(0) + j))
+                if (HasNote(i * selector.textArray[i].Length + j))
                 {
                     selector.textArray[i][j].text = "#" + selector.textArray[i][j].name;
                 }
@@ -94,7 +116,7 @@ public class JournalManager : MonoBehaviour
     }
     public void UpdateRightSide()
     {
-        NoteScript curNote = GetNote(Mathf.RoundToInt(selector.selection.y) * selector.textArray[0].GetLength(0) + Mathf.RoundToInt(selector.selection.x));
+        NoteScript curNote = GetNote(Mathf.RoundToInt(selector.selection.y) * selector.textArray[0].Length + Mathf.RoundToInt(selector.selection.x));
         if (curNote != null)
         {
             noteTitle.text = "#" + (curNote.noteId + 1) + " - " + curNote.noteTitle;
