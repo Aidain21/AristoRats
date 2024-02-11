@@ -16,6 +16,7 @@ public class PlayerScript2D : MonoBehaviour
     public bool sameDir;
     public Vector3 prevDir;
     public float timeBetweenTiles;
+    public float swapy;
     //made so the player can turn in spot without moving
     public float holdTimer;
     //current walls next to player
@@ -76,6 +77,7 @@ public class PlayerScript2D : MonoBehaviour
     void Start()
     {
         timeBetweenTiles = 0.3f;
+        swapy = 0.15f;
         prevDir = Vector3.zero;
     }
     void Update()
@@ -104,13 +106,35 @@ public class PlayerScript2D : MonoBehaviour
             {
                 GetPlayerMovement();
             }
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] != new Vector2(1,1))
             {
-                timeBetweenTiles = 0.15f;
+                if (menuManager.optionSelector.selections[1] == new Vector2(0,1))
+                {
+                    timeBetweenTiles = 0.15f;
+                }
+                else if (menuManager.optionSelector.selections[1] == new Vector2(2, 1))
+                {
+                    timeBetweenTiles = 0.3f;
+                }
+                
             }
             else
             {
-                timeBetweenTiles = 0.3f;
+                if (menuManager.optionSelector.selections[1] == new Vector2(0, 1))
+                {
+                    timeBetweenTiles = 0.3f;
+                }
+                else if (menuManager.optionSelector.selections[1] == new Vector2(2, 1))
+                {
+                    timeBetweenTiles = 0.15f;
+                }
+                
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] == new Vector2(1, 1))
+            {
+                float temp = swapy;
+                swapy = timeBetweenTiles;
+                timeBetweenTiles = temp;
             }
             if (Input.GetKeyDown(KeyCode.J))
             {
@@ -250,30 +274,70 @@ public class PlayerScript2D : MonoBehaviour
             {
                 journalManager.CloseJournal();
             }
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                if (journalManager.selector.selection != journalManager.selector.selectorPos)
-                {
-                    journalManager.selector.prevSelection = journalManager.selector.selection;
-                    journalManager.selector.selection = journalManager.selector.selectorPos;
-                    journalManager.selector.UpdateSelector();
-                    journalManager.UpdateRightSide();
-                }
-            }
             if (Input.GetKeyDown(KeyCode.R))
             {
                 journalManager.CloseJournal();
                 NoteWarp();
             }
             GetSelectorMovement(journalManager.selector);
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                journalManager.selector.prevSelection = journalManager.selector.selection;
+                journalManager.selector.selection = journalManager.selector.selectorPos;
+                journalManager.selector.UpdateSelector();
+                journalManager.UpdateRightSide();
+            }
         }
+
         else if (inMenu)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 menuManager.CloseMenu();
             }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                menuManager.CloseMenu();
+                switch (Mathf.RoundToInt(menuManager.menuSelector.selectorPos.y))
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        menuManager.OpenOptions();
+                        break;
+                    case 2:
+                        string[] temp = new string[] { "0You:HAHA YOU THOUGHT", "0You: There is no hidden god mode. This was just made to test out menu funcitons." };
+                        dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                        break;
+                    case 3:  //save stuff
+                        SceneManager.LoadScene("TitleScreen");
+                        break;
+                }
+            }
             GetSelectorMovement(menuManager.menuSelector);
+        }
+        else if (inOptions)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                menuManager.CloseOptions();
+                menuManager.OpenMenu();
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (menuManager.optionSelector.selections[Mathf.RoundToInt(menuManager.optionSelector.selectorPos.y)] != menuManager.optionSelector.selectorPos)
+                {
+                    menuManager.optionSelector.prevSelections[Mathf.RoundToInt(menuManager.optionSelector.selectorPos.y)] = menuManager.optionSelector.selections[Mathf.RoundToInt(menuManager.optionSelector.selectorPos.y)];
+                    menuManager.optionSelector.selections[Mathf.RoundToInt(menuManager.optionSelector.selectorPos.y)] = menuManager.optionSelector.selectorPos;
+                    menuManager.optionSelector.UpdateSelector();
+                }
+                if (menuManager.optionSelector.selectorPos == Vector2.zero)
+                {
+                    menuManager.CloseOptions();
+                    menuManager.OpenMenu();
+                }
+            }
+            GetSelectorMovement(menuManager.optionSelector);
         }
         else if (inMap)
         {
@@ -283,7 +347,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     public void GetSelectorMovement(Selector selector)
     {
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             selector.prevSelectorPos = selector.selectorPos;
             if (selector.selectorPos.y > 0)
@@ -301,7 +365,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             selector.UpdateSelector();
         }
-        else if (Input.GetKeyDown(KeyCode.A))
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             selector.prevSelectorPos = selector.selectorPos;
             if (selector.selectorPos.x > 0)
@@ -314,7 +378,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             selector.UpdateSelector();
         }
-        else if (Input.GetKeyDown(KeyCode.S))
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             selector.prevSelectorPos = selector.selectorPos;
             if (selector.selectorPos.y < selector.textArray.Length - 1)
@@ -332,7 +396,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             selector.UpdateSelector();
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             selector.prevSelectorPos = selector.selectorPos;
             if (selector.selectorPos.x < selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1)
