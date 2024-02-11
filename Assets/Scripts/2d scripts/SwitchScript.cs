@@ -157,6 +157,8 @@ public class SwitchScript : MonoBehaviour
                     item.GetComponent<PlayerScript2D>().entryPos = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
                     item.GetComponent<PlayerScript2D>().entryScene = SceneManager.GetActiveScene().name;
                     item.GetComponent<PlayerScript2D>().entryDirection = item.GetComponent<PlayerScript2D>().direction;
+                    item.GetComponent<PlayerScript2D>().menuManager.puzzleSelector = new Selector(x2,y2);
+                    item.GetComponent<PlayerScript2D>().menuManager.MakePuzzleMenu();
                     break;
             }
         }

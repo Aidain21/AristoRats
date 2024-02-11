@@ -7,12 +7,15 @@ public class MenuMapManager : MonoBehaviour
 {
     public Selector menuSelector = new(1,4);
     public Selector optionSelector = new(new int[] {1,3,5,3,4},5);
+    public Selector puzzleSelector = new(5,5);
     public string[] menuChoices;
     public Canvas menu;
     public Canvas options;
-    public Canvas map;
+    //public Canvas map;
+    public Canvas puzzle;
     public GameObject menuTextArray;
     public GameObject optionsTextArray;
+    public GameObject puzzleTextArray;
     public TMP_Text defOpt;
     public TMP_Text defMenu;
     public PlayerScript2D playerScript;
@@ -22,6 +25,7 @@ public class MenuMapManager : MonoBehaviour
         menuChoices = new string[] { "Continue", "Options", "god mode (real)", "Save and Quit" };
         menu.GetComponent<Canvas>().enabled = false;
         options.GetComponent<Canvas>().enabled = false;
+        puzzle.GetComponent<Canvas>().enabled = false;
         int count = 0;
         for (int i = 0; i < menuSelector.textArray.Length; i++)
         {
@@ -66,8 +70,9 @@ public class MenuMapManager : MonoBehaviour
                 }
             }
         }
+        MakePuzzleMenu();
         Destroy(defOpt);
-        Destroy(defMenu);
+        defMenu.gameObject.SetActive(false);
     }
     public void OpenMenu()
     {
@@ -91,5 +96,40 @@ public class MenuMapManager : MonoBehaviour
     {
         options.GetComponent<Canvas>().enabled = false;
         playerScript.inOptions = false;
+    }
+    public void OpenPuzzle()
+    {
+        puzzle.GetComponent<Canvas>().enabled = true;
+        playerScript.inPuzzle = true;
+        puzzleSelector.UpdateSelector();
+    }
+    public void MakePuzzleMenu()
+    {
+        for (int i = 0; i < puzzleTextArray.transform.childCount; i++)
+        {
+            Destroy(puzzleTextArray.transform.GetChild(i).gameObject);
+        }
+        defMenu.gameObject.SetActive(true);
+        Canvas.ForceUpdateCanvases();
+        int count = 0;
+        for (int i = 0; i < puzzleSelector.textArray.Length; i++)
+        {
+            for (int j = 0; j < puzzleSelector.textArray[i].Length; j++)
+            {
+                count += 1;
+                TMP_Text text = Instantiate(defMenu, puzzleTextArray.transform);
+                text.rectTransform.localPosition = new Vector2(100 * j, -100 * i);
+                text.name = count.ToString();
+                text.text = count.ToString();
+                puzzleSelector.textArray[i][j] = text;
+            }
+        }
+        defMenu.gameObject.SetActive(false);
+    }
+
+    public void ClosePuzzle()
+    {
+        puzzle.GetComponent<Canvas>().enabled = false;
+        playerScript.inPuzzle = false;
     }
 }

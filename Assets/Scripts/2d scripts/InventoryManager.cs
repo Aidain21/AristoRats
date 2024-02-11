@@ -43,8 +43,6 @@ public class InventoryManager : MonoBehaviour
         Destroy(def);
         Destroy(def2);
     }
-
-    // Update is called once per frame
     public void OpenInventory()
     {
         inventoryBox.GetComponent<Canvas>().enabled = true;
@@ -54,14 +52,14 @@ public class InventoryManager : MonoBehaviour
         {
             images[i].color = Color.white;
             images[i].sprite = inventory[i].GetComponent<ItemScript>().itemImage;
-            selector.textArray[i%selector.height][i/selector.height].text = inventory[i].GetComponent<ItemScript>().itemName;
+            selector.textArray[i / selector.width][i % selector.width].text = inventory[i].GetComponent<ItemScript>().itemName;
             curItems++;
         }
         for (int i = curItems; i < selector.width * selector.height; i++)
         {
             images[i].sprite = null;
             images[i].color = new Color32(0,0,0,0);
-            selector.textArray[i % selector.height][i / selector.height].text = "Empty";
+            selector.textArray[i / selector.width][i % selector.width].text = "Empty";
         }
         cheeseText.text = "Cheese: " + cheese.ToString();
         selector.UpdateSelector();

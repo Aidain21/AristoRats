@@ -36,6 +36,7 @@ public class PlayerScript2D : MonoBehaviour
     public bool inInventory;
     public bool inMenu;
     public bool inOptions;
+    public bool inPuzzle;
 
     public bool aboveTalker;
     public Vector2 spawnPoint;
@@ -82,7 +83,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     void Update()
     {
-        if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && holdTimer == 0)
+        if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && holdTimer == 0)
         {
             spinTimer += Time.deltaTime;
         }
@@ -100,7 +101,7 @@ public class PlayerScript2D : MonoBehaviour
         {
             StartCoroutine(IdleSpin(direction));
         }
-        if (!inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu) //Controls for overworld
+        if (!inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle) //Controls for overworld
         {
             if (!moving)
             {
@@ -152,6 +153,10 @@ public class PlayerScript2D : MonoBehaviour
             {
                 invManager.OpenInventory();
             }
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                menuManager.OpenPuzzle();
+            }
             if (Input.GetKeyDown(KeyCode.M))
             {
                 //map
@@ -181,13 +186,13 @@ public class PlayerScript2D : MonoBehaviour
         }
         else if (inDialogue) //Controls for in dialogue
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && menuManager.optionSelector.selections[3] != new Vector2(1, 3))
             {
-                if (dialogueManager.typing)
+                if (dialogueManager.typing && menuManager.optionSelector.selections[3] != new Vector2(2, 3))
                 {
                     dialogueManager.typing = false;
                 }
-                else
+                else if (dialogueManager.typing == false)
                 {
                     if (currentTarget != null)
                     {
@@ -201,7 +206,21 @@ public class PlayerScript2D : MonoBehaviour
                     }
                     dialogueManager.changed = false;
                 }
-
+            }
+            if (Input.GetKey(KeyCode.Space) && menuManager.optionSelector.selections[3] == new Vector2(1, 3))
+            {
+                dialogueManager.typing = false;
+                if (currentTarget != null)
+                {
+                    aboveTalker = transform.position.y > currentTarget.transform.position.y;
+                }
+                dialogueManager.sentences.RemoveAt(0);
+                dialogueManager.eventScript.EndEventTrigger();
+                if (!dialogueManager.changed)
+                {
+                    dialogueManager.DisplayNextSentence();
+                }
+                dialogueManager.changed = false;
             }
 
         }
@@ -339,9 +358,13 @@ public class PlayerScript2D : MonoBehaviour
             }
             GetSelectorMovement(menuManager.optionSelector);
         }
-        else if (inMap)
+        else if (inPuzzle)
         {
-
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                menuManager.ClosePuzzle();
+            }
+            GetSelectorMovement(menuManager.puzzleSelector);
         }
         
     }
