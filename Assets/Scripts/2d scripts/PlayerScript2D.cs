@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -153,10 +154,6 @@ public class PlayerScript2D : MonoBehaviour
             {
                 invManager.OpenInventory();
             }
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                menuManager.OpenPuzzle();
-            }
             if (Input.GetKeyDown(KeyCode.M))
             {
                 //map
@@ -175,7 +172,7 @@ public class PlayerScript2D : MonoBehaviour
                 RaycastHit2D hitData = Physics2D.Raycast(transform.position + direction * 0.51f, direction, 0.5f);
                 if (hitData.collider != null && hitData.collider.gameObject.CompareTag("Block"))
                 {
-                    if (!hitData.collider.gameObject.GetComponent<BlockScript>().moving)
+                    if (!hitData.collider.gameObject.GetComponent<BlockScript>().moving && hitData.collider.gameObject.GetComponent<BlockScript>().type == "push")
                     {
                         GetComponent<AudioSource>().PlayOneShot(sfx[0]);
                         hitData.collider.gameObject.GetComponent<BlockScript>().Push(direction);
@@ -364,7 +361,40 @@ public class PlayerScript2D : MonoBehaviour
             {
                 menuManager.ClosePuzzle();
             }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                for (int i = 0; i < currentTarget.transform.parent.childCount; i++)
+                {
+                    if (currentTarget.transform.parent.GetChild(i).name.Equals("FloorSwitch(Clone)"))
+                    {
+                        if (Int32.Parse(currentTarget.transform.parent.GetChild(i).GetComponent<SwitchScript>().switchData) == menuManager.puzzleSelector.selectorPos.y * menuManager.puzzleSelector.width + menuManager.puzzleSelector.selectorPos.x + 1)
+                        {
+                            currentTarget.transform.position = currentTarget.transform.parent.GetChild(i).position;
+                            currentTarget.transform.position += new Vector3(0, 0, -0.5f);
+                            if (currentTarget.GetComponent<BlockScript>().id == Int32.Parse(currentTarget.transform.parent.GetChild(i).GetComponent<SwitchScript>().switchData))
+                            {
+                                currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                                currentTarget.transform.position += new Vector3(0, 0, 0.5f);
+                                menuManager.puzzleImages[currentTarget.GetComponent<BlockScript>().id - 1].sprite = currentTarget.GetComponent<SpriteRenderer>().sprite;
+                                menuManager.puzzleImages[currentTarget.GetComponent<BlockScript>().id - 1].color = Color.white;
+                                menuManager.puzzleSelector.textArray[(currentTarget.GetComponent<BlockScript>().id - 1) / menuManager.puzzleSelector.width][(currentTarget.GetComponent<BlockScript>().id - 1) % menuManager.puzzleSelector.width].text = "";
+                                Destroy(currentTarget.GetComponent<BoxCollider2D>());
+                                Destroy(currentTarget.GetComponent<BlockScript>());
+                                Destroy(currentTarget.transform.parent.GetChild(i).gameObject);
+                                
+                            }
+                            break;
+                        }
+                    }
+                }
+                menuManager.ClosePuzzle();
+            }
             GetSelectorMovement(menuManager.puzzleSelector);
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                menuManager.puzzleImages[Mathf.RoundToInt(menuManager.puzzleSelector.selectorPos.y) * menuManager.puzzleSelector.width + Mathf.RoundToInt(menuManager.puzzleSelector.selectorPos.x)].rectTransform.sizeDelta = new Vector2(100, 100);
+                menuManager.puzzleImages[Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.y) * menuManager.puzzleSelector.width + Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.x)].rectTransform.sizeDelta = new Vector2(150, 150);
+            }
         }
         
     }

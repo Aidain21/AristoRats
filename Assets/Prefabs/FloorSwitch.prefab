@@ -150,6 +150,7 @@ MonoBehaviour:
   warpEnd: {fileID: 0}
   onValue: 0
   playerOnSpike: 0
+  puzzleImage: {fileID: 0}
   affectedObjects:
   - {fileID: 0}
 --- !u!50 &864846978952022817
@@ -176,6 +177,6 @@ Rigidbody2D:
     serializedVersion: 2
     m_Bits: 0
   m_Interpolate: 0
-  m_SleepingMode: 1
+  m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 0

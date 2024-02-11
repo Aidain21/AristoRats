@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class MenuMapManager : MonoBehaviour
@@ -8,6 +10,7 @@ public class MenuMapManager : MonoBehaviour
     public Selector menuSelector = new(1,4);
     public Selector optionSelector = new(new int[] {1,3,5,3,4},5);
     public Selector puzzleSelector = new(5,5);
+    public List<Image> puzzleImages;
     public string[] menuChoices;
     public Canvas menu;
     public Canvas options;
@@ -18,6 +21,9 @@ public class MenuMapManager : MonoBehaviour
     public GameObject puzzleTextArray;
     public TMP_Text defOpt;
     public TMP_Text defMenu;
+    public TMP_Text defPuzzle;
+    public Image defImg;
+    public Image curPiece;
     public PlayerScript2D playerScript;
     void Start()
     {
@@ -100,16 +106,19 @@ public class MenuMapManager : MonoBehaviour
     public void OpenPuzzle()
     {
         puzzle.GetComponent<Canvas>().enabled = true;
+        curPiece.sprite = playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite;
         playerScript.inPuzzle = true;
         puzzleSelector.UpdateSelector();
     }
     public void MakePuzzleMenu()
     {
+        puzzleImages = new List<Image>();
         for (int i = 0; i < puzzleTextArray.transform.childCount; i++)
         {
             Destroy(puzzleTextArray.transform.GetChild(i).gameObject);
         }
-        defMenu.gameObject.SetActive(true);
+        defImg.gameObject.SetActive(true);
+        defPuzzle.gameObject.SetActive(true);
         Canvas.ForceUpdateCanvases();
         int count = 0;
         for (int i = 0; i < puzzleSelector.textArray.Length; i++)
@@ -117,14 +126,21 @@ public class MenuMapManager : MonoBehaviour
             for (int j = 0; j < puzzleSelector.textArray[i].Length; j++)
             {
                 count += 1;
-                TMP_Text text = Instantiate(defMenu, puzzleTextArray.transform);
-                text.rectTransform.localPosition = new Vector2(100 * j, -100 * i);
+                TMP_Text text = Instantiate(defPuzzle, puzzleTextArray.transform);
+                text.rectTransform.localPosition = new Vector2(150 * j, -150 * i);
                 text.name = count.ToString();
-                text.text = count.ToString();
                 puzzleSelector.textArray[i][j] = text;
+
+                Image img = Instantiate(defImg, puzzleTextArray.transform);
+                img.color = new Color32(0, 0, 0, 0);
+                img.rectTransform.localPosition = new Vector2(150 * j, -150 * i);
+                img.rectTransform.sizeDelta = new Vector2(150, 150);
+                img.name = "Image" + count.ToString();
+                puzzleImages.Add(img);
             }
         }
-        defMenu.gameObject.SetActive(false);
+        defPuzzle.gameObject.SetActive(false);
+        defImg.gameObject.SetActive(false);
     }
 
     public void ClosePuzzle()
