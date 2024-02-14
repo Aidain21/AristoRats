@@ -1553,8 +1553,8 @@ MonoBehaviour:
 
     Dialogue Skippng:
 
-    Test
-    Option:
+    Camera
+    Zoom:
 
 
 '
@@ -4254,6 +4254,7 @@ MonoBehaviour:
   menuManager: {fileID: 8210873494910846516}
   currentTarget: {fileID: 0}
   backpackMenu: {fileID: 0}
+  cam: {fileID: 6297145517509531733}
   inMap: 0
   inJournal: 0
   inDialogue: 0

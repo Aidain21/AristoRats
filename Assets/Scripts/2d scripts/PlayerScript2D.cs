@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 
 public class PlayerScript2D : MonoBehaviour
@@ -30,6 +31,8 @@ public class PlayerScript2D : MonoBehaviour
     //Tracks current dialogue instance and place in dialogue. dialogueData[0] is name, dialogueData[1] is position
     public GameObject currentTarget;
     public GameObject backpackMenu;
+
+    public CinemachineVirtualCamera cam;
 
     public bool inMap;
     public bool inJournal;
@@ -117,8 +120,7 @@ public class PlayerScript2D : MonoBehaviour
                 else if (menuManager.optionSelector.selections[1] == new Vector2(2, 1))
                 {
                     timeBetweenTiles = 0.3f;
-                }
-                
+                } 
             }
             else
             {
@@ -130,7 +132,6 @@ public class PlayerScript2D : MonoBehaviour
                 {
                     timeBetweenTiles = 0.15f;
                 }
-                
             }
             if (Input.GetKeyDown(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] == new Vector2(1, 1))
             {
@@ -227,10 +228,6 @@ public class PlayerScript2D : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Escape))
             {
                 invManager.CloseInventory();
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                //Use
             }
             GetSelectorMovement(invManager.selector);
             if (Input.GetKeyDown(KeyCode.E))
@@ -351,6 +348,10 @@ public class PlayerScript2D : MonoBehaviour
                 {
                     menuManager.CloseOptions();
                     menuManager.OpenMenu();
+                }
+                if (menuManager.optionSelector.selectorPos.y == 4)
+                {
+                    cam.m_Lens.OrthographicSize = menuManager.optionSelector.selectorPos.x + 3;
                 }
             }
             GetSelectorMovement(menuManager.optionSelector);
