@@ -28,7 +28,7 @@ public class TileScreenButtons : MonoBehaviour
     }
     public void QuitButtonPressed()
     {
-        Application.Quit();
+        UnityEditor.EditorApplication.isPlaying = false;
     }
 }
     
