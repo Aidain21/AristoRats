@@ -82,10 +82,16 @@ public class BlockScript : MonoBehaviour
         {
             player.GetComponent<PlayerScript2D>().menuManager.OpenPuzzle();
         }
+        else if (type == "control")
+        {
+            player.GetComponent<PlayerScript2D>().cam.Follow = gameObject.transform;
+            player.GetComponent<PlayerScript2D>().invManager.blockControlText.GetComponent<Canvas>().enabled = true;
+            player.GetComponent<PlayerScript2D>().controllingBlock = true;
+        }
         
         
     }
-    private bool[] WallChecker()
+    public bool[] WallChecker()
     {
         RaycastHit2D hitData = Physics2D.Raycast(transform.position + Vector3.up * 0.51f, Vector2.up, 0.5f);
         bool up = hitData.collider != null;

@@ -9,6 +9,7 @@ public class InventoryManager : MonoBehaviour
     public Selector selector;
     public List<GameObject> inventory;
     public Canvas inventoryBox;
+    public Canvas blockControlText;
     public int cheese;
     public TMP_Text cheeseText;
     public List<Image> images;
@@ -23,6 +24,7 @@ public class InventoryManager : MonoBehaviour
         selector = new Selector(5, 3);
         images = new List<Image>();
         inventoryBox.GetComponent<Canvas>().enabled = false;
+        blockControlText.GetComponent<Canvas>().enabled = false;
         cheese = 0;
         for (int i = 0; i < selector.textArray.Length; i++)
         {

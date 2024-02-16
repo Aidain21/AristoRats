@@ -113,6 +113,22 @@ public class ImagePuzzleScript : MonoBehaviour
                 }
                 timerOn = true;
                 break;
+            case "Control":
+                for (int i = 0; i < width * height; i++)
+                {
+                    GameObject piece = Instantiate(pushBlock, transform);
+                    piece.GetComponent<BlockScript>().id = norm[i];
+                    piece.GetComponent<BlockScript>().type = "control";
+                    piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
+                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                    GameObject place = Instantiate(floorSwitch, transform);
+                    place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
+                    place.GetComponent<SwitchScript>().switchEffect = "insert";
+                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
+                    place.GetComponent<SpriteRenderer>().color = Color.cyan;
+                }
+                timerOn = true;
+                break;
 
         }
     }
