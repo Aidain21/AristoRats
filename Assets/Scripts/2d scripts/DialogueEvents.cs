@@ -30,7 +30,7 @@ public class DialogueEvents : MonoBehaviour
         }
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "3", "1" }))
         {
-            StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.left * 3, 1f));
+            StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.down * 3, 1f));
         }
     }
     public void EndEventTrigger()
