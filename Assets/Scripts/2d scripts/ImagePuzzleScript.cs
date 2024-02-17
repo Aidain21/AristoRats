@@ -72,11 +72,6 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().id = norm[i];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
-                    GameObject place = Instantiate(floorSwitch, transform);
-                    place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
-                    place.GetComponent<SwitchScript>().switchEffect = "insert";
-                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
-                    place.GetComponent<SpriteRenderer>().color = Color.cyan;
                 }
                 timerOn = true;
                 break;
@@ -90,11 +85,6 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<ItemScript>().itemImage = pieces[norm[i] - 1];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
-                    GameObject place = Instantiate(floorSwitch, transform);
-                    place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
-                    place.GetComponent<SwitchScript>().switchEffect = "insert";
-                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
-                    place.GetComponent<SpriteRenderer>().color = Color.cyan;
                 }
                 break;
             case "Menu":
@@ -105,11 +95,6 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().type = "menu";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
-                    GameObject place = Instantiate(floorSwitch, transform);
-                    place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
-                    place.GetComponent<SwitchScript>().switchEffect = "insert";
-                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
-                    place.GetComponent<SpriteRenderer>().color = Color.cyan;
                 }
                 timerOn = true;
                 break;
@@ -121,15 +106,17 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().type = "control";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
-                    GameObject place = Instantiate(floorSwitch, transform);
-                    place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
-                    place.GetComponent<SwitchScript>().switchEffect = "insert";
-                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
-                    place.GetComponent<SpriteRenderer>().color = Color.cyan;
                 }
                 timerOn = true;
                 break;
-
+        }
+        for (int i = 0; i < width * height; i++)
+        {
+            GameObject place = Instantiate(floorSwitch, transform);
+            place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
+            place.GetComponent<SwitchScript>().switchEffect = "insert";
+            place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
+            place.GetComponent<SpriteRenderer>().color = Color.cyan;
         }
     }
     public Texture2D Resize(Texture2D source, int newWidth, int newHeight)

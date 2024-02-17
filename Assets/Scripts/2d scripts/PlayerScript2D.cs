@@ -231,26 +231,23 @@ public class PlayerScript2D : MonoBehaviour
                 invManager.CloseInventory();
             }
             GetSelectorMovement(invManager.selector);
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                invManager.selector.prevSelection = invManager.selector.selection;
+                invManager.selector.selection = invManager.selector.selectorPos;
+                invManager.selector.UpdateSelector();
+            }
             if (Input.GetKeyDown(KeyCode.E))
             {
-                if (invManager.selector.selectorPos == invManager.selector.selection)
+                if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count)
                 {
-                    if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count)
-                    {
-                        ItemScript itemScript = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)].GetComponent<ItemScript>();
-                        dialogueManager.StartDialogue(itemScript.itemName, itemScript.itemLore, 0, GetComponent<SpriteRenderer>().sprite);
-                    }
-                    else
-                    {
-                        string[] temp = new string[] { "0You:There's nothing here :(" };
-                        dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
-                    }
+                    ItemScript itemScript = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)].GetComponent<ItemScript>();
+                    dialogueManager.StartDialogue(itemScript.itemName, itemScript.itemLore, 0, GetComponent<SpriteRenderer>().sprite);
                 }
                 else
                 {
-                    invManager.selector.prevSelection = invManager.selector.selection;
-                    invManager.selector.selection = invManager.selector.selectorPos;
-                    invManager.selector.UpdateSelector();
+                    string[] temp = new string[] { "0You:There's nothing here :(" };
+                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
                 }
             }
             if (Input.GetKeyDown(KeyCode.R))
@@ -320,7 +317,8 @@ public class PlayerScript2D : MonoBehaviour
                         menuManager.OpenOptions();
                         break;
                     case 2:
-                        string[] temp = new string[] { "0You:HAHA YOU THOUGHT", "0You: There is no hidden god mode. This was just made to test out menu funcitons." };
+                        string[] temp = new string[] { "0You:HAHA YOU THOUGHT", "0You: There is no hidden god mode. This was just made to test out menu funcitons.", "0You:Wait I got free ches ong!" };
+                        invManager.cheese += 10000;
                         dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
                         break;
                     case 3:  //save stuff
@@ -808,6 +806,10 @@ public class PlayerScript2D : MonoBehaviour
             case "PuzzleTest":
                 GetComponent<AudioSource>().clip = songs[0];
                 break;
+            default:
+                GetComponent<AudioSource>().clip = songs[0];
+                break;
+
         }
         GetComponent<AudioSource>().Play();
     }
