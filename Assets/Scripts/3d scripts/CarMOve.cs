@@ -15,7 +15,7 @@ public class CarMOve : MonoBehaviour
     void Update()
     {
         deathTimer += Time.deltaTime;
-        transform.Translate(Random.Range(-0.1f, -0.3f), 0, 0);
+        transform.Translate(-0.8f, 0, 0);
         if(deathTimer >= 10f)
         {
             Destroy(gameObject);
