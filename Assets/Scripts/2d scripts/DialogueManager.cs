@@ -29,6 +29,7 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(string dialogueName, string[] dialogue, int talkCounter, Sprite talkerImage)
     {
+        typingSpeed = 2 * ((5 - playerScript.menuManager.optionSelector.selections[2].x)  / 100) - 0.01f; 
         hasMoreText = false;
         sentences.Clear();
         playerScript.inDialogue = true;

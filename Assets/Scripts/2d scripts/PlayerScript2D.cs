@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 
 public class PlayerScript2D : MonoBehaviour
@@ -16,6 +18,7 @@ public class PlayerScript2D : MonoBehaviour
     public bool sameDir;
     public Vector3 prevDir;
     public float timeBetweenTiles;
+    public float swapy;
     //made so the player can turn in spot without moving
     public float holdTimer;
     //current walls next to player
@@ -24,14 +27,21 @@ public class PlayerScript2D : MonoBehaviour
     public DialogueManager dialogueManager;
     public InventoryManager invManager;
     public JournalManager journalManager;
+    public MenuMapManager menuManager;
     //Tracks current dialogue instance and place in dialogue. dialogueData[0] is name, dialogueData[1] is position
     public GameObject currentTarget;
     public GameObject backpackMenu;
+
+    public CinemachineVirtualCamera cam;
 
     public bool inMap;
     public bool inJournal;
     public bool inDialogue;
     public bool inInventory;
+    public bool inMenu;
+    public bool inOptions;
+    public bool inPuzzle;
+    public bool controllingBlock;
 
     public bool aboveTalker;
     public Vector2 spawnPoint;
@@ -54,6 +64,7 @@ public class PlayerScript2D : MonoBehaviour
 
     void Awake()
     {
+        //Cursor.visible = false;
         if (instance == null)
         {
             instance = this; 
@@ -72,11 +83,12 @@ public class PlayerScript2D : MonoBehaviour
     void Start()
     {
         timeBetweenTiles = 0.3f;
+        swapy = 0.15f;
         prevDir = Vector3.zero;
     }
     void Update()
     {
-        if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && holdTimer == 0)
+        if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && holdTimer == 0)
         {
             spinTimer += Time.deltaTime;
         }
@@ -94,23 +106,47 @@ public class PlayerScript2D : MonoBehaviour
         {
             StartCoroutine(IdleSpin(direction));
         }
-        if (!inDialogue && !inMap && !inJournal && !inInventory) //Controls for overworld
+        if (!inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock) //Controls for overworld
         {
             if (!moving)
             {
                 GetPlayerMovement();
             }
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] != new Vector2(1,1))
             {
-                timeBetweenTiles = 0.15f;   
+                if (menuManager.optionSelector.selections[1] == new Vector2(0,1))
+                {
+                    timeBetweenTiles = 0.15f;
+                }
+                else if (menuManager.optionSelector.selections[1] == new Vector2(2, 1))
+                {
+                    timeBetweenTiles = 0.3f;
+                } 
             }
             else
             {
-                timeBetweenTiles = 0.3f;
+                if (menuManager.optionSelector.selections[1] == new Vector2(0, 1))
+                {
+                    timeBetweenTiles = 0.3f;
+                }
+                else if (menuManager.optionSelector.selections[1] == new Vector2(2, 1))
+                {
+                    timeBetweenTiles = 0.15f;
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] == new Vector2(1, 1))
+            {
+                float temp = swapy;
+                swapy = timeBetweenTiles;
+                timeBetweenTiles = temp;
             }
             if (Input.GetKeyDown(KeyCode.J))
             {
                 journalManager.OpenJournal();
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                menuManager.OpenMenu();
             }
             if (Input.GetKeyDown(KeyCode.B))
             {
@@ -133,29 +169,29 @@ public class PlayerScript2D : MonoBehaviour
                     Interact(currentTarget);
                 }
             }
-            else if(Input.GetKey(KeyCode.E))
+            else if (Input.GetKey(KeyCode.E))
             {
                 RaycastHit2D hitData = Physics2D.Raycast(transform.position + direction * 0.51f, direction, 0.5f);
-                if (hitData.collider != null && hitData.collider.gameObject.tag == "Block")
+                if (hitData.collider != null && hitData.collider.gameObject.CompareTag("Block"))
                 {
-                    if (!hitData.collider.gameObject.GetComponent<BlockScript>().moving)
+                    if (!hitData.collider.gameObject.GetComponent<BlockScript>().moving && hitData.collider.gameObject.GetComponent<BlockScript>().type == "push")
                     {
                         GetComponent<AudioSource>().PlayOneShot(sfx[0]);
                         hitData.collider.gameObject.GetComponent<BlockScript>().Push(direction);
                     }
                 }
-                
+
             }
         }
         else if (inDialogue) //Controls for in dialogue
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) && menuManager.optionSelector.selections[3] != new Vector2(1, 3))
             {
-                if (dialogueManager.typing)
+                if (dialogueManager.typing && menuManager.optionSelector.selections[3] != new Vector2(2, 3))
                 {
                     dialogueManager.typing = false;
                 }
-                else
+                else if (dialogueManager.typing == false)
                 {
                     if (currentTarget != null)
                     {
@@ -169,65 +205,43 @@ public class PlayerScript2D : MonoBehaviour
                     }
                     dialogueManager.changed = false;
                 }
-                
             }
-            
+            if (Input.GetKey(KeyCode.Space) && menuManager.optionSelector.selections[3] == new Vector2(1, 3))
+            {
+                dialogueManager.typing = false;
+                if (currentTarget != null)
+                {
+                    aboveTalker = transform.position.y > currentTarget.transform.position.y;
+                }
+                dialogueManager.sentences.RemoveAt(0);
+                dialogueManager.eventScript.EndEventTrigger();
+                if (!dialogueManager.changed)
+                {
+                    dialogueManager.DisplayNextSentence();
+                }
+                dialogueManager.changed = false;
+            }
+
         }
         else if (inInventory)
         {
-            aboveTalker = invManager.selectorPos > 2;
+            aboveTalker = invManager.selector.selectorPos.y == 0;
             if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Escape))
             {
                 invManager.CloseInventory();
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            GetSelectorMovement(invManager.selector);
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
             {
-                //Use
-            }
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.S))
-            {
-                invManager.prevSelect = invManager.selectorPos;
-                if (invManager.selectorPos > 2)
-                {
-                    invManager.selectorPos -= 3;
-                }
-                else
-                {
-                    invManager.selectorPos += 3;
-                }
-                invManager.UpdateSelector();
-            }
-            else if (Input.GetKeyDown(KeyCode.A))
-            {
-                invManager.prevSelect = invManager.selectorPos;
-                if (invManager.selectorPos == 0 || invManager.selectorPos == 3)
-                {
-                    invManager.selectorPos += 2;
-                }
-                else
-                {
-                    invManager.selectorPos -= 1;
-                }
-                invManager.UpdateSelector();
-            }
-            else if (Input.GetKeyDown(KeyCode.D))
-            {
-                invManager.prevSelect = invManager.selectorPos;
-                if (invManager.selectorPos == 2 || invManager.selectorPos == 5)
-                {
-                    invManager.selectorPos -= 2;
-                }
-                else
-                {
-                    invManager.selectorPos += 1;
-                }
-                invManager.UpdateSelector();
+                invManager.selector.prevSelection = invManager.selector.selection;
+                invManager.selector.selection = invManager.selector.selectorPos;
+                invManager.selector.UpdateSelector();
             }
             if (Input.GetKeyDown(KeyCode.E))
             {
-                if (invManager.selectorPos < invManager.inventory.Count)
+                if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count)
                 {
-                    ItemScript itemScript = invManager.inventory[invManager.selectorPos].GetComponent<ItemScript>();
+                    ItemScript itemScript = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)].GetComponent<ItemScript>();
                     dialogueManager.StartDialogue(itemScript.itemName, itemScript.itemLore, 0, GetComponent<SpriteRenderer>().sprite);
                 }
                 else
@@ -235,16 +249,15 @@ public class PlayerScript2D : MonoBehaviour
                     string[] temp = new string[] { "0You:There's nothing here :(" };
                     dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
                 }
-                
             }
             if (Input.GetKeyDown(KeyCode.R))
             {
                 bool[] walls = WallChecker();
                 bool frontClear = (!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right);
-                if (invManager.selectorPos < invManager.inventory.Count && frontClear)
+                if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count && frontClear)
                 {
-                    
-                    ItemScript itemScript = invManager.inventory[invManager.selectorPos].GetComponent<ItemScript>();
+
+                    ItemScript itemScript = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)].GetComponent<ItemScript>();
                     itemScript.gameObject.transform.parent = GameObject.Find("LevelObjects").transform;
                     string[] temp = new string[] { "0You:Dropped the " + itemScript.itemName + "." };
                     itemScript.gameObject.SetActive(true);
@@ -253,7 +266,7 @@ public class PlayerScript2D : MonoBehaviour
                     invManager.OpenInventory();
                     dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
                 }
-                else if (invManager.selectorPos >= invManager.inventory.Count)
+                else if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x >= invManager.inventory.Count)
                 {
                     string[] temp = new string[] { "0You:Can't drop nothing :(" };
                     dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
@@ -272,79 +285,237 @@ public class PlayerScript2D : MonoBehaviour
             {
                 journalManager.CloseJournal();
             }
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                if (journalManager.selection != journalManager.selectorPos)
-                {
-                    journalManager.prevSelection = journalManager.selection;
-                    journalManager.selection = journalManager.selectorPos;
-                    journalManager.UpdateSelector();
-                    journalManager.UpdateRightSide();
-                }
-            }
             if (Input.GetKeyDown(KeyCode.R))
             {
                 journalManager.CloseJournal();
                 NoteWarp();
             }
-            if (Input.GetKeyDown(KeyCode.W))
+            GetSelectorMovement(journalManager.selector);
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
             {
-                journalManager.prevSelectorPos = journalManager.selectorPos;
-                if (journalManager.selectorPos.y > 0)
-                {
-                    journalManager.selectorPos.y -= 1;
-                }
-                else
-                {
-                    journalManager.selectorPos.y += journalManager.textArray.GetLength(0) - 1;
-                }
-                journalManager.UpdateSelector();
-            }
-            else if (Input.GetKeyDown(KeyCode.A))
-            {
-                journalManager.prevSelectorPos = journalManager.selectorPos;
-                if (journalManager.selectorPos.x > 0)
-                {
-                    journalManager.selectorPos.x -= 1;
-                }
-                else
-                {
-                    journalManager.selectorPos.x += journalManager.textArray.GetLength(1) - 1;
-                }
-                journalManager.UpdateSelector();
-            }
-            else if (Input.GetKeyDown(KeyCode.S))
-            {
-                journalManager.prevSelectorPos = journalManager.selectorPos;
-                if (journalManager.selectorPos.y < journalManager.textArray.GetLength(0) - 1)
-                {
-                    journalManager.selectorPos.y += 1;
-                }
-                else
-                {
-                    journalManager.selectorPos.y -= journalManager.textArray.GetLength(0) - 1;
-                }
-                journalManager.UpdateSelector();
-            }
-            else if (Input.GetKeyDown(KeyCode.D))
-            {
-                journalManager.prevSelectorPos = journalManager.selectorPos;
-                if (journalManager.selectorPos.x < journalManager.textArray.GetLength(1) - 1)
-                {
-                    journalManager.selectorPos.x += 1;
-                }
-                else
-                {
-                    journalManager.selectorPos.x -= journalManager.textArray.GetLength(1) - 1;
-                }
-                journalManager.UpdateSelector();
+                journalManager.selector.prevSelection = journalManager.selector.selection;
+                journalManager.selector.selection = journalManager.selector.selectorPos;
+                journalManager.selector.UpdateSelector();
+                journalManager.UpdateRightSide();
             }
         }
-        else if (inMap)
-        {
 
+        else if (inMenu)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                menuManager.CloseMenu();
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                menuManager.CloseMenu();
+                switch (Mathf.RoundToInt(menuManager.menuSelector.selectorPos.y))
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        menuManager.OpenOptions();
+                        break;
+                    case 2:
+                        string[] temp = new string[] { "0You:HAHA YOU THOUGHT", "0You: There is no hidden god mode. This was just made to test out menu funcitons.", "0You:Wait I got free ches ong!" };
+                        invManager.cheese += 10000;
+                        dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                        break;
+                    case 3:  //save stuff
+                        SceneManager.LoadScene("TitleScreen");
+                        break;
+                }
+            }
+            GetSelectorMovement(menuManager.menuSelector);
+        }
+        else if (inOptions)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                menuManager.CloseOptions();
+                menuManager.OpenMenu();
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (menuManager.optionSelector.selections[Mathf.RoundToInt(menuManager.optionSelector.selectorPos.y)] != menuManager.optionSelector.selectorPos)
+                {
+                    menuManager.optionSelector.prevSelections[Mathf.RoundToInt(menuManager.optionSelector.selectorPos.y)] = menuManager.optionSelector.selections[Mathf.RoundToInt(menuManager.optionSelector.selectorPos.y)];
+                    menuManager.optionSelector.selections[Mathf.RoundToInt(menuManager.optionSelector.selectorPos.y)] = menuManager.optionSelector.selectorPos;
+                    menuManager.optionSelector.UpdateSelector();
+                }
+                if (menuManager.optionSelector.selectorPos == Vector2.zero)
+                {
+                    menuManager.CloseOptions();
+                    menuManager.OpenMenu();
+                }
+                if (menuManager.optionSelector.selectorPos.y == 4)
+                {
+                    cam.m_Lens.OrthographicSize = menuManager.optionSelector.selectorPos.x + 3;
+                }
+            }
+            GetSelectorMovement(menuManager.optionSelector);
+        }
+        else if (inPuzzle)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                menuManager.ClosePuzzle();
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                for (int i = 0; i < currentTarget.transform.parent.childCount; i++)
+                {
+                    if (currentTarget.transform.parent.GetChild(i).name.Equals("FloorSwitch(Clone)"))
+                    {
+                        if (Int32.Parse(currentTarget.transform.parent.GetChild(i).GetComponent<SwitchScript>().switchData) == menuManager.puzzleSelector.selectorPos.y * menuManager.puzzleSelector.width + menuManager.puzzleSelector.selectorPos.x + 1)
+                        {
+                            currentTarget.transform.position = currentTarget.transform.parent.GetChild(i).position;
+                            currentTarget.transform.position += new Vector3(0, 0, -0.5f);
+                            if (currentTarget.GetComponent<BlockScript>().id == Int32.Parse(currentTarget.transform.parent.GetChild(i).GetComponent<SwitchScript>().switchData))
+                            {
+                                currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                                currentTarget.transform.position += new Vector3(0, 0, 0.5f);
+                                menuManager.puzzleImages[currentTarget.GetComponent<BlockScript>().id - 1].sprite = currentTarget.GetComponent<SpriteRenderer>().sprite;
+                                menuManager.puzzleImages[currentTarget.GetComponent<BlockScript>().id - 1].color = Color.white;
+                                menuManager.puzzleSelector.textArray[(currentTarget.GetComponent<BlockScript>().id - 1) / menuManager.puzzleSelector.width][(currentTarget.GetComponent<BlockScript>().id - 1) % menuManager.puzzleSelector.width].text = "";
+                                Destroy(currentTarget.GetComponent<BoxCollider2D>());
+                                Destroy(currentTarget.GetComponent<BlockScript>());
+                                Destroy(currentTarget.transform.parent.GetChild(i).gameObject);
+                                
+                            }
+                            break;
+                        }
+                    }
+                }
+                menuManager.ClosePuzzle();
+            }
+            GetSelectorMovement(menuManager.puzzleSelector);
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                menuManager.puzzleImages[Mathf.RoundToInt(menuManager.puzzleSelector.selectorPos.y) * menuManager.puzzleSelector.width + Mathf.RoundToInt(menuManager.puzzleSelector.selectorPos.x)].rectTransform.sizeDelta = new Vector2(100, 100);
+                menuManager.puzzleImages[Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.y) * menuManager.puzzleSelector.width + Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.x)].rectTransform.sizeDelta = new Vector2(150, 150);
+            }
+        }
+        else if (controllingBlock && !currentTarget.GetComponent<BlockScript>().moving)
+        {
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            {
+                holdTimer += Time.deltaTime;
+                direction = Vector3.up;
+                wallTouchList = currentTarget.GetComponent<BlockScript>().WallChecker();
+                if (!wallTouchList[0] && holdTimer > 0.1f)
+                {
+                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                }
+            }
+            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                holdTimer += Time.deltaTime;
+                direction = Vector3.left;
+                wallTouchList = currentTarget.GetComponent<BlockScript>().WallChecker();
+                if (!wallTouchList[1] && holdTimer > 0.1f)
+                {
+                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                }
+            }
+            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+            {
+                holdTimer += Time.deltaTime;
+                direction = Vector3.down;
+                wallTouchList = currentTarget.GetComponent<BlockScript>().WallChecker();
+                if (!wallTouchList[2] && holdTimer > 0.1f)
+                {
+                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                }
+            }
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                holdTimer += Time.deltaTime;
+                direction = Vector3.right;
+                wallTouchList = currentTarget.GetComponent<BlockScript>().WallChecker();
+                if (!wallTouchList[3] && holdTimer > 0.1f)
+                {
+                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                }
+                
+            }
+            if (!Input.anyKey)
+            {
+                holdTimer = 0;
+            }
+            if(Input.GetKeyDown(KeyCode.E))
+            {
+                cam.Follow = gameObject.transform;
+                invManager.blockControlText.GetComponent<Canvas>().enabled = false;
+                controllingBlock = false;
+            }
         }
         
+    }
+    public void GetSelectorMovement(Selector selector)
+    {
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            selector.prevSelectorPos = selector.selectorPos;
+            if (selector.selectorPos.y > 0)
+            {
+                selector.selectorPos.y -= 1;
+                
+            }
+            else
+            {
+                selector.selectorPos.y += selector.textArray.Length - 1;
+            }
+            if (selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1 < selector.selectorPos.x)
+            {
+                selector.selectorPos.x = selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1;
+            }
+            selector.UpdateSelector();
+        }
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            selector.prevSelectorPos = selector.selectorPos;
+            if (selector.selectorPos.x > 0)
+            {
+                selector.selectorPos.x -= 1;
+            }
+            else
+            {
+                selector.selectorPos.x += selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1;
+            }
+            selector.UpdateSelector();
+        }
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            selector.prevSelectorPos = selector.selectorPos;
+            if (selector.selectorPos.y < selector.textArray.Length - 1)
+            {
+                selector.selectorPos.y += 1;
+                
+            }
+            else
+            {
+                selector.selectorPos.y -= selector.textArray.Length - 1;
+            }
+            if (selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1 < selector.selectorPos.x)
+            {
+                selector.selectorPos.x = selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1;
+            }
+            selector.UpdateSelector();
+        }
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            selector.prevSelectorPos = selector.selectorPos;
+            if (selector.selectorPos.x < selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1)
+            {
+                selector.selectorPos.x += 1;
+            }
+            else
+            {
+                selector.selectorPos.x -= selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1;
+            }
+            selector.UpdateSelector();
+        }
     }
     public void GetPlayerMovement()
     {
@@ -364,7 +535,7 @@ public class PlayerScript2D : MonoBehaviour
                 GetComponent<SpriteRenderer>().sprite = idleSprites[0];
             }
         }
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.left;
@@ -380,7 +551,7 @@ public class PlayerScript2D : MonoBehaviour
                 GetComponent<SpriteRenderer>().sprite = idleSprites[1];
             }
         }
-        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.down;
@@ -396,7 +567,7 @@ public class PlayerScript2D : MonoBehaviour
                 GetComponent<SpriteRenderer>().sprite = idleSprites[2];
             }
         }
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.right;
@@ -412,7 +583,7 @@ public class PlayerScript2D : MonoBehaviour
                 GetComponent<SpriteRenderer>().sprite = idleSprites[3];
             }
         }
-        else
+        if(!Input.anyKey)
         {
             holdTimer = 0;
         }
@@ -440,6 +611,10 @@ public class PlayerScript2D : MonoBehaviour
             }
             moving = true;
         }
+        if (mover.CompareTag("Block"))
+        {
+            mover.GetComponent<BlockScript>().moving = true;
+        }
         Vector3 start = mover.transform.position;
         float elapsedTime = 0;
         while (elapsedTime < seconds)
@@ -453,6 +628,23 @@ public class PlayerScript2D : MonoBehaviour
         {
             GetComponent<Animator>().enabled = false;
             moving = false;
+        }
+        if (mover.CompareTag("Block"))
+        {
+            mover.GetComponent<BlockScript>().moving = false;
+            if (mover.GetComponent<BlockScript>().inserted)
+            {
+                if (mover.GetComponent<BlockScript>().id > 0)
+                {
+                    mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                }
+                mover.transform.position += new Vector3(0, 0, 1);
+                Destroy(mover.GetComponent<BoxCollider2D>());
+                Destroy(mover.GetComponent<BlockScript>());
+                cam.Follow = gameObject.transform;
+                invManager.blockControlText.GetComponent<Canvas>().enabled = false;
+                controllingBlock = false;
+            } 
         }
     }
     public IEnumerator IdleSpin(Vector3 start)
@@ -535,7 +727,7 @@ public class PlayerScript2D : MonoBehaviour
                 target.GetComponent<SwitchScript>().UseSwitch();
                 break;
             case "Item":
-                if (invManager.inventory.Count == 6)
+                if (invManager.inventory.Count == invManager.selector.width * invManager.selector.height)
                 {
                     string[] temp = new string[] { "0You:I don't have any room left to pick items up. I should drop or use one." };
                     dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
@@ -580,7 +772,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     public void NoteWarp()
     {
-        NoteScript curNote = journalManager.GetNote(Mathf.RoundToInt(journalManager.selection.y) * journalManager.textArray.GetLength(1) + Mathf.RoundToInt(journalManager.selection.x));
+        NoteScript curNote = journalManager.GetNote(Mathf.RoundToInt(journalManager.selector.selection.y) * journalManager.selector.textArray[0].Length + Mathf.RoundToInt(journalManager.selector.selection.x));
         if (curNote == null)
         {
             string[] temp = new string[] { "0You:I can't travel to a place that I haven't found yet." };
@@ -614,6 +806,10 @@ public class PlayerScript2D : MonoBehaviour
             case "PuzzleTest":
                 GetComponent<AudioSource>().clip = songs[0];
                 break;
+            default:
+                GetComponent<AudioSource>().clip = songs[0];
+                break;
+
         }
         GetComponent<AudioSource>().Play();
     }

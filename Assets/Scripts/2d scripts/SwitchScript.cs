@@ -49,7 +49,7 @@ public class SwitchScript : MonoBehaviour
                     item.SetActive(true);
                     break;
                 case "onoff":
-                    if (item.tag == "RedWall")
+                    if (item.CompareTag("RedWall"))
                     {
                         item.SetActive(onValue);
                     }
@@ -59,13 +59,13 @@ public class SwitchScript : MonoBehaviour
                     } 
                     break;
                 case "insert": //for puzzles
-                    if (item.tag == "Block")
+                    if (item.CompareTag("Block"))
                     {
                         item.GetComponent<BlockScript>().inserted = true;
                         Destroy(gameObject);
                         break;
                     }
-                    else if (item.tag  == "Item")
+                    else if (item.CompareTag("Item"))
                     {
                         transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
                         item.transform.position += new Vector3(0, 0, 1);
@@ -107,15 +107,11 @@ public class SwitchScript : MonoBehaviour
                         {
                             item.GetComponent<PlayerScript2D>().direction = Vector3.right;
                         }
-                        else if (item.GetComponent<PlayerScript2D>().entryDirection != Vector3.zero)
-                        {
-                            item.GetComponent<PlayerScript2D>().direction = -item.GetComponent<PlayerScript2D>().entryDirection;
-                            item.GetComponent<PlayerScript2D>().entryDirection = Vector3.zero;
-                        }
                         item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         item.GetComponent<PlayerScript2D>().SwitchSong(scene);
                         SceneManager.LoadScene(scene);
+                        
                     }
                     break;
                 case "spike":
@@ -144,6 +140,23 @@ public class SwitchScript : MonoBehaviour
                     if (item.name == "SceneWarp")
                     {
                         item.GetComponent<SwitchScript>().switchData = player.entryScene + " " + player.entryPos.x + "," + player.entryPos.y;
+                        if (player.entryDirection == Vector3.up)
+                        {
+                            item.transform.position = new Vector3(-3, -13, 1);
+                            item.transform.Rotate(new Vector3(0, 0, 90));
+                            player.transform.position = new Vector3(-3, -12, 0);
+                        }
+                        else if (player.entryDirection == Vector3.left)
+                        {
+                            item.transform.position = new Vector3(6, 0, 1);
+                            player.transform.position = new Vector3(5, 0, 0);
+                        }
+                        else if (player.entryDirection == Vector3.down)
+                        {
+                            item.transform.position = new Vector3(-3, 13, 1);
+                            item.transform.Rotate(new Vector3(0, 0, 90));
+                            player.transform.position = new Vector3(-3, 12, 0);
+                        }
                     }
                     break;
                 case "puzzleData":
@@ -157,6 +170,8 @@ public class SwitchScript : MonoBehaviour
                     item.GetComponent<PlayerScript2D>().entryPos = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
                     item.GetComponent<PlayerScript2D>().entryScene = SceneManager.GetActiveScene().name;
                     item.GetComponent<PlayerScript2D>().entryDirection = item.GetComponent<PlayerScript2D>().direction;
+                    item.GetComponent<PlayerScript2D>().menuManager.puzzleSelector = new Selector(x2,y2);
+                    item.GetComponent<PlayerScript2D>().menuManager.MakePuzzleMenu();
                     break;
             }
         }
@@ -193,7 +208,7 @@ public class SwitchScript : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Block" && switchType == "floor")
+        if (collision.CompareTag("Block") && switchType == "floor")
         {
             if(switchData == "")
             {
@@ -205,12 +220,12 @@ public class SwitchScript : MonoBehaviour
                 UseSwitch();
             }
         }
-        if (collision.tag == "Item" && switchType == "floor" && switchData == collision.name)
+        if (collision.CompareTag("Item") && switchType == "floor" && switchData == collision.name)
         {
             affectedObjects[0] = collision.gameObject;
             UseSwitch();
         }
-        if (collision.tag == "Player" && (switchType == "pressurePlate" || switchType == "pressurePlate+"))
+        if (collision.CompareTag("Player") && (switchType == "pressurePlate" || switchType == "pressurePlate+"))
         {
             if (switchEffect == "warp" || switchEffect == "talk" || switchEffect == "puzzleData")
             {
@@ -233,7 +248,7 @@ public class SwitchScript : MonoBehaviour
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.tag == "Player" && switchType == "pressurePlate")
+        if (collision.CompareTag("Player") && switchType == "pressurePlate")
         {
             if (switchEffect == "spike")
             {

@@ -16,13 +16,7 @@ public class ImagePuzzleScript : MonoBehaviour
     public bool timerOn;
     public GameObject reward;
     public Texture2D fullImage;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
         if (timerOn)
@@ -78,11 +72,6 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().id = norm[i];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
-                    GameObject place = Instantiate(floorSwitch, transform);
-                    place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
-                    place.GetComponent<SwitchScript>().switchEffect = "insert";
-                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
-                    place.GetComponent<SpriteRenderer>().color = Color.cyan;
                 }
                 timerOn = true;
                 break;
@@ -96,14 +85,38 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<ItemScript>().itemImage = pieces[norm[i] - 1];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
-                    GameObject place = Instantiate(floorSwitch, transform);
-                    place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
-                    place.GetComponent<SwitchScript>().switchEffect = "insert";
-                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
-                    place.GetComponent<SpriteRenderer>().color = Color.cyan;
                 }
                 break;
-
+            case "Menu":
+                for (int i = 0; i < width * height; i++)
+                {
+                    GameObject piece = Instantiate(pushBlock, transform);
+                    piece.GetComponent<BlockScript>().id = norm[i];
+                    piece.GetComponent<BlockScript>().type = "menu";
+                    piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
+                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                }
+                timerOn = true;
+                break;
+            case "Control":
+                for (int i = 0; i < width * height; i++)
+                {
+                    GameObject piece = Instantiate(pushBlock, transform);
+                    piece.GetComponent<BlockScript>().id = norm[i];
+                    piece.GetComponent<BlockScript>().type = "control";
+                    piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
+                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                }
+                timerOn = true;
+                break;
+        }
+        for (int i = 0; i < width * height; i++)
+        {
+            GameObject place = Instantiate(floorSwitch, transform);
+            place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
+            place.GetComponent<SwitchScript>().switchEffect = "insert";
+            place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
+            place.GetComponent<SpriteRenderer>().color = Color.cyan;
         }
     }
     public Texture2D Resize(Texture2D source, int newWidth, int newHeight)
@@ -113,7 +126,7 @@ public class ImagePuzzleScript : MonoBehaviour
         rt.filterMode = FilterMode.Point;
         RenderTexture.active = rt;
         Graphics.Blit(source, rt);
-        Texture2D nTex = new Texture2D(newWidth, newHeight);
+        Texture2D nTex = new(newWidth, newHeight);
         nTex.ReadPixels(new Rect(0, 0, newWidth, newHeight), 0, 0);
         nTex.Apply();
         RenderTexture.active = null;

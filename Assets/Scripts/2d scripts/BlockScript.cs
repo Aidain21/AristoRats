@@ -5,6 +5,7 @@ using UnityEngine;
 public class BlockScript : MonoBehaviour
 {
     public bool moving;
+    public string type = "push";
     public bool inserted;
     public IEnumerator move;
     public bool[] walls = { false, false, false, false }; //ULDR
@@ -18,12 +19,12 @@ public class BlockScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    public IEnumerator Moving(Vector2 goal)
+    public IEnumerator Moving(Vector3 goal, float time)
     {
-        while (new Vector2(transform.position.x, transform.position.y) != goal)
+        while (new Vector3(transform.position.x, transform.position.y,0) != goal)
         {
             moving = true;
-            transform.position = Vector2.MoveTowards(transform.position, goal, 2.5f * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, goal, time * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
         transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0);
@@ -34,32 +35,61 @@ public class BlockScript : MonoBehaviour
             {
                 transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
             }
-            transform.position += new Vector3(0,0,1);
+            transform.position += new Vector3(0, 0, 1);
             Destroy(GetComponent<BoxCollider2D>());
             Destroy(GetComponent<BlockScript>());
-        }
+        }        
     }
 
     public void Push(Vector3 direction)
     {
-        walls = WallChecker();
-        if ((!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right))
+        if (type == "push")
         {
-            StartCoroutine(Moving(transform.position + direction));
-        }
-        else if (!player.GetComponent<PlayerScript2D>().moving)
-        {
-            bool[] pwalls = player.GetComponent<PlayerScript2D>().WallChecker();
-            if ((!pwalls[0] && direction == Vector3.down) || (!pwalls[1] && direction == Vector3.right) || (!pwalls[2] && direction == Vector3.up) || (!pwalls[3] && direction == Vector3.left))
+            walls = WallChecker();
+            if ((!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right))
             {
-                StartCoroutine(Moving(transform.position - direction));
-                StartCoroutine(player.GetComponent<PlayerScript2D>().GridMove(player, player.transform.position - direction, 0.3f));
+                StartCoroutine(Moving(transform.position + direction, 2.5f));
             }
-            
+            else if (!player.GetComponent<PlayerScript2D>().moving)
+            {
+                bool[] pwalls = player.GetComponent<PlayerScript2D>().WallChecker();
+                if ((!pwalls[0] && direction == Vector3.down) || (!pwalls[1] && direction == Vector3.right) || (!pwalls[2] && direction == Vector3.up) || (!pwalls[3] && direction == Vector3.left))
+                {
+                    StartCoroutine(Moving(transform.position - direction, 2.5f));
+                    string temp;
+                    if (direction == Vector3.up)
+                    {
+                        temp = "Up";
+                    }
+                    else if (direction == Vector3.left)
+                    {
+                        temp = "Left";
+                    }
+                    else if (direction == Vector3.down)
+                    {
+                        temp = "Down";
+                    }
+                    else
+                    {
+                        temp = "Right";
+                    }
+                    StartCoroutine(player.GetComponent<PlayerScript2D>().GridMove(player, player.transform.position - direction, 0.3f, temp));
+                }
+
+            }
         }
-        
+        else if (type == "menu")
+        {
+            player.GetComponent<PlayerScript2D>().menuManager.OpenPuzzle();
+        }
+        else if (type == "control")
+        {
+            player.GetComponent<PlayerScript2D>().cam.Follow = gameObject.transform;
+            player.GetComponent<PlayerScript2D>().invManager.blockControlText.GetComponent<Canvas>().enabled = true;
+            player.GetComponent<PlayerScript2D>().controllingBlock = true;
+        }
     }
-    private bool[] WallChecker()
+    public bool[] WallChecker()
     {
         RaycastHit2D hitData = Physics2D.Raycast(transform.position + Vector3.up * 0.51f, Vector2.up, 0.5f);
         bool up = hitData.collider != null;
