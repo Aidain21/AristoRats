@@ -151,6 +151,17 @@ public class DialogueManager : MonoBehaviour
         if (hasMoreText)
         {
             playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter += 1;
+            if (playerScript.currentTarget != null && playerScript.currentTarget.CompareTag("Sign") && playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite.name == "Circle")
+            {
+                playerScript.currentTarget.GetComponent<SpriteRenderer>().color = Color.yellow;
+            }
+        }
+        else
+        {
+            if (playerScript.currentTarget != null && playerScript.currentTarget.CompareTag("Sign") && playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite.name == "Circle")
+            {
+                playerScript.currentTarget.GetComponent<SpriteRenderer>().color = Color.blue;
+            }
         }
         playerScript.inDialogue = false;
         textBox.GetComponent<Canvas>().enabled = false;

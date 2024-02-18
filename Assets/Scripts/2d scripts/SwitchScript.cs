@@ -14,6 +14,7 @@ public class SwitchScript : MonoBehaviour
     public bool playerOnSpike = false;
     public Texture2D puzzleImage;
     public GameObject[] affectedObjects = new GameObject[1];
+    public bool funny;
     // Start is called before the first frame update
     void Start()
     {
@@ -97,6 +98,7 @@ public class SwitchScript : MonoBehaviour
                     }
                     else
                     {
+                        bool sillyDude = false;
                         string scene = switchData.Substring(0, switchData.IndexOf(" "));
                         int x = Int32.Parse(switchData.Substring(switchData.IndexOf(" ") + 1, switchData.IndexOf(",") - switchData.IndexOf(" ") - 1));
                         int y = Int32.Parse(switchData[(switchData.IndexOf(",") + 1)..]);
@@ -107,10 +109,18 @@ public class SwitchScript : MonoBehaviour
                         {
                             item.GetComponent<PlayerScript2D>().direction = Vector3.right;
                         }
+                        if (scene == "PuzzleTest" && SceneManager.GetActiveScene().name == "ImagePuzzle" && item.GetComponent<PlayerScript2D>().entryScene != "PuzzleTest")
+                        {
+                            sillyDude = true;
+                        }
                         item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         item.GetComponent<PlayerScript2D>().SwitchSong(scene);
                         SceneManager.LoadScene(scene);
+                        if (sillyDude)
+                        {
+                            item.GetComponent<PlayerScript2D>().sillyDude = true;
+                        }
                         
                     }
                     break;
@@ -139,6 +149,9 @@ public class SwitchScript : MonoBehaviour
                     }
                     if (item.name == "SceneWarp")
                     {
+                        player.StopAllCoroutines();
+                        player.moving = false;
+                        player.GetComponent<Animator>().enabled = false;
                         item.GetComponent<SwitchScript>().switchData = player.entryScene + " " + player.entryPos.x + "," + player.entryPos.y;
                         if (player.entryDirection == Vector3.up)
                         {

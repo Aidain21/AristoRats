@@ -62,6 +62,7 @@ public class PlayerScript2D : MonoBehaviour
     public List<AudioClip> sfx;
     public List<AudioClip> songs;
 
+    public bool sillyDude;
     void Awake()
     {
         //Cursor.visible = false;
@@ -88,6 +89,11 @@ public class PlayerScript2D : MonoBehaviour
     }
     void Update()
     {
+        if (sillyDude && transform.position != new Vector3(23, 1, 0))
+        {
+            transform.position = new Vector3(23, 1, 0);
+            sillyDude = false;
+        }
         if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && holdTimer == 0)
         {
             spinTimer += Time.deltaTime;

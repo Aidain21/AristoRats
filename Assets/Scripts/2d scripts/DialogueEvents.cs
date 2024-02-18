@@ -59,6 +59,22 @@ public class DialogueEvents : MonoBehaviour
         {
             Destroy(playerScript.currentTarget);
         }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "0", "0" }))
+        {
+            GameObject.Find("LevelObjects").transform.Find("Easy").gameObject.SetActive(true);
+        }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Easy", "0", "0" }))
+        {
+            GameObject.Find("LevelObjects").transform.Find("Harder").gameObject.SetActive(true);
+        }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Harder", "0", "0" }))
+        {
+            GameObject.Find("LevelObjects").transform.Find("Insane").gameObject.SetActive(true);
+        }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Insane", "0", "0" }))
+        {
+            GameObject.Find("LevelObjects").transform.Find("Auto").gameObject.SetActive(true);
+        }
     }
 
     public IEnumerator Grow()
