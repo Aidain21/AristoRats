@@ -34,6 +34,7 @@ public class PlayerScript2D : MonoBehaviour
 
     public CinemachineVirtualCamera cam;
 
+    public bool isLoading;
     public bool inMap;
     public bool inJournal;
     public bool inDialogue;
@@ -89,12 +90,13 @@ public class PlayerScript2D : MonoBehaviour
     }
     void Update()
     {
+
         if (sillyDude && transform.position != new Vector3(23, 1, 0))
         {
             transform.position = new Vector3(23, 1, 0);
             sillyDude = false;
         }
-        if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && holdTimer == 0)
+        if (!isLoading && !moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && holdTimer == 0)
         {
             spinTimer += Time.deltaTime;
         }
@@ -112,7 +114,7 @@ public class PlayerScript2D : MonoBehaviour
         {
             StartCoroutine(IdleSpin(direction));
         }
-        if (!inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock) //Controls for overworld
+        if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock) //Controls for overworld
         {
             if (!moving)
             {
@@ -625,6 +627,10 @@ public class PlayerScript2D : MonoBehaviour
         float elapsedTime = 0;
         while (elapsedTime < seconds)
         {
+            if (isLoading && mover.name != "Player")
+            {
+                yield break;
+            }
             mover.transform.position = Vector3.Lerp(start, end, (elapsedTime / seconds));
             elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
@@ -703,7 +709,7 @@ public class PlayerScript2D : MonoBehaviour
             case "Sign":
                 aboveTalker = transform.position.y > target.transform.position.y;
                 SignTextScript signScript = target.GetComponent<SignTextScript>();
-                dialogueManager.StartDialogue(signScript.dialogueName, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
+                dialogueManager.StartDialogue(signScript.name, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
                 break;
             case "Block":
                 if (!target.GetComponent<BlockScript>().moving)
@@ -840,5 +846,19 @@ public class PlayerScript2D : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public IEnumerator SwitchScene(string sceneName)
+    {
+        yield return null;
+        isLoading = true;
+        var op = SceneManager.LoadSceneAsync(sceneName);
+        op.completed += (x) =>
+        {
+            isLoading = false;
+            SwitchSong(sceneName);
+            dialogueManager.eventScript.RunPastEvents();
+        };
+        
     }
 }

@@ -1,33 +1,61 @@
 using System.Collections;
 using System.Linq;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DialogueEvents : MonoBehaviour
 {
+    public bool dontAdd;
     public GameObject player;
     public PlayerScript2D playerScript;
     public string[] dialogueData = new string[3];
+    public List<string[]> storedEvents = new();
     public Sprite norm;
-    //current targeted item 
-    // Start is called before the first frame update
 
-    // Update is called once per frame
-    public void EventTrigger()
+    public void RunPastEvents()
     {
+        dontAdd = true;
+        for (int i = 0; i < storedEvents.Count; i++)
+        {
+            playerScript.currentTarget = GameObject.Find(storedEvents[i][0]);
+            if (playerScript.currentTarget != null)
+            {
+                playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = Int32.Parse(storedEvents[i][1]) + 1;
+                storedEvents[i].CopyTo(dialogueData, 0);
+                EventTrigger();
+                EndEventTrigger();
+            }
+        }
+        dontAdd = false;
+    }
+    public void EventTrigger() //use:   else if (Enumerable.SequenceEqual(dialogueData, new string[] { "NPC Object's name", "Talk Counter", "Current Line" }))
+    {
+        // NPC in test room runs away from you.
         if (Enumerable.SequenceEqual(dialogueData, new string[] { "Testy", "2", "1" }))
         {
             StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up * 10, 4f));
+            if (!dontAdd)
+            {
+                storedEvents.Add(new string[] { "Testy", "2", "1" });
+            }
         }
+
+        // Hidden NPC changes to red
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "RedSign", "2", "0" }))
         {
             playerScript.currentTarget.GetComponent<SpriteRenderer>().color = Color.red;
         }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "tre", "1", "2" }))
+
+        //NPC behind tree starts growing and has funny normal face
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "TreeGuy", "1", "2" }))
         {
             playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite = norm;
             StartCoroutine(Grow());
         }
+
+        // First guard moves out of the way
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "3", "1" }))
         {
             StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.down * 3, 1f));
@@ -35,7 +63,8 @@ public class DialogueEvents : MonoBehaviour
     }
     public void EndEventTrigger()
     {
-        if (Enumerable.SequenceEqual(dialogueData, new string[] { "darkDude", "1", "0" }))
+        // Darkness Renderer takes key from player
+        if (Enumerable.SequenceEqual(dialogueData, new string[] { "DarkDude", "1", "0" }))
         {
             if (playerScript.HasItem("TestKey"))
             {
@@ -43,10 +72,14 @@ public class DialogueEvents : MonoBehaviour
                 playerScript.invManager.inventory.Remove(playerScript.GetItem("TestKey"));
             }
         }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "darkDude", "2", "0" }))
+
+        // Darkness Renderer resets dialogue
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "DarkDude", "2", "0" }))
         {
             playerScript.dialogueManager.ChangeDialogue(0, false);
         }
+
+        // The First Guard takes the key from the player, if they had one, and changes dialogue
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "0", "0" }) || Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "1", "0" }))
         {
             if (playerScript.HasItem("Key"))
@@ -55,10 +88,14 @@ public class DialogueEvents : MonoBehaviour
                 playerScript.invManager.inventory.Remove(playerScript.GetItem("Key"));
             }
         }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "trash", "0", "3" }))
+
+        // Stickman death
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Trash", "0", "3" }))
         {
             Destroy(playerScript.currentTarget);
         }
+
+        // Funny Stuff start
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "0", "0" }))
         {
             GameObject.Find("LevelObjects").transform.Find("Easy").gameObject.SetActive(true);
@@ -75,6 +112,7 @@ public class DialogueEvents : MonoBehaviour
         {
             GameObject.Find("LevelObjects").transform.Find("Auto").gameObject.SetActive(true);
         }
+        // Funny stuff end
     }
 
     public IEnumerator Grow()

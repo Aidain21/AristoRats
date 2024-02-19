@@ -27,13 +27,13 @@ public class DialogueManager : MonoBehaviour
         sentences = new List<string>();
     }
 
-    public void StartDialogue(string dialogueName, string[] dialogue, int talkCounter, Sprite talkerImage)
+    public void StartDialogue(string name, string[] dialogue, int talkCounter, Sprite talkerImage)
     {
         typingSpeed = 2 * ((5 - playerScript.menuManager.optionSelector.selections[2].x)  / 100) - 0.01f; 
         hasMoreText = false;
         sentences.Clear();
         playerScript.inDialogue = true;
-        eventScript.dialogueData[0] = dialogueName;
+        eventScript.dialogueData[0] = name;
         eventScript.dialogueData[1] = talkCounter.ToString();
         eventScript.dialogueData[2] = "-1";
         textBox.GetComponent<Canvas>().enabled = true;
