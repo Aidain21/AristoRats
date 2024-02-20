@@ -82,6 +82,7 @@ public class DialogueManager : MonoBehaviour
 
     public void DisplayNextSentence()
     {
+        
         eventScript.dialogueData[2] = (Int32.Parse(eventScript.dialogueData[2]) + 1).ToString();
         spaceText.text = "";
         if (sentences.Count == 0)
@@ -128,6 +129,11 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
+            if (playerScript.currentTarget != null && playerScript.currentTarget.CompareTag("Sign") && playerScript.currentTarget.GetComponent<Animator>().runtimeAnimatorController != null)
+            {
+                playerScript.currentTarget.GetComponent<Animator>().enabled = true;
+                playerScript.currentTarget.GetComponent<Animator>().Play("Talk");
+            }
             imageFrame.sprite = currentImage;
             eventScript.EventTrigger();
             if (sentence[sentence.IndexOf(":") + 1] == ' ')
@@ -151,6 +157,7 @@ public class DialogueManager : MonoBehaviour
             StartDialogue(eventScript.dialogueData[0], playerScript.currentTarget.GetComponent<SignTextScript>().dialogue, talkCounter, currentImage);
         }
     }
+
 
     public IEnumerator TypeSentence(string sentence)
     {

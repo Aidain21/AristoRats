@@ -204,6 +204,12 @@ public class PlayerScript2D : MonoBehaviour
                     if (currentTarget != null)
                     {
                         aboveTalker = transform.position.y > currentTarget.transform.position.y;
+                        if (currentTarget.CompareTag("Sign") && currentTarget.GetComponent<Animator>().runtimeAnimatorController != null)
+                        {
+                            
+                            currentTarget.GetComponent<Animator>().enabled = false;
+                            currentTarget.GetComponent<SpriteRenderer>().sprite = currentTarget.GetComponent<SignTextScript>().talkerImage;
+                        }
                     }
                     dialogueManager.sentences.RemoveAt(0);
                     dialogueManager.eventScript.EndEventTrigger();
