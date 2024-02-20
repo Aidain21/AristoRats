@@ -13,12 +13,19 @@ public class DialogueManager : MonoBehaviour
     public bool changed;
     public float typingSpeed = 0.03f;
     public bool hasMoreText;
+    public bool hiddenText;
     public PlayerScript2D playerScript;
     public DialogueEvents eventScript;
     public Canvas textBox;
     public GameObject background;
     public Image imageFrame;
     public Sprite currentImage; //just the talker for now
+
+    public Sprite hasNewText;
+    public Sprite hasHiddenText;
+    public Sprite noMoreText;
+
+    public Sprite storedStatus;
 
     public List<string> sentences;
     void Start()
@@ -31,6 +38,7 @@ public class DialogueManager : MonoBehaviour
     {
         typingSpeed = 2 * ((5 - playerScript.menuManager.optionSelector.selections[2].x)  / 100) - 0.01f; 
         hasMoreText = false;
+        hiddenText = false;
         sentences.Clear();
         playerScript.inDialogue = true;
         eventScript.dialogueData[0] = name;
@@ -62,6 +70,11 @@ public class DialogueManager : MonoBehaviour
             if (Int32.Parse(sentence.Substring(0, index)) == talkCounter + 1)
             {
                 hasMoreText = true;
+                hiddenText = false;
+            }
+            else if (!hasMoreText && Int32.Parse(sentence.Substring(0, index)) > talkCounter + 1)
+            {
+                hiddenText = true;
             }
         }
         DisplayNextSentence();
@@ -79,7 +92,20 @@ public class DialogueManager : MonoBehaviour
 
         string sentence = sentences[0];
         StopAllCoroutines();
-        
+
+        if (hasMoreText)
+        {
+            storedStatus = hasNewText;
+        }
+        else if (hiddenText)
+        {
+            storedStatus = hasHiddenText;
+        }
+        else
+        {
+            storedStatus = noMoreText;
+        }
+
         nameText.text = sentence.Substring(0,sentence.IndexOf(":")+1);
         if (nameText.text == "")
         {
@@ -148,20 +174,13 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
+        if (playerScript.currentTarget != null && playerScript.currentTarget.CompareTag("Sign"))
+        {
+            playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = storedStatus;
+        }
         if (hasMoreText)
         {
             playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter += 1;
-            if (playerScript.currentTarget != null && playerScript.currentTarget.CompareTag("Sign") && playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite.name == "Circle")
-            {
-                playerScript.currentTarget.GetComponent<SpriteRenderer>().color = Color.yellow;
-            }
-        }
-        else
-        {
-            if (playerScript.currentTarget != null && playerScript.currentTarget.CompareTag("Sign") && playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite.name == "Circle")
-            {
-                playerScript.currentTarget.GetComponent<SpriteRenderer>().color = Color.blue;
-            }
         }
         playerScript.inDialogue = false;
         textBox.GetComponent<Canvas>().enabled = false;

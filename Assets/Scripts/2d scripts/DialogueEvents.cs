@@ -12,6 +12,7 @@ public class DialogueEvents : MonoBehaviour
     public PlayerScript2D playerScript;
     public string[] dialogueData = new string[3];
     public List<string[]> storedEvents = new();
+    public List<Sprite> talkerStats = new();
     public Sprite norm;
 
     public void RunPastEvents()
@@ -23,6 +24,7 @@ public class DialogueEvents : MonoBehaviour
             if (playerScript.currentTarget != null)
             {
                 playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = Int32.Parse(storedEvents[i][1]) + 1;
+                playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = talkerStats[i];
                 storedEvents[i].CopyTo(dialogueData, 0);
                 EventTrigger();
                 EndEventTrigger();
@@ -38,7 +40,8 @@ public class DialogueEvents : MonoBehaviour
             StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up * 10, 4f));
             if (!dontAdd)
             {
-                storedEvents.Add(new string[] { "Testy", "2", "1" });
+                storedEvents.Add((string[])dialogueData.Clone());
+                talkerStats.Add(playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite);
             }
         }
 
@@ -59,6 +62,11 @@ public class DialogueEvents : MonoBehaviour
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "3", "1" }))
         {
             StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.down * 3, 1f));
+            if (!dontAdd)
+            {
+                storedEvents.Add((string[])dialogueData.Clone());
+                talkerStats.Add(playerScript.dialogueManager.storedStatus);
+            }
         }
     }
     public void EndEventTrigger()
@@ -98,19 +106,19 @@ public class DialogueEvents : MonoBehaviour
         // Funny Stuff start
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "0", "0" }))
         {
-            GameObject.Find("LevelObjects").transform.Find("Easy").gameObject.SetActive(true);
+            GameObject.Find("LevelObjects/NPCs").transform.Find("Easy").gameObject.SetActive(true);
         }
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Easy", "0", "0" }))
         {
-            GameObject.Find("LevelObjects").transform.Find("Harder").gameObject.SetActive(true);
+            GameObject.Find("LevelObjects/NPCs").transform.Find("Harder").gameObject.SetActive(true);
         }
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Harder", "0", "0" }))
         {
-            GameObject.Find("LevelObjects").transform.Find("Insane").gameObject.SetActive(true);
+            GameObject.Find("LevelObjects/NPCs").transform.Find("Insane").gameObject.SetActive(true);
         }
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Insane", "0", "0" }))
         {
-            GameObject.Find("LevelObjects").transform.Find("Auto").gameObject.SetActive(true);
+            GameObject.Find("LevelObjects/NPCs").transform.Find("Auto").gameObject.SetActive(true);
         }
         // Funny stuff end
     }

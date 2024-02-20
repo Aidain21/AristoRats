@@ -7,7 +7,6 @@ public class SignTextScript : MonoBehaviour
     public string[] dialogue;
     public int talkCounter = 0;
     public Sprite talkerImage;
-
     void Start()
     {
         talkerImage = GetComponent<SpriteRenderer>().sprite;

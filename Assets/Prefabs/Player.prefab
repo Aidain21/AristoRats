@@ -2434,12 +2434,16 @@ MonoBehaviour:
   changed: 0
   typingSpeed: 0.05
   hasMoreText: 0
+  hiddenText: 0
   playerScript: {fileID: 7819647501052969531}
   eventScript: {fileID: 2112590002134000536}
   textBox: {fileID: 651645792049097564}
   background: {fileID: 8787963313055384083}
   imageFrame: {fileID: 5105127137833425124}
   currentImage: {fileID: 0}
+  hasNewText: {fileID: 21300000, guid: f2e7b0402025c8a4fb0e5e0a27e63e3d, type: 3}
+  hasHiddenText: {fileID: 21300000, guid: e4cb3ff7bdbe82941beba48358876bfc, type: 3}
+  noMoreText: {fileID: 21300000, guid: 617778672b7cf5b4babfcaaba1a621d1, type: 3}
   sentences: []
 --- !u!114 &2112590002134000536
 MonoBehaviour:
@@ -2453,6 +2457,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cc7da55669513349be3fd7c9166241e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontAdd: 0
   player: {fileID: 6997520163577216977}
   playerScript: {fileID: 7819647501052969531}
   dialogueData:
@@ -4511,6 +4516,7 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   backpackMenu: {fileID: 0}
   cam: {fileID: 6297145517509531733}
+  isLoading: 0
   inMap: 0
   inJournal: 0
   inDialogue: 0
@@ -4539,6 +4545,7 @@ MonoBehaviour:
   songs:
   - {fileID: 8300000, guid: 3b837106d9bd06546a39a5180b8b55ee, type: 3}
   - {fileID: 8300000, guid: 9c21c6ec340d95b428bf728757106178, type: 3}
+  sillyDude: 0
 --- !u!61 &7938383530957215042
 BoxCollider2D:
   m_ObjectHideFlags: 0
