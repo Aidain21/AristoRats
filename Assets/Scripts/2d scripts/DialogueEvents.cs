@@ -37,7 +37,7 @@ public class DialogueEvents : MonoBehaviour
         // NPC in test room runs away from you.
         if (Enumerable.SequenceEqual(dialogueData, new string[] { "Testy", "2", "1" }))
         {
-            StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up * 10, 4f));
+            StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up * 9, 4f));
             if (!dontAdd)
             {
                 storedEvents.Add((string[])dialogueData.Clone());

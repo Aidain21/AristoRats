@@ -87,6 +87,7 @@ public class PlayerScript2D : MonoBehaviour
         timeBetweenTiles = 0.3f;
         swapy = 0.15f;
         prevDir = Vector3.zero;
+        SwitchSong(SceneManager.GetActiveScene().name);
     }
     void Update()
     {
@@ -816,19 +817,13 @@ public class PlayerScript2D : MonoBehaviour
     }
     public void SwitchSong(string scene)
     {
-        switch (scene)
+        GetComponent<AudioSource>().clip = scene switch
         {
-            case "ImagePuzzle":
-                GetComponent<AudioSource>().clip = songs[1];
-                break;
-            case "PuzzleTest":
-                GetComponent<AudioSource>().clip = songs[0];
-                break;
-            default:
-                GetComponent<AudioSource>().clip = songs[0];
-                break;
-
-        }
+            "ImagePuzzle" => songs[1],
+            "PuzzleTest" => songs[0],
+            "Castle" => songs[2],
+            _ => songs[0],
+        };
         GetComponent<AudioSource>().Play();
     }
     public bool HasItem(string name)

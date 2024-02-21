@@ -9,6 +9,10 @@ public class SignTextScript : MonoBehaviour
     public Sprite talkerImage;
     void Start()
     {
+        if (gameObject.CompareTag("Sign"))
+        {
+            GetComponent<Animator>().enabled = false;
+        }
         talkerImage = GetComponent<SpriteRenderer>().sprite;
     }
 
