@@ -108,10 +108,21 @@ public class ImagePuzzleScript : MonoBehaviour
                 for (int i = 0; i < width * height; i++)
                 {
                     GameObject piece = Instantiate(pushBlock, transform);
-                    piece.GetComponent<BlockScript>().id = norm[i];
+                    piece.GetComponent<BlockScript>().id = norm[i]; 
                     piece.GetComponent<BlockScript>().type = "control";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                }
+                timerOn = true;
+                break;
+            case "Shuffle":
+                for (int i = 0; i < width * height; i++)
+                {
+                    GameObject piece = Instantiate(pushBlock, transform);
+                    piece.GetComponent<BlockScript>().id = norm[i];
+                    piece.GetComponent<BlockScript>().type = "shuffle";
+                    piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
+                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, height - (i / width));
                 }
                 timerOn = true;
                 break;

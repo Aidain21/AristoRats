@@ -4181,7 +4181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   switchType: pressurePlate
   switchEffect: puzzleData
-  switchData: Blocks 5,4
+  switchData: Shuffle+ 4,4
   warpEnd: {fileID: 0}
   onValue: 0
   playerOnSpike: 0
@@ -16988,6 +16988,10 @@ PrefabInstance:
     - target: {fileID: 7143149181382550141, guid: 74c6602d190f7654895d85f61f214bac, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7444518235817482092, guid: 74c6602d190f7654895d85f61f214bac, type: 3}
+      propertyPath: switchData
+      value: Blocks 2,3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
