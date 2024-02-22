@@ -2444,6 +2444,7 @@ MonoBehaviour:
   hasNewText: {fileID: 21300000, guid: f2e7b0402025c8a4fb0e5e0a27e63e3d, type: 3}
   hasHiddenText: {fileID: 21300000, guid: e4cb3ff7bdbe82941beba48358876bfc, type: 3}
   noMoreText: {fileID: 21300000, guid: 617778672b7cf5b4babfcaaba1a621d1, type: 3}
+  storedStatus: {fileID: 0}
   sentences: []
 --- !u!114 &2112590002134000536
 MonoBehaviour:
@@ -2464,6 +2465,7 @@ MonoBehaviour:
   - ' '
   - 0
   - 0
+  talkerStats: []
   norm: {fileID: 21300000, guid: 53f52e5c9b9e23f4aa8783514a62dab1, type: 3}
 --- !u!1 &5027809843419717894
 GameObject:
@@ -4545,6 +4547,7 @@ MonoBehaviour:
   songs:
   - {fileID: 8300000, guid: 3b837106d9bd06546a39a5180b8b55ee, type: 3}
   - {fileID: 8300000, guid: 9c21c6ec340d95b428bf728757106178, type: 3}
+  - {fileID: 8300000, guid: e97fd71e0146c3c4ba043673f858ac0c, type: 3}
   sillyDude: 0
 --- !u!61 &7938383530957215042
 BoxCollider2D:
@@ -4870,7 +4873,7 @@ Transform:
   m_GameObject: {fileID: 7255253736602156306}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 51, y: 53, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

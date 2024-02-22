@@ -80,6 +80,10 @@ public class DialogueEvents : MonoBehaviour
                 playerScript.invManager.inventory.Remove(playerScript.GetItem("TestKey"));
             }
         }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Infinite", "1", "5" }))
+        {
+            playerScript.dialogueManager.ChangeDialogue(1, true);
+        }
 
         // Darkness Renderer resets dialogue
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "DarkDude", "2", "0" }))

@@ -107,10 +107,6 @@ public class SwitchScript : MonoBehaviour
                         {
                             item.GetComponent<PlayerScript2D>().direction = Vector3.right;
                         }
-                        if (scene == "PuzzleTest" && SceneManager.GetActiveScene().name == "ImagePuzzle" && item.GetComponent<PlayerScript2D>().entryScene != "PuzzleTest")
-                        {
-                            item.GetComponent<PlayerScript2D>().sillyDude = true;
-                        }
                         item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         
@@ -164,6 +160,10 @@ public class SwitchScript : MonoBehaviour
                             item.transform.position = new Vector3(-3, 13, 1);
                             item.transform.Rotate(new Vector3(0, 0, 90));
                             player.transform.position = new Vector3(-3, 12, 0);
+                        }
+                        else if (player.entryDirection == Vector3.right)
+                        {
+                            item.transform.position = new Vector3(-12, 0, 1);
                         }
                     }
                     break;

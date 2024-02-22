@@ -62,8 +62,9 @@ public class PlayerScript2D : MonoBehaviour
 
     public List<AudioClip> sfx;
     public List<AudioClip> songs;
-
-    public bool sillyDude;
+    public int sillyDude;
+    public bool funnyCheck;
+    public float funnyTimer;
     void Awake()
     {
         //Cursor.visible = false;
@@ -91,11 +92,28 @@ public class PlayerScript2D : MonoBehaviour
     }
     void Update()
     {
-
-        if (sillyDude && transform.position != new Vector3(23, 1, 0))
+        if (sillyDude > 0)
         {
+            funnyTimer += Time.deltaTime;
+        }
+        if (funnyCheck)
+        {
+            funnyTimer = 0;
+            sillyDude += 1;
+            funnyCheck = false;
+        }
+        if (funnyTimer > 2.5f)
+        {
+            sillyDude = 0;
+        }
+        if (sillyDude > 10 && transform.position != new Vector3(23, 1, 0))
+        {
+            StopAllCoroutines();
+            moving = false;
+            GetComponent<Animator>().enabled = false;
+            StartCoroutine(SwitchScene("PuzzleTest"));
             transform.position = new Vector3(23, 1, 0);
-            sillyDude = false;
+            sillyDude = 0;
         }
         if (!isLoading && !moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && holdTimer == 0)
         {
@@ -810,7 +828,7 @@ public class PlayerScript2D : MonoBehaviour
             spawnPoint = curNote.pos;
             if(curNote.scene != SceneManager.GetActiveScene().name)
             {
-                SceneManager.LoadScene(curNote.scene);
+                StartCoroutine(SwitchScene(curNote.scene));
             }
             
         }
@@ -860,6 +878,6 @@ public class PlayerScript2D : MonoBehaviour
             SwitchSong(sceneName);
             dialogueManager.eventScript.RunPastEvents();
         };
-        
+        funnyCheck = true;
     }
 }
