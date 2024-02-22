@@ -21,13 +21,18 @@ public class BlockScript : MonoBehaviour
     // Update is called once per frame
     public IEnumerator Moving(Vector3 goal, float time)
     {
-        while (new Vector3(transform.position.x, transform.position.y,0) != goal)
+        
+        while (new Vector3(transform.position.x, transform.position.y, transform.position.z) != goal)
         {
             moving = true;
             transform.position = Vector3.MoveTowards(transform.position, goal, time * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
-        transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0);
+        if (id > 0 && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == -1)
+        {
+            transform.position += new Vector3(0, 0, 1);
+        }
+        transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), Mathf.Round(transform.position.z));
         moving = false;
         if (inserted)
         {

@@ -75,6 +75,31 @@ public class SwitchScript : MonoBehaviour
                         break;
                     }
                     break;
+                case "insert+":
+                    if (item.CompareTag("Block"))
+                    {
+                        transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                        if (transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+                        {
+                            for (int i = 0; i < transform.parent.childCount; i++)
+                            {
+                                if (transform.parent.GetChild(i).name.Equals("PushBlock(Clone)"))
+                                {
+                                    transform.parent.GetChild(i).position += new Vector3(0, 0, 1);
+                                    Destroy(transform.parent.GetChild(i).GetComponent<BoxCollider2D>());
+                                }
+                            }
+                            for (int i = 0; i < transform.parent.childCount; i++)
+                            {
+                                if (transform.parent.GetChild(i).name.Equals("FloorSwitch(Clone)"))
+                                {
+                                    Destroy(transform.parent.GetChild(i).gameObject);
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    break;
                 case "warp":
                     item.GetComponent<PlayerScript2D>().invManager.RemovePuzzleStuff();
                     if (switchData.Length == 0)
@@ -262,6 +287,13 @@ public class SwitchScript : MonoBehaviour
             {
                 affectedObjects[0] = collision.gameObject;
                 playerOnSpike = false;
+            }
+        }
+        if (collision.CompareTag("Block") && switchType == "floor" && switchEffect == "insert+")
+        {
+            if (switchData == collision.GetComponent<BlockScript>().id.ToString() && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft > 0)
+            {
+                transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft += 1;
             }
         }
     }

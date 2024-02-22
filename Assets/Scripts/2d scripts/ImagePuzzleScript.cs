@@ -63,6 +63,12 @@ public class ImagePuzzleScript : MonoBehaviour
             norm[t] = norm[r];
             norm[r] = tmp;
         }
+        string switchType = "insert";
+        if (mode.Contains("+"))
+        {
+            mode = mode[0..^1];
+            switchType = "insert+";
+        }
         switch (mode)
         {
             case "Blocks":
@@ -114,7 +120,7 @@ public class ImagePuzzleScript : MonoBehaviour
         {
             GameObject place = Instantiate(floorSwitch, transform);
             place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
-            place.GetComponent<SwitchScript>().switchEffect = "insert";
+            place.GetComponent<SwitchScript>().switchEffect = switchType;
             place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
             place.GetComponent<SpriteRenderer>().color = Color.cyan;
         }

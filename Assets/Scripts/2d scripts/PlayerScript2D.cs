@@ -681,7 +681,14 @@ public class PlayerScript2D : MonoBehaviour
                 cam.Follow = gameObject.transform;
                 invManager.blockControlText.GetComponent<Canvas>().enabled = false;
                 controllingBlock = false;
-            } 
+            }
+            else if (mover.GetComponent<BlockScript>().id > 0 && mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == -1)
+            {
+                mover.transform.position += new Vector3(0, 0, 1);
+                cam.Follow = gameObject.transform;
+                invManager.blockControlText.GetComponent<Canvas>().enabled = false;
+                controllingBlock = false;
+            }
         }
     }
     public IEnumerator IdleSpin(Vector3 start)
