@@ -143,9 +143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86bbc270578d36b4abd38c8cbf8b303c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteTitle: Puzzle Test Room
-  noteLore: This is a really stange room, with materials I have not seen anywhere
-    else in this kingdom. I probably should explore this more later.
-  noteId: 23
+  noteTitle: Room Name
+  noteLore: Room Lore/Clue
+  noteId: -1
   scene: 
   pos: {x: 0, y: 0, z: 0}
