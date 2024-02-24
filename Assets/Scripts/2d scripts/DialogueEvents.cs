@@ -12,24 +12,40 @@ public class DialogueEvents : MonoBehaviour
     public PlayerScript2D playerScript;
     public string[] dialogueData = new string[3];
     public List<string[]> storedEvents = new();
+    public List<string[]> storedTalks = new();
     public List<Sprite> talkerStats = new();
+    public int fullyTalkedTo;
+    public int npcsInScene;
     public Sprite norm;
 
     public void RunPastEvents()
     {
+        fullyTalkedTo = 0;
         dontAdd = true;
         for (int i = 0; i < storedEvents.Count; i++)
         {
             playerScript.currentTarget = GameObject.Find(storedEvents[i][0]);
             if (playerScript.currentTarget != null)
             {
-                playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = Int32.Parse(storedEvents[i][1]) + 1;
-                playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = talkerStats[i];
                 storedEvents[i].CopyTo(dialogueData, 0);
                 EventTrigger();
                 EndEventTrigger();
             }
         }
+        for (int i = 0; i < storedTalks.Count; i++)
+        {
+            playerScript.currentTarget = GameObject.Find(storedTalks[i][0]);
+            if (playerScript.currentTarget != null)
+            {
+                playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = Int32.Parse(storedTalks[i][1]);
+                playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = talkerStats[i];
+                if (talkerStats[i] == playerScript.dialogueManager.noMoreText)
+                {
+                    fullyTalkedTo += 1;
+                }
+            }
+        }
+        npcsInScene = GameObject.FindGameObjectsWithTag("Sign").Length;
         dontAdd = false;
     }
     public void EventTrigger() //use:   else if (Enumerable.SequenceEqual(dialogueData, new string[] { "NPC Object's name", "Talk Counter", "Current Line" }))
@@ -41,7 +57,6 @@ public class DialogueEvents : MonoBehaviour
             if (!dontAdd)
             {
                 storedEvents.Add((string[])dialogueData.Clone());
-                talkerStats.Add(playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite);
             }
         }
 
@@ -65,66 +80,138 @@ public class DialogueEvents : MonoBehaviour
             if (!dontAdd)
             {
                 storedEvents.Add((string[])dialogueData.Clone());
-                talkerStats.Add(playerScript.dialogueManager.storedStatus);
             }
         }
     }
     public void EndEventTrigger()
     {
-        // Darkness Renderer takes key from player
-        if (Enumerable.SequenceEqual(dialogueData, new string[] { "DarkDude", "1", "0" }))
+        if (SceneManager.GetActiveScene().name == "Castle")
         {
-            if (playerScript.HasItem("TestKey"))
+            //Guard Rat 2 (Basement) Takes Cheese and tells riddle.
+            if (Enumerable.SequenceEqual(dialogueData, new string[] { "GuardRat2", "0", "2" }) || Enumerable.SequenceEqual(dialogueData, new string[] { "GuardRat2", "1", "0" }))
             {
-                playerScript.dialogueManager.ChangeDialogue(5, true);
-                playerScript.invManager.inventory.Remove(playerScript.GetItem("TestKey"));
+                if (playerScript.invManager.cheese > 0)
+                {
+                    playerScript.dialogueManager.ChangeDialogue(3, true);
+                    playerScript.invManager.cheese -= 1;
+                }
+            }
+            //Maid Rat 1 (Basement) Takes Cheese and tells riddle.
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "MaidRat1", "1", "0" }))
+            {
+                if (playerScript.invManager.cheese > 0)
+                {
+                    playerScript.dialogueManager.ChangeDialogue(3, true);
+                    playerScript.invManager.cheese -= 1;
+                }
+            }
+            //Chef Rat 1 (Main Floor) Takes Cheese and tells riddle.
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "ChefRat1", "1", "0" }) || Enumerable.SequenceEqual(dialogueData, new string[] { "ChefRat1", "2", "0" }))
+            {
+                if (playerScript.invManager.cheese > 1)
+                {
+                    playerScript.dialogueManager.ChangeDialogue(4, true);
+                    playerScript.invManager.cheese -= 2;
+                }
+            }
+            //Maid Rat 3 (Main floor) Takes Medicine and gives Cheese.
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "MaidRat3", "1", "0" }))
+            {
+                if (playerScript.HasItem("Medicine"))
+                {
+                    playerScript.dialogueManager.ChangeDialogue(3, true);
+                    playerScript.invManager.inventory.Remove(playerScript.GetItem("Medicine"));
+                    playerScript.invManager.cheese += 5;
+                }
+            }
+            //Guard Rat 7 (2nd floor) Takes 2 cheese and gives riddle.
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "GuardRat7", "1", "0" }))
+            {
+                if (playerScript.invManager.cheese > 1)
+                {
+                    playerScript.dialogueManager.ChangeDialogue(3, true);
+                    playerScript.invManager.cheese -= 2;
+                }
+            }
+            //Maid Rat 4 (2nd floor) Takes Proof and gives Cheese.
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "MaidRat4", "1", "0" }))
+            {
+                if (playerScript.HasItem("Photo of a Made Bed"))
+                {
+                    playerScript.dialogueManager.ChangeDialogue(3, true);
+                    playerScript.invManager.inventory.Remove(playerScript.GetItem("Photo of a Made Bed"));
+                    playerScript.invManager.cheese += 5;
+                }
+            }
+            //Maid Rat 6 (2nd floor) Takes 2 cheese and gives riddle.
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "MaidRat6", "1", "0" }))
+            {
+                if (playerScript.invManager.cheese > 1)
+                {
+                    playerScript.dialogueManager.ChangeDialogue(3, true);
+                    playerScript.invManager.cheese -= 2;
+                }
             }
         }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Infinite", "1", "5" }))
+        else if (SceneManager.GetActiveScene().name == "Forest")
         {
-            playerScript.dialogueManager.ChangeDialogue(1, true);
-        }
-
-        // Darkness Renderer resets dialogue
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "DarkDude", "2", "0" }))
-        {
-            playerScript.dialogueManager.ChangeDialogue(0, false);
-        }
-
-        // The First Guard takes the key from the player, if they had one, and changes dialogue
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "0", "0" }) || Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "1", "0" }))
-        {
-            if (playerScript.HasItem("Key"))
-            { 
-                playerScript.dialogueManager.ChangeDialogue(3, true);
-                playerScript.invManager.inventory.Remove(playerScript.GetItem("Key"));
+            //First Guard takes key if player has one
+            if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "0", "0" }) || Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "1", "0" }))
+            {
+                if (playerScript.HasItem("Key"))
+                {
+                    playerScript.dialogueManager.ChangeDialogue(3, true);
+                    playerScript.invManager.inventory.Remove(playerScript.GetItem("Key"));
+                }
             }
         }
+        else if (SceneManager.GetActiveScene().name == "PuzzleTest")
+        {
+            // Darkness Renderer takes key from player
+            if (Enumerable.SequenceEqual(dialogueData, new string[] { "DarkDude", "1", "0" }))
+            {
+                if (playerScript.HasItem("TestKey"))
+                {
+                    playerScript.dialogueManager.ChangeDialogue(5, true);
+                    playerScript.invManager.inventory.Remove(playerScript.GetItem("TestKey"));
+                }
+            }
+            // Darkness Renderer resets dialogue
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "DarkDude", "2", "0" }))
+            {
+                playerScript.dialogueManager.ChangeDialogue(0, false);
+            }
+            // funny infinite talk!
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Infinite", "1", "5" }))
+            {
+                playerScript.dialogueManager.ChangeDialogue(1, true);
+            }
+            // Stickman death
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Trash", "0", "3" }))
+            {
+                Destroy(playerScript.currentTarget);
+            }
 
-        // Stickman death
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Trash", "0", "3" }))
-        {
-            Destroy(playerScript.currentTarget);
+            // Funny Stuff start
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "0", "0" }))
+            {
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Easy").gameObject.SetActive(true);
+            }
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Easy", "0", "0" }))
+            {
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Harder").gameObject.SetActive(true);
+            }
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Harder", "0", "0" }))
+            {
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Insane").gameObject.SetActive(true);
+            }
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Insane", "0", "0" }))
+            {
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Auto").gameObject.SetActive(true);
+            }
+            // Funny stuff end
         }
 
-        // Funny Stuff start
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "0", "0" }))
-        {
-            GameObject.Find("LevelObjects/NPCs").transform.Find("Easy").gameObject.SetActive(true);
-        }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Easy", "0", "0" }))
-        {
-            GameObject.Find("LevelObjects/NPCs").transform.Find("Harder").gameObject.SetActive(true);
-        }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Harder", "0", "0" }))
-        {
-            GameObject.Find("LevelObjects/NPCs").transform.Find("Insane").gameObject.SetActive(true);
-        }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Insane", "0", "0" }))
-        {
-            GameObject.Find("LevelObjects/NPCs").transform.Find("Auto").gameObject.SetActive(true);
-        }
-        // Funny stuff end
     }
 
     public IEnumerator Grow()

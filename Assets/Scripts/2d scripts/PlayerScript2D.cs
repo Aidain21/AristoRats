@@ -89,6 +89,7 @@ public class PlayerScript2D : MonoBehaviour
         swapy = 0.15f;
         prevDir = Vector3.zero;
         SwitchSong(SceneManager.GetActiveScene().name);
+        dialogueManager.eventScript.RunPastEvents();
     }
     void Update()
     {
@@ -350,9 +351,8 @@ public class PlayerScript2D : MonoBehaviour
                         menuManager.OpenOptions();
                         break;
                     case 2:
-                        string[] temp = new string[] { "0You:HAHA YOU THOUGHT", "0You: There is no hidden god mode. This was just made to test out menu funcitons.", "0You:Wait I got free ches ong!" };
-                        invManager.cheese += 10000;
-                        dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                        invManager.cheese += 1;
+                        menuManager.OpenMenu();
                         break;
                     case 3:  //save stuff
                         SceneManager.LoadScene("TitleScreen");
@@ -739,6 +739,7 @@ public class PlayerScript2D : MonoBehaviour
         switch (target.tag)
         {
             case "Sign":
+                dialogueManager.talkingToNPC = true;
                 aboveTalker = transform.position.y > target.transform.position.y;
                 SignTextScript signScript = target.GetComponent<SignTextScript>();
                 dialogueManager.StartDialogue(signScript.name, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);

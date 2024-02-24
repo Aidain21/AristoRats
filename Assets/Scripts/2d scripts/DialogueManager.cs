@@ -11,9 +11,11 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text spaceText;
     public bool typing;
     public bool changed;
+    public bool talkingToNPC;
     public float typingSpeed = 0.03f;
     public bool hasMoreText;
     public bool hiddenText;
+    public bool isRiddle;
     public PlayerScript2D playerScript;
     public DialogueEvents eventScript;
     public Canvas textBox;
@@ -85,6 +87,7 @@ public class DialogueManager : MonoBehaviour
         
         eventScript.dialogueData[2] = (Int32.Parse(eventScript.dialogueData[2]) + 1).ToString();
         spaceText.text = "";
+        
         if (sentences.Count == 0)
         {
             EndDialogue();
@@ -92,6 +95,17 @@ public class DialogueManager : MonoBehaviour
         }
 
         string sentence = sentences[0];
+        if (sentence[0] == '#')
+        {
+            sentence = sentence[1..];
+            dialogueText.color = Color.magenta;
+            dialogueText.fontStyle = FontStyles.Bold;
+        }
+        else
+        {
+            dialogueText.color = Color.white;
+            dialogueText.fontStyle = FontStyles.Normal;
+        }
         StopAllCoroutines();
 
         if (hasMoreText)
@@ -181,9 +195,33 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
-        if (playerScript.currentTarget != null && playerScript.currentTarget.CompareTag("Sign"))
+        if (playerScript.currentTarget != null && playerScript.currentTarget.CompareTag("Sign") && talkingToNPC)
         {
+            if (playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite != noMoreText && storedStatus == noMoreText)
+            {
+                eventScript.fullyTalkedTo += 1;
+            }
             playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = storedStatus;
+            int alreadyTracked = -1;
+            for (int i = 0; i < eventScript.storedTalks.Count; i++)
+            {
+                if (eventScript.storedTalks[i][0] == eventScript.dialogueData[0])
+                {
+                    alreadyTracked = i;
+                }
+            }
+            if (alreadyTracked != -1)
+            {
+                eventScript.storedTalks[alreadyTracked] = (string[])eventScript.dialogueData.Clone();
+                eventScript.talkerStats[alreadyTracked] = playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite;
+            }
+            else
+            {
+                eventScript.storedTalks.Add((string[])eventScript.dialogueData.Clone());
+                eventScript.talkerStats.Add(playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite);
+            }
+            
+            talkingToNPC = false;
         }
         if (hasMoreText)
         {

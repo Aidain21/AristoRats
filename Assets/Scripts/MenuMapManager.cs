@@ -13,6 +13,8 @@ public class MenuMapManager : MonoBehaviour
     public List<Image> puzzleImages;
     public string[] menuChoices;
     public Canvas menu;
+    public TMP_Text cheeseText;
+    public TMP_Text talkedToText;
     public Canvas options;
     //public Canvas map;
     public Canvas puzzle;
@@ -28,7 +30,7 @@ public class MenuMapManager : MonoBehaviour
     void Start()
     {
         Canvas.ForceUpdateCanvases();   
-        menuChoices = new string[] { "Continue", "Options", "god mode (real)", "Save and Quit" };
+        menuChoices = new string[] { "Continue", "Options", "Add 1 Cheese", "Save and Quit" };
         menu.GetComponent<Canvas>().enabled = false;
         options.GetComponent<Canvas>().enabled = false;
         puzzle.GetComponent<Canvas>().enabled = false;
@@ -85,6 +87,8 @@ public class MenuMapManager : MonoBehaviour
     {
         menu.GetComponent<Canvas>().enabled = true;
         playerScript.inMenu = true;
+        cheeseText.text = "Cheese: " + playerScript.invManager.cheese.ToString();
+        talkedToText.text = "Friends made: " + playerScript.dialogueManager.eventScript.fullyTalkedTo.ToString() + "/" + playerScript.dialogueManager.eventScript.npcsInScene.ToString();
         menuSelector.UpdateSelector();
     }
     public void CloseMenu()
