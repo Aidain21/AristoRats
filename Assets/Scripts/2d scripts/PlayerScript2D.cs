@@ -37,6 +37,8 @@ public class PlayerScript2D : MonoBehaviour
     public bool isLoading;
     public bool inMap;
     public bool inJournal;
+    public bool selectingItem;
+    public GameObject selection = null;
     public bool inDialogue;
     public bool inInventory;
     public bool inMenu;
@@ -211,7 +213,7 @@ public class PlayerScript2D : MonoBehaviour
 
             }
         }
-        else if (inDialogue) //Controls for in dialogue
+        else if (inDialogue && !selectingItem) //Controls for in dialogue
         {
             if (Input.GetKeyDown(KeyCode.Space) && menuManager.optionSelector.selections[3] != new Vector2(1, 3))
             {
@@ -259,8 +261,8 @@ public class PlayerScript2D : MonoBehaviour
         }
         else if (inInventory)
         {
-            aboveTalker = invManager.selector.selectorPos.y == 0;
-            if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Escape))
+            aboveTalker = invManager.selector.selectorPos.y != 0;
+            if ((Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Escape)) && !selectingItem)
             {
                 invManager.CloseInventory();
             }
@@ -271,7 +273,7 @@ public class PlayerScript2D : MonoBehaviour
                 invManager.selector.selection = invManager.selector.selectorPos;
                 invManager.selector.UpdateSelector();
             }
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !selectingItem)
             {
                 if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count)
                 {
@@ -284,7 +286,21 @@ public class PlayerScript2D : MonoBehaviour
                     dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
                 }
             }
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.E) && selectingItem)
+            {
+                selectingItem = false;
+                if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count)
+                {
+                    selection = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)];
+                }
+                else
+                {
+                    selection = currentTarget;
+                }
+                invManager.CloseInventory();
+                dialogueManager.eventScript.EndEventTrigger();
+            }
+            if (Input.GetKeyDown(KeyCode.R) && !selectingItem)
             {
                 bool[] walls = WallChecker();
                 bool frontClear = (!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right);
@@ -739,7 +755,6 @@ public class PlayerScript2D : MonoBehaviour
         switch (target.tag)
         {
             case "Sign":
-                dialogueManager.talkingToNPC = true;
                 aboveTalker = transform.position.y > target.transform.position.y;
                 SignTextScript signScript = target.GetComponent<SignTextScript>();
                 dialogueManager.StartDialogue(signScript.name, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);

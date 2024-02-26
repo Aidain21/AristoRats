@@ -11,6 +11,7 @@ public class DialogueManager : MonoBehaviour
     public TMP_Text spaceText;
     public bool typing;
     public bool changed;
+    public bool keepTalkerInfo;
     public bool talkingToNPC;
     public float typingSpeed = 0.03f;
     public bool hasMoreText;
@@ -38,6 +39,7 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(string name, string[] dialogue, int talkCounter, Sprite talkerImage)
     {
+        talkingToNPC = playerScript.currentTarget != null && playerScript.currentTarget.CompareTag("Sign");
         typingSpeed = 2 * ((5 - playerScript.menuManager.optionSelector.selections[2].x)  / 100) - 0.01f; 
         hasMoreText = false;
         hiddenText = false;
@@ -45,7 +47,10 @@ public class DialogueManager : MonoBehaviour
         playerScript.inDialogue = true;
         eventScript.dialogueData[0] = name;
         eventScript.dialogueData[1] = talkCounter.ToString();
-        eventScript.dialogueData[2] = "-1";
+        if (!changed)
+        {
+            eventScript.dialogueData[2] = "-1";
+        }
         textBox.GetComponent<Canvas>().enabled = true;
         PositionBox();
         currentImage = talkerImage;
@@ -78,6 +83,15 @@ public class DialogueManager : MonoBehaviour
             {
                 hiddenText = true;
             }
+        }
+        if (changed && eventScript.dialogueData[2] != "-1")
+        {
+            int num = Int32.Parse(eventScript.dialogueData[2]);
+            for (int i = 0; i < num + 1; i++)
+            {
+                sentences.RemoveAt(0);
+            }
+            changed = false;
         }
         DisplayNextSentence();
     }
@@ -160,11 +174,12 @@ public class DialogueManager : MonoBehaviour
             }
         }
     }
-    public void ChangeDialogue(int talkCounter, bool keepTalking)
+    public void ChangeDialogue(int talkCounter, bool keepTalking, string continueLine = "-1")
     {
+        keepTalkerInfo = true;
         EndDialogue();
         playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = talkCounter;
-        eventScript.dialogueData[2] = "-1";
+        eventScript.dialogueData[2] = continueLine;
         if (keepTalking)
         {
             changed = true;
@@ -229,6 +244,11 @@ public class DialogueManager : MonoBehaviour
         }
         playerScript.inDialogue = false;
         textBox.GetComponent<Canvas>().enabled = false;
+        if (!keepTalkerInfo)
+        {
+            playerScript.currentTarget = null;
+        }
+        keepTalkerInfo = false;
     }
 
     public void PositionBox()

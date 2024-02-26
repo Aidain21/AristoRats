@@ -3016,7 +3016,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.size
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
@@ -3036,20 +3036,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[4]
-      value: 2Darkness_Renderer:You failed to bring me special item. Now I shall
-        forget I ever talked to you.
+      value: '1You: nah.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[5]
-      value: 5Darkness_Renderer:sussy sus sus.
+      value: '1Darkness_Renderer: Darn.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[6]
-      value: 5Darkness_Renderer:hi1.
+      value: '3You: key'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[7]
-      value: 6Darkness_Renderer:hi2.
+      value: '3Darkness_Renderer: thank.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[8]
+      value: '4Darkness_Renderer: sus'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite

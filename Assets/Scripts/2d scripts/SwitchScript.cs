@@ -154,6 +154,7 @@ public class SwitchScript : MonoBehaviour
                     break;
                 case "puzzle":
                     PlayerScript2D player = affectedObjects[2].GetComponent<PlayerScript2D>();
+                    GameObject signs = GameObject.Find("InstructionSigns");
                     if (item.name == "Puzzle Box")
                     {
                         item.GetComponent<ImagePuzzleScript>().fullImage = player.puzzleImage;
@@ -174,21 +175,26 @@ public class SwitchScript : MonoBehaviour
                             item.transform.position = new Vector3(-3, -13, 1);
                             item.transform.Rotate(new Vector3(0, 0, 90));
                             player.transform.position = new Vector3(-3, -12, 0);
+                            signs.transform.position = new Vector3(-5, -12, 0);
+
                         }
                         else if (player.entryDirection == Vector3.left)
                         {
                             item.transform.position = new Vector3(6, 0, 1);
                             player.transform.position = new Vector3(5, 0, 0);
+                            signs.transform.position = new Vector3(5, -2, 0);
                         }
                         else if (player.entryDirection == Vector3.down)
                         {
                             item.transform.position = new Vector3(-3, 13, 1);
                             item.transform.Rotate(new Vector3(0, 0, 90));
                             player.transform.position = new Vector3(-3, 12, 0);
+                            signs.transform.position = new Vector3(-1, 12, 0);
                         }
                         else if (player.entryDirection == Vector3.right)
                         {
                             item.transform.position = new Vector3(-12, 0, 1);
+                            signs.transform.position = new Vector3(-11, 2, 0);
                         }
                     }
                     break;

@@ -16,6 +16,7 @@ public class ImagePuzzleScript : MonoBehaviour
     public bool timerOn;
     public GameObject reward;
     public Texture2D fullImage;
+    public GameObject instructionSigns;
 
     void Update()
     {
@@ -64,6 +65,13 @@ public class ImagePuzzleScript : MonoBehaviour
             norm[r] = tmp;
         }
         string switchType = "insert";
+        for (int i = 0; i < instructionSigns.transform.childCount; i++)
+        {
+            if (instructionSigns.transform.GetChild(i).name == mode)
+            {
+                instructionSigns.transform.GetChild(i).gameObject.SetActive(true);
+            }
+        }
         if (mode.Contains("+"))
         {
             mode = mode[0..^1];
@@ -135,6 +143,7 @@ public class ImagePuzzleScript : MonoBehaviour
             place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
             place.GetComponent<SpriteRenderer>().color = Color.cyan;
         }
+        
     }
     public Texture2D Resize(Texture2D source, int newWidth, int newHeight)
     {

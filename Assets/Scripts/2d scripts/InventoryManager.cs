@@ -11,6 +11,8 @@ public class InventoryManager : MonoBehaviour
     public Canvas inventoryBox;
     public Canvas blockControlText;
     public int cheese;
+    public TMP_Text titleText;
+    public TMP_Text controlsText;
     public TMP_Text cheeseText;
     public List<Image> images;
     public PlayerScript2D playerScript;
@@ -63,7 +65,18 @@ public class InventoryManager : MonoBehaviour
             images[i].color = new Color32(0,0,0,0);
             selector.textArray[i / selector.width][i % selector.width].text = "Empty";
         }
-        cheeseText.text = "Cheese: " + cheese.ToString();
+        if (playerScript.selectingItem)
+        {
+            titleText.text = "Select an Item:";
+            controlsText.text = "WASD - Select              E - Choose Item";
+            cheeseText.text = "";
+        }
+        else
+        {
+            titleText.text = "Inventory";
+            controlsText.text = "WASD - Select              E - Info               R - Drop            I/Esc - Close";
+            cheeseText.text = "Cheese: " + cheese.ToString();
+        }
         selector.UpdateSelector();
     }
     public void CloseInventory()

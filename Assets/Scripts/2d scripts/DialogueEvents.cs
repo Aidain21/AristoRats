@@ -117,10 +117,8 @@ public class DialogueEvents : MonoBehaviour
             //Maid Rat 3 (Main floor) Takes Medicine and gives Cheese.
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "MaidRat3", "1", "0" }))
             {
-                if (playerScript.HasItem("Medicine"))
+                if (SelectItem("Medicine", 3, 1))
                 {
-                    playerScript.dialogueManager.ChangeDialogue(3, true);
-                    playerScript.invManager.inventory.Remove(playerScript.GetItem("Medicine"));
                     playerScript.invManager.cheese += 5;
                 }
             }
@@ -136,10 +134,8 @@ public class DialogueEvents : MonoBehaviour
             //Maid Rat 4 (2nd floor) Takes Proof and gives Cheese.
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "MaidRat4", "1", "0" }))
             {
-                if (playerScript.HasItem("Photo of a Made Bed"))
+                if (SelectItem("Photo of a Made Bed", 3, 1))
                 {
-                    playerScript.dialogueManager.ChangeDialogue(3, true);
-                    playerScript.invManager.inventory.Remove(playerScript.GetItem("Photo of a Made Bed"));
                     playerScript.invManager.cheese += 5;
                 }
             }
@@ -158,11 +154,7 @@ public class DialogueEvents : MonoBehaviour
             //First Guard takes key if player has one
             if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "0", "0" }) || Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "1", "0" }))
             {
-                if (playerScript.HasItem("Key"))
-                {
-                    playerScript.dialogueManager.ChangeDialogue(3, true);
-                    playerScript.invManager.inventory.Remove(playerScript.GetItem("Key"));
-                }
+                SelectItem("Key", 3, Int32.Parse(dialogueData[1]));
             }
         }
         else if (SceneManager.GetActiveScene().name == "PuzzleTest")
@@ -170,16 +162,7 @@ public class DialogueEvents : MonoBehaviour
             // Darkness Renderer takes key from player
             if (Enumerable.SequenceEqual(dialogueData, new string[] { "DarkDude", "1", "0" }))
             {
-                if (playerScript.HasItem("TestKey"))
-                {
-                    playerScript.dialogueManager.ChangeDialogue(5, true);
-                    playerScript.invManager.inventory.Remove(playerScript.GetItem("TestKey"));
-                }
-            }
-            // Darkness Renderer resets dialogue
-            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "DarkDude", "2", "0" }))
-            {
-                playerScript.dialogueManager.ChangeDialogue(0, false);
+                SelectItem("TestKey", 3, 1);
             }
             // funny infinite talk!
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Infinite", "1", "5" }))
@@ -213,7 +196,35 @@ public class DialogueEvents : MonoBehaviour
         }
 
     }
-
+    public bool SelectItem(string wantedItem, int successDialogueCounter, int failDialogueCounter)
+    {
+        if (playerScript.selection == null)
+        {
+            playerScript.dialogueManager.ChangeDialogue(failDialogueCounter, false);
+            playerScript.selectingItem = true;
+            playerScript.invManager.OpenInventory();
+        }
+        else if (playerScript.selection.CompareTag("Item") && playerScript.selection.GetComponent<ItemScript>().itemName == wantedItem)
+        {
+            playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = successDialogueCounter;
+            playerScript.dialogueManager.StartDialogue(playerScript.currentTarget.name, playerScript.currentTarget.GetComponent<SignTextScript>().dialogue, successDialogueCounter, playerScript.currentTarget.GetComponent<SignTextScript>().talkerImage);
+            playerScript.invManager.inventory.Remove(playerScript.GetItem(wantedItem));
+            playerScript.selection = null;
+            return true;
+        }
+        else if (playerScript.selection.CompareTag("Item") && playerScript.selection.GetComponent<ItemScript>().itemName != wantedItem)
+        {
+            
+            playerScript.selection = null;
+            playerScript.dialogueManager.ChangeDialogue(failDialogueCounter, true, dialogueData[2]);
+        }
+        else if (playerScript.selection == playerScript.currentTarget)
+        {
+            playerScript.selection = null;
+            playerScript.dialogueManager.ChangeDialogue(failDialogueCounter, true, dialogueData[2]);
+        }
+        return false;
+    }
     public IEnumerator Grow()
     {
         while (true)
