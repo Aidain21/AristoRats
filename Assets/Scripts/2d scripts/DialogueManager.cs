@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 public class DialogueManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class DialogueManager : MonoBehaviour
     public bool changed;
     public bool keepTalkerInfo;
     public bool talkingToNPC;
+    public bool playerCurrentlyTalking;
     public float typingSpeed = 0.03f;
     public bool hasMoreText;
     public bool hiddenText;
@@ -54,6 +56,7 @@ public class DialogueManager : MonoBehaviour
         textBox.GetComponent<Canvas>().enabled = true;
         PositionBox();
         currentImage = talkerImage;
+
         foreach (string sentence in dialogue)
         {
             int index = 0;
@@ -134,7 +137,7 @@ public class DialogueManager : MonoBehaviour
         {
             storedStatus = noMoreText;
         }
-
+        playerCurrentlyTalking = false;
         nameText.text = sentence.Substring(0,sentence.IndexOf(":")+1);
         if (nameText.text == "")
         {
@@ -143,6 +146,7 @@ public class DialogueManager : MonoBehaviour
         }
         else if (nameText.text == "You:")
         {
+            playerCurrentlyTalking = true;
             nameText.text = playerScript.playerName + ":";
             imageFrame.sprite = playerScript.GetComponent<SpriteRenderer>().sprite;
             eventScript.EventTrigger();
@@ -190,9 +194,20 @@ public class DialogueManager : MonoBehaviour
 
     public IEnumerator TypeSentence(string sentence)
     {
+        if (playerCurrentlyTalking)
+        {
+            Sprite curSprite = playerScript.GetComponent<SpriteRenderer>().sprite;
+            imageFrame.rectTransform.sizeDelta = new Vector2(curSprite.rect.width * (300 / curSprite.rect.height), 300);
+            imageFrame.color = playerScript.GetComponent<SpriteRenderer>().color;
+        }
+        else if (talkingToNPC)
+        {
+            imageFrame.rectTransform.sizeDelta = new Vector2(currentImage.rect.width * (300 / currentImage.rect.height), 300);
+            imageFrame.color = playerScript.currentTarget.GetComponent<SpriteRenderer>().color;
+        }
         typing = true;
         dialogueText.text = "";
-
+        
         foreach (char letter in sentence.ToCharArray())
         {
             if (!typing)
@@ -200,10 +215,22 @@ public class DialogueManager : MonoBehaviour
                 break;
             }
             dialogueText.text += letter;
+            if (talkingToNPC && !playerCurrentlyTalking)
+            {
+                Sprite curSprite = playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite;
+                imageFrame.rectTransform.sizeDelta = new Vector2(curSprite.rect.width * (300 / curSprite.rect.height), 300);
+                imageFrame.sprite = curSprite;
+            }
             yield return new WaitForSeconds(typingSpeed);
         }
         dialogueText.text = sentence;
         typing = false;
+        if (talkingToNPC && !playerCurrentlyTalking)
+        {
+            playerScript.currentTarget.GetComponent<Animator>().enabled = false;
+            playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite = playerScript.currentTarget.GetComponent<SignTextScript>().talkerImage;
+            imageFrame.sprite = playerScript.currentTarget.GetComponent<SignTextScript>().talkerImage;
+        }
         yield return new WaitForSeconds(1.5f);
         spaceText.text = "Space to Continue";
     }
@@ -232,8 +259,11 @@ public class DialogueManager : MonoBehaviour
             }
             else
             {
-                eventScript.storedTalks.Add((string[])eventScript.dialogueData.Clone());
-                eventScript.talkerStats.Add(playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite);
+                if (SceneManager.GetActiveScene().name != "ImagePuzzle")
+                {
+                    eventScript.storedTalks.Add((string[])eventScript.dialogueData.Clone());
+                    eventScript.talkerStats.Add(playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite);
+                }
             }
             
             talkingToNPC = false;

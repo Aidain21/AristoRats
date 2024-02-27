@@ -163,6 +163,7 @@ public class SwitchScript : MonoBehaviour
                         item.GetComponent<ImagePuzzleScript>().reward = player.reward;
                         item.GetComponent<ImagePuzzleScript>().mode = player.puzzleType;
                         item.GetComponent<ImagePuzzleScript>().PuzzleSetUp();
+                        item.GetComponent<ImagePuzzleScript>().playerScript = player;
                     }
                     if (item.name == "SceneWarp")
                     {
@@ -194,6 +195,7 @@ public class SwitchScript : MonoBehaviour
                         else if (player.entryDirection == Vector3.right)
                         {
                             item.transform.position = new Vector3(-12, 0, 1);
+                            player.transform.position = new Vector3(-11, 0, 0);
                             signs.transform.position = new Vector3(-11, 2, 0);
                         }
                     }

@@ -8,7 +8,7 @@ using TMPro;
 public class MenuMapManager : MonoBehaviour
 {
     public Selector menuSelector = new(1,4);
-    public Selector optionSelector = new(new int[] {1,3,5,3,5},5);
+    public Selector optionSelector = new(new int[] {1,3,5,3,5,5},6);
     public Selector puzzleSelector = new(5,5);
     public List<Image> puzzleImages;
     public string[] menuChoices;
@@ -48,7 +48,7 @@ public class MenuMapManager : MonoBehaviour
             }
         }
         count = 0;
-        menuChoices = new string[] { "Back", "Hold to Run", "Toggle Between", "Hold to Walk", "Snail", "Slow", "Normal", "Fast", "Cheetah", "Spam Space", "Hold Space", "Disabled", "Very In", "In", "Default", "Out", "Very Out"};
+        menuChoices = new string[] { "Back", "Hold to Run", "Toggle Between", "Hold to Walk", "Snail", "Slow", "Normal", "Fast", "Cheetah", "Spam Space", "Hold Space", "Disabled", "Very In", "In", "Default", "Out", "Very Out", "0%", "25%", "50%", "75%", "100%" };
         for (int i = 0; i < optionSelector.textArray.Length; i++)
         {
             for (int j = 0; j < optionSelector.textArray[i].Length; j++)
@@ -58,7 +58,7 @@ public class MenuMapManager : MonoBehaviour
                 if (j == 0)
                 {
                     text.rectTransform.localPosition = new Vector2(0, -110 * i);
-                    if (i != 4 && i != 2)
+                    if (i != 4 && i != 2 && i != 5)
                     {
                         text.color = Color.yellow;
                     }
@@ -66,9 +66,9 @@ public class MenuMapManager : MonoBehaviour
                 else
                 {
                     text.rectTransform.localPosition = new Vector2(optionSelector.textArray[i][j-1].rectTransform.localPosition.x + optionSelector.textArray[i][j - 1].preferredWidth + 30, -110 * i);
-                    if ((i == 2 && j == 2) || (i == 4 && j == 2))
+                    if ((i == 2 && j == 2) || (i == 4 && j == 2) || (i == 5 && j == 4))
                     {
-                        optionSelector.selections[i] = new Vector2(2,i);
+                        optionSelector.selections[i] = new Vector2(j,i);
                         text.color = Color.yellow;
 
                     }

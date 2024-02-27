@@ -17,6 +17,7 @@ public class ImagePuzzleScript : MonoBehaviour
     public GameObject reward;
     public Texture2D fullImage;
     public GameObject instructionSigns;
+    public PlayerScript2D playerScript;
 
     void Update()
     {
@@ -37,6 +38,7 @@ public class ImagePuzzleScript : MonoBehaviour
 
     public void PuzzleSetUp()
     {
+        playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
         fullImage = Resize(fullImage, width * 100, height * 100);
         if (reward != null)
         {
@@ -69,7 +71,17 @@ public class ImagePuzzleScript : MonoBehaviour
         {
             if (instructionSigns.transform.GetChild(i).name == mode)
             {
-                instructionSigns.transform.GetChild(i).gameObject.SetActive(true);
+                if (!playerScript.oldPuzzles.Contains(mode))
+                {
+                    instructionSigns.transform.GetChild(0).gameObject.SetActive(true);
+                    playerScript.oldPuzzles.Add(mode);
+                }
+                else
+                {
+                    instructionSigns.transform.GetChild(i).gameObject.SetActive(true);
+                }
+                break;
+                
             }
         }
         if (mode.Contains("+"))

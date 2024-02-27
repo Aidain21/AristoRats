@@ -61,6 +61,7 @@ public class PlayerScript2D : MonoBehaviour
     public string entryScene;
     public Vector2 entryPos;
     public Vector3 entryDirection;
+    public List<string> oldPuzzles;
 
     public List<AudioClip> sfx;
     public List<AudioClip> songs;
@@ -140,6 +141,22 @@ public class PlayerScript2D : MonoBehaviour
         {
             if (!moving)
             {
+                if (direction == Vector3.up)
+                {
+                    GetComponent<SpriteRenderer>().sprite = idleSprites[0];
+                }
+                else if (direction == Vector3.left)
+                {
+                    GetComponent<SpriteRenderer>().sprite = idleSprites[1];
+                }
+                else if (direction == Vector3.down)
+                {
+                    GetComponent<SpriteRenderer>().sprite = idleSprites[2];
+                }
+                else if (direction == Vector3.right)
+                {
+                    GetComponent<SpriteRenderer>().sprite = idleSprites[3];
+                }
                 GetPlayerMovement();
             }
             if (Input.GetKey(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] != new Vector2(1,1))
@@ -226,12 +243,6 @@ public class PlayerScript2D : MonoBehaviour
                     if (currentTarget != null)
                     {
                         aboveTalker = transform.position.y > currentTarget.transform.position.y;
-                        if (currentTarget.CompareTag("Sign") && currentTarget.GetComponent<Animator>().runtimeAnimatorController != null)
-                        {
-                            
-                            currentTarget.GetComponent<Animator>().enabled = false;
-                            currentTarget.GetComponent<SpriteRenderer>().sprite = currentTarget.GetComponent<SignTextScript>().talkerImage;
-                        }
                     }
                     dialogueManager.sentences.RemoveAt(0);
                     dialogueManager.eventScript.EndEventTrigger();
@@ -401,6 +412,10 @@ public class PlayerScript2D : MonoBehaviour
                 {
                     cam.m_Lens.OrthographicSize = menuManager.optionSelector.selectorPos.x + 3;
                 }
+                if (menuManager.optionSelector.selectorPos.y == 5)
+                {
+                    GetComponent<AudioSource>().volume = menuManager.optionSelector.selectorPos.x * 0.25f;
+                }
             }
             GetSelectorMovement(menuManager.optionSelector);
         }
@@ -509,7 +524,6 @@ public class PlayerScript2D : MonoBehaviour
             if (selector.selectorPos.y > 0)
             {
                 selector.selectorPos.y -= 1;
-                
             }
             else
             {
@@ -540,7 +554,6 @@ public class PlayerScript2D : MonoBehaviour
             if (selector.selectorPos.y < selector.textArray.Length - 1)
             {
                 selector.selectorPos.y += 1;
-                
             }
             else
             {
@@ -555,6 +568,7 @@ public class PlayerScript2D : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             selector.prevSelectorPos = selector.selectorPos;
+            
             if (selector.selectorPos.x < selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1)
             {
                 selector.selectorPos.x += 1;
@@ -825,7 +839,7 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 break;
             default:
-                Debug.Log(target.name);
+                currentTarget = null;
                 break;
         }
         
@@ -858,6 +872,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     public void SwitchSong(string scene)
     {
+        AudioClip prevSong = GetComponent<AudioSource>().clip;
         GetComponent<AudioSource>().clip = scene switch
         {
             "ImagePuzzle" => songs[1],
@@ -865,7 +880,10 @@ public class PlayerScript2D : MonoBehaviour
             "Castle" => songs[2],
             _ => songs[0],
         };
-        GetComponent<AudioSource>().Play();
+        if (prevSong != GetComponent<AudioSource>().clip)
+        {
+            GetComponent<AudioSource>().Play();
+        }
     }
     public bool HasItem(string name)
     {

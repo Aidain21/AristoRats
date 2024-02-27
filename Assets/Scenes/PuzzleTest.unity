@@ -186,7 +186,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.size
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
@@ -218,6 +218,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[7]
+      value: 1Aidan:Unfortunately, this funny mechanic was removed for being too
+        buggy.
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[8]
       value: 2Normal Face (Real):feet. (real.)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -17381,6 +17386,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1090859356}
     m_Modifications:
+    - target: {fileID: 2319706005700229478, guid: aa94e1e2d238ec44aa60227e85ec8438, type: 3}
+      propertyPath: noteId
+      value: 52
+      objectReference: {fileID: 0}
     - target: {fileID: 3775710150319375438, guid: aa94e1e2d238ec44aa60227e85ec8438, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4

@@ -66,13 +66,6 @@ public class DialogueEvents : MonoBehaviour
             playerScript.currentTarget.GetComponent<SpriteRenderer>().color = Color.red;
         }
 
-        //NPC behind tree starts growing and has funny normal face
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "TreeGuy", "1", "2" }))
-        {
-            playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite = norm;
-            StartCoroutine(Grow());
-        }
-
         // First guard moves out of the way
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "3", "1" }))
         {
@@ -224,13 +217,5 @@ public class DialogueEvents : MonoBehaviour
             playerScript.dialogueManager.ChangeDialogue(failDialogueCounter, true, dialogueData[2]);
         }
         return false;
-    }
-    public IEnumerator Grow()
-    {
-        while (true)
-        {
-            playerScript.currentTarget.transform.localScale += new Vector3(0.01f, 0.01f, 0);
-            yield return new WaitForSeconds(0.1f);
-        }
     }
 }

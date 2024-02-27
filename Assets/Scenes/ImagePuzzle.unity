@@ -152,6 +152,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2104168442}
   - {fileID: 500709665}
   - {fileID: 2136659765}
   - {fileID: 643717970}
@@ -16095,6 +16096,7 @@ MonoBehaviour:
   reward: {fileID: 0}
   fullImage: {fileID: 2800000, guid: a5d7f98a9d2b7964ca7b289aaa2e279f, type: 3}
   instructionSigns: {fileID: 44472007}
+  playerScript: {fileID: 2022606009}
 --- !u!4 &937440540 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3114995002767385680, guid: 1d2abde38b5840241961f5d5713647b7, type: 3}
@@ -16504,6 +16506,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+--- !u!114 &2022606009 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7819647501052969531, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+  m_PrefabInstance: {fileID: 2022606008}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f214924edb3a11549aeace5aa703e58c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2069045357
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16586,6 +16599,103 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+--- !u!1001 &2104168441
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 44472008}
+    m_Modifications:
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Name
+      value: Default
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: '0Puzzle Instructions: This is your first time trying this puzzle, and
+        to keep it''s unique mechanics a suprise, I won''t tell you anyhing. Try
+        it out first, rather than reading boring instructions! To get you started,
+        all puzzles have you interact with the puzzle pieces with E.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: '0Puzzle Instructions: If you are stuck, or don''t care to be spoiled
+        and just want the instructions, leave and re-enter this room.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Push the blocks to where you think they would
+        go in the full image, and if you are correct, the block will insert itself
+        into the ground, so it won''t block other blocks. Once all blocks have been
+        inserted, you will have solved the puzzle!'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6fd332a8b070ce84b8c40f29e67b48de, type: 3}
+    - target: {fileID: 5423466057360024805, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+--- !u!4 &2104168442 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+  m_PrefabInstance: {fileID: 2104168441}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2136659765 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
