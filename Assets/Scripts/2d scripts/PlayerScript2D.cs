@@ -385,8 +385,9 @@ public class PlayerScript2D : MonoBehaviour
                         invManager.cheese += 1;
                         menuManager.OpenMenu();
                         break;
-                    case 3:  //save stuff
+                    case 3:  
                         SceneManager.LoadScene("TitleScreen");
+                        Destroy(gameObject);
                         break;
                 }
             }
@@ -448,6 +449,7 @@ public class PlayerScript2D : MonoBehaviour
                                 menuManager.puzzleSelector.textArray[(currentTarget.GetComponent<BlockScript>().id - 1) / menuManager.puzzleSelector.width][(currentTarget.GetComponent<BlockScript>().id - 1) % menuManager.puzzleSelector.width].text = "";
                                 Destroy(currentTarget.GetComponent<BoxCollider2D>());
                                 Destroy(currentTarget.GetComponent<BlockScript>());
+                                Destroy(currentTarget.transform.GetChild(0).gameObject);
                                 Destroy(currentTarget.transform.parent.GetChild(i).gameObject);
                                 if (currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
                                 {
@@ -716,6 +718,7 @@ public class PlayerScript2D : MonoBehaviour
                 mover.transform.position += new Vector3(0, 0, 1);
                 Destroy(mover.GetComponent<BoxCollider2D>());
                 Destroy(mover.GetComponent<BlockScript>());
+                Destroy(mover.transform.GetChild(0).gameObject);
                 cam.Follow = gameObject.transform;
                 invManager.blockControlText.GetComponent<Canvas>().enabled = false;
                 controllingBlock = false;

@@ -16120,10 +16120,9 @@ MonoBehaviour:
   mode: Blocks
   pushBlock: {fileID: 4202955538110697831, guid: 1bf0d52168cd6ae4ba2bb3864c8de477, type: 3}
   item: {fileID: 6851348241922633678, guid: 5d2fcd5af2c377247921f38ed8f4ee9d, type: 3}
+  border: {fileID: 3279107124325540570, guid: 675fe3c63d9e5c0408a9fd2cbec50ab7, type: 3}
   floorSwitch: {fileID: 6522425729884833140, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
   piecesLeft: 0
-  puzzleTimer: 0
-  timerOn: 0
   reward: {fileID: 0}
   fullImage: {fileID: 2800000, guid: a5d7f98a9d2b7964ca7b289aaa2e279f, type: 3}
   instructionSigns: {fileID: 44472007}

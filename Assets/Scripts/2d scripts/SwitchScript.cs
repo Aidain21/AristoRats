@@ -71,6 +71,7 @@ public class SwitchScript : MonoBehaviour
                         item.transform.position += new Vector3(0, 0, 1);
                         Destroy(item.GetComponent<BoxCollider2D>());
                         Destroy(item.GetComponent<ItemScript>());
+                        Destroy(item.transform.GetChild(0).gameObject);
                         Destroy(gameObject);
                         if (transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
                         {
@@ -91,6 +92,7 @@ public class SwitchScript : MonoBehaviour
                                 {
                                     transform.parent.GetChild(i).position += new Vector3(0, 0, 1);
                                     Destroy(transform.parent.GetChild(i).GetComponent<BoxCollider2D>());
+                                    Destroy(transform.parent.GetChild(i).GetChild(0).gameObject);
                                 }
                             }
                             for (int i = 0; i < transform.parent.childCount; i++)

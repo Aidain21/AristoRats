@@ -10,6 +10,7 @@ public class ImagePuzzleScript : MonoBehaviour
     public string mode;
     public GameObject pushBlock;
     public GameObject item;
+    public GameObject border;
     public GameObject floorSwitch;
     public int piecesLeft;
     public GameObject reward;
@@ -37,7 +38,9 @@ public class ImagePuzzleScript : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                pieces[(j * width) + i] = Sprite.Create(fullImage, new Rect(i * 100, (fullImage.height - 100) - (j * 100), 100, 100), new Vector2(0.5f, 0.5f));
+                Sprite newSprite = Sprite.Create(fullImage, new Rect(i * 100, (fullImage.height - 100) - (j * 100), 100, 100), new Vector2(0.5f, 0.5f));
+
+                pieces[(j * width) + i] = newSprite;
             }
         }
         int[] norm = new int[width*height];
@@ -84,6 +87,7 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().id = norm[i];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
                 break;
             case "Items":
@@ -96,6 +100,7 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<ItemScript>().itemImage = pieces[norm[i] - 1];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
                 break;
             case "Menu":
@@ -106,6 +111,7 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().type = "menu";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
                 break;
             case "Control":
@@ -116,6 +122,7 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().type = "control";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
                 break;
             case "Shuffle":
@@ -126,6 +133,7 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().type = "shuffle";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, height - (i / width));
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
                 break;
         }
