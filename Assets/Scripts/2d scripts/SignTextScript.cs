@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class SignTextScript : MonoBehaviour
 {
-    public string dialogueName;
     public string[] dialogue;
     public int talkCounter = 0;
     public Sprite talkerImage;
-
     void Start()
     {
+        if (gameObject.CompareTag("Sign"))
+        {
+            GetComponent<Animator>().enabled = false;
+        }
         talkerImage = GetComponent<SpriteRenderer>().sprite;
     }
 

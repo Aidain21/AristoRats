@@ -123,6 +123,328 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &44472007
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 44472008}
+  m_Layer: 0
+  m_Name: InstructionSigns
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &44472008
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 44472007}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2104168442}
+  - {fileID: 500709665}
+  - {fileID: 2136659765}
+  - {fileID: 643717970}
+  - {fileID: 921333727}
+  - {fileID: 996771727}
+  - {fileID: 1341030363}
+  - {fileID: 114605428}
+  m_Father: {fileID: 1090859356}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &114605427
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 44472008}
+    m_Modifications:
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Name
+      value: Shuffle+
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: '0Puzzle Instructions: This puzzle is called Shuffle, and it has you
+        cycle rows and columns of blocks, in order to reform the correct full image.
+        This one is pretty hard sometimes!'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: '0Puzzle Instructions: When facing a side of the mixed blocks, pressing
+        E will cause the row/column to shift in the direction you are facing, also
+        looping the piece opposite of you to in front of you.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Keep shifting those rows/columns, and once everything
+        is unscrambled, you will have solved the puzzle. Here''s a tip for you: Try
+        to form entire rows and columns, and then maintain them as long as possible
+        before solving another row/column.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6fd332a8b070ce84b8c40f29e67b48de, type: 3}
+    - target: {fileID: 5423466057360024805, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+--- !u!4 &114605428 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+  m_PrefabInstance: {fileID: 114605427}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &265162750
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 44472008}
+    m_Modifications:
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Name
+      value: Items
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: '0Puzzle Instructions: This puzzle is called Items, and it has you pick
+        up, and put down pieces of a broken image in the right spots to form the
+        whole image again.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: '0Puzzle Instructions: You may have already known this, but the pieces
+        can be picked up with E. Once picked up, it can be accessed from your Inventory
+        with I, and then dropped with R when selected.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Place the pieces where you think they would go,
+        and if correct, the piece will insert itself into the ground. However, if
+        you incorrectly place a piece, it won''t insert itself, and will need to
+        be picked up again. Once all pieces have been inserted, you will have solved
+        the puzzle!'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6fd332a8b070ce84b8c40f29e67b48de, type: 3}
+    - target: {fileID: 5423466057360024805, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+--- !u!1001 &310359343
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 44472008}
+    m_Modifications:
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Name
+      value: Blocks+
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: '0Puzzle Instructions: This puzzle is called Blocks+ (A harder variant
+        of Blocks), and it has you push the pieces of a broken image together to
+        form the whole image again.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: '0Puzzle Instructions: You may have already known this, but the blocks
+        can be pushed/pulled with E. If there is something blocking the block from
+        being pushed forward, it will be instead pulled back.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Push the blocks to where you think they would
+        go in the full image, and only once all blocks are in the correct spots,
+        the puzzle will solve. Unlike Blocks, the blocks don''t insert themselves
+        when positioned correctly, so you will have to deal with blocks blocking
+        other blocks on the puzzle frame.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6fd332a8b070ce84b8c40f29e67b48de, type: 3}
+    - target: {fileID: 5423466057360024805, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
 --- !u!1001 &487766056
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -137,15 +459,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3114995002767385680, guid: 1d2abde38b5840241961f5d5713647b7, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3114995002767385680, guid: 1d2abde38b5840241961f5d5713647b7, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.30769232
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 3114995002767385680, guid: 1d2abde38b5840241961f5d5713647b7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.25
+      value: -8.125
       objectReference: {fileID: 0}
     - target: {fileID: 3114995002767385680, guid: 1d2abde38b5840241961f5d5713647b7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -200,6 +522,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d2abde38b5840241961f5d5713647b7, type: 3}
+--- !u!4 &500709665 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+  m_PrefabInstance: {fileID: 1626805733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &573696198
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15641,6 +15968,108 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 02f8d91e88082f14cb58dac1f4b5dc73, type: 3}
+--- !u!4 &643717970 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+  m_PrefabInstance: {fileID: 1845238372}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &705619166
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 44472008}
+    m_Modifications:
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Name
+      value: Control
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: '0Puzzle Instructions: This puzzle is called Control, and it has you
+        control broken pieces and move them to form the whole image again.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: '0Puzzle Instructions: To begin, go up to any block surrounded by less
+        than 3 other blocks, and press E. You can now move the block with movement
+        keys, and stop controlling by putting it in the right place or pressing E
+        again.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Move the blocks to the correct spot, and that
+        will cause the block to insert itself into the ground. This will stop your
+        control, and cause it to not block other blocks. Once all blocks have been
+        inserted, you will have solved the puzzle!'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6fd332a8b070ce84b8c40f29e67b48de, type: 3}
+    - target: {fileID: 5423466057360024805, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+--- !u!4 &921333727 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+  m_PrefabInstance: {fileID: 705619166}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &927054724
 GameObject:
   m_ObjectHideFlags: 0
@@ -15691,16 +16120,22 @@ MonoBehaviour:
   mode: Blocks
   pushBlock: {fileID: 4202955538110697831, guid: 1bf0d52168cd6ae4ba2bb3864c8de477, type: 3}
   item: {fileID: 6851348241922633678, guid: 5d2fcd5af2c377247921f38ed8f4ee9d, type: 3}
+  border: {fileID: 3279107124325540570, guid: 675fe3c63d9e5c0408a9fd2cbec50ab7, type: 3}
   floorSwitch: {fileID: 6522425729884833140, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
   piecesLeft: 0
-  puzzleTimer: 0
-  timerOn: 0
   reward: {fileID: 0}
   fullImage: {fileID: 2800000, guid: a5d7f98a9d2b7964ca7b289aaa2e279f, type: 3}
+  instructionSigns: {fileID: 44472007}
+  playerScript: {fileID: 2022606009}
 --- !u!4 &937440540 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3114995002767385680, guid: 1d2abde38b5840241961f5d5713647b7, type: 3}
   m_PrefabInstance: {fileID: 487766056}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &996771727 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+  m_PrefabInstance: {fileID: 310359343}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1090859355
 GameObject:
@@ -15734,8 +16169,14 @@ Transform:
   - {fileID: 927054725}
   - {fileID: 1807622621}
   - {fileID: 1564250759}
+  - {fileID: 44472008}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1341030363 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+  m_PrefabInstance: {fileID: 2069045357}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1564250758
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15750,7 +16191,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: switchData
-      value: PuzzleTest 9,0
+      value: PuzzleTest 16,2
       objectReference: {fileID: 0}
     - target: {fileID: 1083203313887484989, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: switchEffect
@@ -15766,7 +16207,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8431808016095115378, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 8431808016095115378, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
       propertyPath: m_LocalPosition.y
@@ -15817,11 +16258,195 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8431808016095115378, guid: 3dfbab724974f7547ab16206d1f35674, type: 3}
   m_PrefabInstance: {fileID: 1564250758}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1626805733
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 44472008}
+    m_Modifications:
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Name
+      value: Blocks
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: '0Puzzle Instructions: This puzzle is called Blocks, and it has you
+        push the pieces of a broken image together to form the whole image again.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: '0Puzzle Instructions: You may have already known this, but the blocks
+        can be pushed/pulled with E. If there is something blocking the block from
+        being pushed forward, it will be instead pulled back.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Push the blocks to where you think they would
+        go in the full image, and if you are correct, the block will insert itself
+        into the ground, so it won''t block other blocks. Once all blocks have been
+        inserted, you will have solved the puzzle!'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6fd332a8b070ce84b8c40f29e67b48de, type: 3}
+    - target: {fileID: 5423466057360024805, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
 --- !u!4 &1807622621 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6400448175617045446, guid: 02f8d91e88082f14cb58dac1f4b5dc73, type: 3}
   m_PrefabInstance: {fileID: 573696198}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1845238372
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 44472008}
+    m_Modifications:
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Name
+      value: Menu
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: '0Puzzle Instructions: This puzzle is called Menu, and it has you choose
+        where the blocks will go in a peculiar manner.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: '0Puzzle Instructions: Interact with a block using E, select where you
+        want it to go using movement keys, and press E again to send it to that spot,
+        or you can press Esc to cancel sending the block. You can see your current
+        block on the right side.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: If you select the correct spot, the block will
+        insert itself into the ground, also updating inside the selection screen.
+        If incorrect, the selection screen won''t be updated, and you will have to
+        go interact with the block again to correct it. Once all blocks have been
+        inserted, you will have solved the puzzle!'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6fd332a8b070ce84b8c40f29e67b48de, type: 3}
+    - target: {fileID: 5423466057360024805, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
 --- !u!1001 &2022606008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15830,9 +16455,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 336816473096895760, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 336816473096895760, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1393524024979223340, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1393524024979223340, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3072609828047421736, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3072609828047421736, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6997520163577216977, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8479287165565655870, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8479287165565655870, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8921264606102001946, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15879,6 +16536,211 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+--- !u!114 &2022606009 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7819647501052969531, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+  m_PrefabInstance: {fileID: 2022606008}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f214924edb3a11549aeace5aa703e58c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &2069045357
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 44472008}
+    m_Modifications:
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Name
+      value: Control+
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: '0Puzzle Instructions: This puzzle is called Control+ (A harder variant
+        of Control), and it has you control broken pieces and move them to form the
+        whole image again.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: '0Puzzle Instructions: To begin, go up to any block surrounded by less
+        than 3 other blocks, and press E. You can now move the block with movement
+        keys, and stop controlling by pressing E again.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Move all blocks to their correct spots to solve
+        the puzzle. Unlike Control, the blocks won''t insert themselves when positioned
+        correctly, so you will have to move around the blocks with your previously
+        moved blocks blocking the way.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6fd332a8b070ce84b8c40f29e67b48de, type: 3}
+    - target: {fileID: 5423466057360024805, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+--- !u!1001 &2104168441
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 44472008}
+    m_Modifications:
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Name
+      value: Default
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: '0Puzzle Instructions: This is your first time trying this puzzle, and
+        to keep it''s unique mechanics a suprise, I won''t tell you anyhing. Try
+        it out first, rather than reading boring instructions! To get you started,
+        all puzzles have you interact with the puzzle pieces with E.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: '0Puzzle Instructions: If you are stuck, or don''t care to be spoiled
+        and just want the instructions, leave and re-enter this room.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Push the blocks to where you think they would
+        go in the full image, and if you are correct, the block will insert itself
+        into the ground, so it won''t block other blocks. Once all blocks have been
+        inserted, you will have solved the puzzle!'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6fd332a8b070ce84b8c40f29e67b48de, type: 3}
+    - target: {fileID: 5423466057360024805, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+--- !u!4 &2104168442 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+  m_PrefabInstance: {fileID: 2104168441}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2136659765 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+  m_PrefabInstance: {fileID: 265162750}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

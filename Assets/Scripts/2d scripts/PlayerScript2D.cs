@@ -34,8 +34,11 @@ public class PlayerScript2D : MonoBehaviour
 
     public CinemachineVirtualCamera cam;
 
+    public bool isLoading;
     public bool inMap;
     public bool inJournal;
+    public bool selectingItem;
+    public GameObject selection = null;
     public bool inDialogue;
     public bool inInventory;
     public bool inMenu;
@@ -58,10 +61,17 @@ public class PlayerScript2D : MonoBehaviour
     public string entryScene;
     public Vector2 entryPos;
     public Vector3 entryDirection;
+    public string puzzleName;
+    public bool finishedPuzzle;
+    public List<string> completedPuzzles;
+    public GameObject wall;
+    public List<string> oldPuzzles;
 
     public List<AudioClip> sfx;
     public List<AudioClip> songs;
-
+    public int sillyDude;
+    public bool funnyCheck;
+    public float funnyTimer;
     void Awake()
     {
         //Cursor.visible = false;
@@ -85,10 +95,35 @@ public class PlayerScript2D : MonoBehaviour
         timeBetweenTiles = 0.3f;
         swapy = 0.15f;
         prevDir = Vector3.zero;
+        SwitchSong(SceneManager.GetActiveScene().name);
+        dialogueManager.eventScript.RunPastEvents();
     }
     void Update()
     {
-        if (!moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && holdTimer == 0)
+        if (sillyDude > 0)
+        {
+            funnyTimer += Time.deltaTime;
+        }
+        if (funnyCheck)
+        {
+            funnyTimer = 0;
+            sillyDude += 1;
+            funnyCheck = false;
+        }
+        if (funnyTimer > 2.5f)
+        {
+            sillyDude = 0;
+        }
+        if (sillyDude > 10 && transform.position != new Vector3(23, 1, 0))
+        {
+            StopAllCoroutines();
+            moving = false;
+            GetComponent<Animator>().enabled = false;
+            StartCoroutine(SwitchScene("PuzzleTest"));
+            transform.position = new Vector3(23, 1, 0);
+            sillyDude = 0;
+        }
+        if (!isLoading && !moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && holdTimer == 0)
         {
             spinTimer += Time.deltaTime;
         }
@@ -97,19 +132,35 @@ public class PlayerScript2D : MonoBehaviour
             spinTimer = 0;
             if (spinning)
             {
-                StopCoroutine(IdleSpin(direction));
+                StopCoroutine(IdleSpin());
                 spinning = false;
             }
             
         }
         if (spinTimer > 10 && !spinning)
         {
-            StartCoroutine(IdleSpin(direction));
+            StartCoroutine(IdleSpin());
         }
-        if (!inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock) //Controls for overworld
+        if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock) //Controls for overworld
         {
             if (!moving)
             {
+                if (direction == Vector3.up)
+                {
+                    GetComponent<SpriteRenderer>().sprite = idleSprites[0];
+                }
+                else if (direction == Vector3.left)
+                {
+                    GetComponent<SpriteRenderer>().sprite = idleSprites[1];
+                }
+                else if (direction == Vector3.down)
+                {
+                    GetComponent<SpriteRenderer>().sprite = idleSprites[2];
+                }
+                else if (direction == Vector3.right)
+                {
+                    GetComponent<SpriteRenderer>().sprite = idleSprites[3];
+                }
                 GetPlayerMovement();
             }
             if (Input.GetKey(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] != new Vector2(1,1))
@@ -183,7 +234,7 @@ public class PlayerScript2D : MonoBehaviour
 
             }
         }
-        else if (inDialogue) //Controls for in dialogue
+        else if (inDialogue && !selectingItem) //Controls for in dialogue
         {
             if (Input.GetKeyDown(KeyCode.Space) && menuManager.optionSelector.selections[3] != new Vector2(1, 3))
             {
@@ -225,8 +276,8 @@ public class PlayerScript2D : MonoBehaviour
         }
         else if (inInventory)
         {
-            aboveTalker = invManager.selector.selectorPos.y == 0;
-            if (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Escape))
+            aboveTalker = invManager.selector.selectorPos.y != 0;
+            if ((Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.Escape)) && !selectingItem)
             {
                 invManager.CloseInventory();
             }
@@ -237,7 +288,7 @@ public class PlayerScript2D : MonoBehaviour
                 invManager.selector.selection = invManager.selector.selectorPos;
                 invManager.selector.UpdateSelector();
             }
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !selectingItem)
             {
                 if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count)
                 {
@@ -250,7 +301,21 @@ public class PlayerScript2D : MonoBehaviour
                     dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
                 }
             }
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.E) && selectingItem)
+            {
+                selectingItem = false;
+                if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count)
+                {
+                    selection = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)];
+                }
+                else
+                {
+                    selection = currentTarget;
+                }
+                invManager.CloseInventory();
+                dialogueManager.eventScript.EndEventTrigger();
+            }
+            if (Input.GetKeyDown(KeyCode.R) && !selectingItem)
             {
                 bool[] walls = WallChecker();
                 bool frontClear = (!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right);
@@ -317,12 +382,12 @@ public class PlayerScript2D : MonoBehaviour
                         menuManager.OpenOptions();
                         break;
                     case 2:
-                        string[] temp = new string[] { "0You:HAHA YOU THOUGHT", "0You: There is no hidden god mode. This was just made to test out menu funcitons.", "0You:Wait I got free ches ong!" };
-                        invManager.cheese += 10000;
-                        dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+                        invManager.cheese += 1;
+                        menuManager.OpenMenu();
                         break;
-                    case 3:  //save stuff
+                    case 3:  
                         SceneManager.LoadScene("TitleScreen");
+                        Destroy(gameObject);
                         break;
                 }
             }
@@ -352,6 +417,10 @@ public class PlayerScript2D : MonoBehaviour
                 {
                     cam.m_Lens.OrthographicSize = menuManager.optionSelector.selectorPos.x + 3;
                 }
+                if (menuManager.optionSelector.selectorPos.y == 5)
+                {
+                    GetComponent<AudioSource>().volume = menuManager.optionSelector.selectorPos.x * 0.25f;
+                }
             }
             GetSelectorMovement(menuManager.optionSelector);
         }
@@ -380,7 +449,12 @@ public class PlayerScript2D : MonoBehaviour
                                 menuManager.puzzleSelector.textArray[(currentTarget.GetComponent<BlockScript>().id - 1) / menuManager.puzzleSelector.width][(currentTarget.GetComponent<BlockScript>().id - 1) % menuManager.puzzleSelector.width].text = "";
                                 Destroy(currentTarget.GetComponent<BoxCollider2D>());
                                 Destroy(currentTarget.GetComponent<BlockScript>());
+                                Destroy(currentTarget.transform.GetChild(0).gameObject);
                                 Destroy(currentTarget.transform.parent.GetChild(i).gameObject);
+                                if (currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+                                {
+                                    currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                                }
                                 
                             }
                             break;
@@ -460,7 +534,6 @@ public class PlayerScript2D : MonoBehaviour
             if (selector.selectorPos.y > 0)
             {
                 selector.selectorPos.y -= 1;
-                
             }
             else
             {
@@ -491,7 +564,6 @@ public class PlayerScript2D : MonoBehaviour
             if (selector.selectorPos.y < selector.textArray.Length - 1)
             {
                 selector.selectorPos.y += 1;
-                
             }
             else
             {
@@ -506,6 +578,7 @@ public class PlayerScript2D : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             selector.prevSelectorPos = selector.selectorPos;
+            
             if (selector.selectorPos.x < selector.textArray[Mathf.RoundToInt(selector.selectorPos.y)].Length - 1)
             {
                 selector.selectorPos.x += 1;
@@ -619,6 +692,10 @@ public class PlayerScript2D : MonoBehaviour
         float elapsedTime = 0;
         while (elapsedTime < seconds)
         {
+            if (isLoading && mover.name != "Player")
+            {
+                yield break;
+            }
             mover.transform.position = Vector3.Lerp(start, end, (elapsedTime / seconds));
             elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
@@ -641,40 +718,49 @@ public class PlayerScript2D : MonoBehaviour
                 mover.transform.position += new Vector3(0, 0, 1);
                 Destroy(mover.GetComponent<BoxCollider2D>());
                 Destroy(mover.GetComponent<BlockScript>());
+                Destroy(mover.transform.GetChild(0).gameObject);
                 cam.Follow = gameObject.transform;
                 invManager.blockControlText.GetComponent<Canvas>().enabled = false;
                 controllingBlock = false;
-            } 
+                if (mover.GetComponent<BlockScript>().id > 0 && mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+                {
+                    mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                }
+            }
+            else if (mover.GetComponent<BlockScript>().id > 0 && mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == -1)
+            {
+                mover.transform.position += new Vector3(0, 0, 1);
+                cam.Follow = gameObject.transform;
+                invManager.blockControlText.GetComponent<Canvas>().enabled = false;
+                controllingBlock = false;
+            }
         }
     }
-    public IEnumerator IdleSpin(Vector3 start)
+    public IEnumerator IdleSpin()
     {
         spinning = true;
-        int i = 0;
-        if(start == Vector3.left)
-        {
-            i = 1;
-        }
-        else if (start == Vector3.down)
-        {
-            i = 2;
-        }
-        else if (start == Vector3.right)
-        {
-            i = 3;
-        }
+        
         while (spinning)
         {
-            GetComponent<SpriteRenderer>().sprite = idleSprites[i];
+            if (direction == Vector3.up)
+            {
+                direction = Vector3.left;
+            }
+            else if (direction == Vector3.left)
+            {
+                direction = Vector3.down;
+            }
+            else if (direction == Vector3.down)
+            {
+                direction = Vector3.right;
+
+            }
+            else if (direction == Vector3.right)
+            {
+                direction = Vector3.up;
+            }
             yield return new WaitForSeconds(0.5f);
-            if (i == 3)
-            {
-                i = 0;
-            }
-            else
-            {
-                i++;
-            }
+            
         }
     }
     public bool[] WallChecker()
@@ -697,7 +783,7 @@ public class PlayerScript2D : MonoBehaviour
             case "Sign":
                 aboveTalker = transform.position.y > target.transform.position.y;
                 SignTextScript signScript = target.GetComponent<SignTextScript>();
-                dialogueManager.StartDialogue(signScript.dialogueName, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
+                dialogueManager.StartDialogue(signScript.name, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
                 break;
             case "Block":
                 if (!target.GetComponent<BlockScript>().moving)
@@ -765,7 +851,7 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 break;
             default:
-                Debug.Log(target.name);
+                currentTarget = null;
                 break;
         }
         
@@ -791,27 +877,25 @@ public class PlayerScript2D : MonoBehaviour
             spawnPoint = curNote.pos;
             if(curNote.scene != SceneManager.GetActiveScene().name)
             {
-                SceneManager.LoadScene(curNote.scene);
+                StartCoroutine(SwitchScene(curNote.scene));
             }
             
         }
     }
     public void SwitchSong(string scene)
     {
-        switch (scene)
+        AudioClip prevSong = GetComponent<AudioSource>().clip;
+        GetComponent<AudioSource>().clip = scene switch
         {
-            case "ImagePuzzle":
-                GetComponent<AudioSource>().clip = songs[1];
-                break;
-            case "PuzzleTest":
-                GetComponent<AudioSource>().clip = songs[0];
-                break;
-            default:
-                GetComponent<AudioSource>().clip = songs[0];
-                break;
-
+            "ImagePuzzle" => songs[1],
+            "PuzzleTest" => songs[0],
+            "Castle" => songs[2],
+            _ => songs[0],
+        };
+        if (prevSong != GetComponent<AudioSource>().clip)
+        {
+            GetComponent<AudioSource>().Play();
         }
-        GetComponent<AudioSource>().Play();
     }
     public bool HasItem(string name)
     {
@@ -834,5 +918,46 @@ public class PlayerScript2D : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public IEnumerator SwitchScene(string sceneName)
+    {
+        yield return null;
+        isLoading = true;
+        var op = SceneManager.LoadSceneAsync(sceneName);
+        op.completed += (x) =>
+        {
+            isLoading = false;
+            SwitchSong(sceneName);
+            dialogueManager.eventScript.RunPastEvents();
+            if (finishedPuzzle)
+            {
+                if (puzzleName != "rand")
+                {
+                    completedPuzzles.Add(puzzleName);
+                }
+                finishedPuzzle = false;
+            }
+            foreach (string puz in completedPuzzles)
+            {
+                GameObject puzzle = GameObject.Find(puz);
+                if (puzzle != null)
+                {
+                    GameObject newWall = Instantiate(wall, new Vector2(Mathf.RoundToInt(puzzle.transform.position.x), Mathf.RoundToInt(puzzle.transform.position.y)), Quaternion.identity);
+                    newWall.transform.localScale = new Vector3(Mathf.RoundToInt(puzzle.transform.localScale.x + 0.5f), Mathf.RoundToInt(puzzle.transform.localScale.y + 0.5f), 0);
+                    if (newWall.transform.localScale.x % 2 == 0)
+                    {
+                        newWall.transform.localScale = new Vector3(newWall.transform.localScale.x + 1, 1, 0);
+                    }
+                    else if (newWall.transform.localScale.y % 2 == 0)
+                    {
+                        newWall.transform.localScale = new Vector3(1, newWall.transform.localScale.y + 1, 0);
+                    }
+                    Destroy(puzzle);
+                }
+            }
+        };
+        funnyCheck = true;
+        
     }
 }

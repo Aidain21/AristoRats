@@ -71,8 +71,40 @@ public class SwitchScript : MonoBehaviour
                         item.transform.position += new Vector3(0, 0, 1);
                         Destroy(item.GetComponent<BoxCollider2D>());
                         Destroy(item.GetComponent<ItemScript>());
+                        Destroy(item.transform.GetChild(0).gameObject);
                         Destroy(gameObject);
+                        if (transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+                        {
+                            transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                        }
                         break;
+                    }
+                    break;
+                case "insert+":
+                    if (item.CompareTag("Block"))
+                    {
+                        transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                        if (transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+                        {
+                            for (int i = 0; i < transform.parent.childCount; i++)
+                            {
+                                if (transform.parent.GetChild(i).name.Equals("PushBlock(Clone)"))
+                                {
+                                    transform.parent.GetChild(i).position += new Vector3(0, 0, 1);
+                                    Destroy(transform.parent.GetChild(i).GetComponent<BoxCollider2D>());
+                                    Destroy(transform.parent.GetChild(i).GetChild(0).gameObject);
+                                }
+                            }
+                            for (int i = 0; i < transform.parent.childCount; i++)
+                            {
+                                if (transform.parent.GetChild(i).name.Equals("FloorSwitch(Clone)"))
+                                {
+                                    Destroy(transform.parent.GetChild(i).gameObject);
+                                }
+                            }
+                            transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                            break;
+                        }
                     }
                     break;
                 case "warp":
@@ -109,8 +141,9 @@ public class SwitchScript : MonoBehaviour
                         }
                         item.transform.position = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
-                        item.GetComponent<PlayerScript2D>().SwitchSong(scene);
-                        SceneManager.LoadScene(scene);
+                        
+                        item.GetComponent<PlayerScript2D>().currentTarget = null;
+                        StartCoroutine(item.GetComponent<PlayerScript2D>().SwitchScene(scene));
                         
                     }
                     break;
@@ -124,10 +157,11 @@ public class SwitchScript : MonoBehaviour
                     break;
                 case "talk":
                     SignTextScript signScript = GetComponent<SignTextScript>();
-                    item.GetComponent<PlayerScript2D>().dialogueManager.StartDialogue(signScript.dialogueName, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
+                    item.GetComponent<PlayerScript2D>().dialogueManager.StartDialogue(signScript.name, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
                     break;
                 case "puzzle":
                     PlayerScript2D player = affectedObjects[2].GetComponent<PlayerScript2D>();
+                    GameObject signs = GameObject.Find("InstructionSigns");
                     if (item.name == "Puzzle Box")
                     {
                         item.GetComponent<ImagePuzzleScript>().fullImage = player.puzzleImage;
@@ -136,26 +170,40 @@ public class SwitchScript : MonoBehaviour
                         item.GetComponent<ImagePuzzleScript>().reward = player.reward;
                         item.GetComponent<ImagePuzzleScript>().mode = player.puzzleType;
                         item.GetComponent<ImagePuzzleScript>().PuzzleSetUp();
+                        item.GetComponent<ImagePuzzleScript>().playerScript = player;
                     }
                     if (item.name == "SceneWarp")
                     {
+                        player.StopAllCoroutines();
+                        player.moving = false;
+                        player.GetComponent<Animator>().enabled = false;
                         item.GetComponent<SwitchScript>().switchData = player.entryScene + " " + player.entryPos.x + "," + player.entryPos.y;
                         if (player.entryDirection == Vector3.up)
                         {
                             item.transform.position = new Vector3(-3, -13, 1);
                             item.transform.Rotate(new Vector3(0, 0, 90));
                             player.transform.position = new Vector3(-3, -12, 0);
+                            signs.transform.position = new Vector3(-5, -12, 0);
+
                         }
                         else if (player.entryDirection == Vector3.left)
                         {
                             item.transform.position = new Vector3(6, 0, 1);
                             player.transform.position = new Vector3(5, 0, 0);
+                            signs.transform.position = new Vector3(5, -2, 0);
                         }
                         else if (player.entryDirection == Vector3.down)
                         {
                             item.transform.position = new Vector3(-3, 13, 1);
                             item.transform.Rotate(new Vector3(0, 0, 90));
                             player.transform.position = new Vector3(-3, 12, 0);
+                            signs.transform.position = new Vector3(-1, 12, 0);
+                        }
+                        else if (player.entryDirection == Vector3.right)
+                        {
+                            item.transform.position = new Vector3(-12, 0, 1);
+                            player.transform.position = new Vector3(-11, 0, 0);
+                            signs.transform.position = new Vector3(-11, 2, 0);
                         }
                     }
                     break;
@@ -170,6 +218,7 @@ public class SwitchScript : MonoBehaviour
                     item.GetComponent<PlayerScript2D>().entryPos = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
                     item.GetComponent<PlayerScript2D>().entryScene = SceneManager.GetActiveScene().name;
                     item.GetComponent<PlayerScript2D>().entryDirection = item.GetComponent<PlayerScript2D>().direction;
+                    item.GetComponent<PlayerScript2D>().puzzleName = name;
                     item.GetComponent<PlayerScript2D>().menuManager.puzzleSelector = new Selector(x2,y2);
                     item.GetComponent<PlayerScript2D>().menuManager.MakePuzzleMenu();
                     break;
@@ -254,6 +303,13 @@ public class SwitchScript : MonoBehaviour
             {
                 affectedObjects[0] = collision.gameObject;
                 playerOnSpike = false;
+            }
+        }
+        if (collision.CompareTag("Block") && switchType == "floor" && switchEffect == "insert+")
+        {
+            if (switchData == collision.GetComponent<BlockScript>().id.ToString() && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft > 0)
+            {
+                transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft += 1;
             }
         }
     }

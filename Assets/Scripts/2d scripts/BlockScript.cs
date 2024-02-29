@@ -21,13 +21,18 @@ public class BlockScript : MonoBehaviour
     // Update is called once per frame
     public IEnumerator Moving(Vector3 goal, float time)
     {
-        while (new Vector3(transform.position.x, transform.position.y,0) != goal)
+        
+        while (new Vector3(transform.position.x, transform.position.y, transform.position.z) != goal)
         {
             moving = true;
             transform.position = Vector3.MoveTowards(transform.position, goal, time * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
-        transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), 0);
+        if (id > 0 && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == -1)
+        {
+            transform.position += new Vector3(0, 0, 1);
+        }
+        transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), Mathf.Round(transform.position.z));
         moving = false;
         if (inserted)
         {
@@ -38,6 +43,11 @@ public class BlockScript : MonoBehaviour
             transform.position += new Vector3(0, 0, 1);
             Destroy(GetComponent<BoxCollider2D>());
             Destroy(GetComponent<BlockScript>());
+            Destroy(transform.GetChild(0).gameObject);
+            if (id > 0 && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+            {
+                transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+            }
         }        
     }
 
@@ -87,6 +97,59 @@ public class BlockScript : MonoBehaviour
             player.GetComponent<PlayerScript2D>().cam.Follow = gameObject.transform;
             player.GetComponent<PlayerScript2D>().invManager.blockControlText.GetComponent<Canvas>().enabled = true;
             player.GetComponent<PlayerScript2D>().controllingBlock = true;
+        }
+        else if (type == "shuffle")
+        {
+            for (int i = 0; i < transform.parent.childCount; i++) 
+            {
+                if (transform.parent.GetChild(i).name == "PushBlock(Clone)")
+                {
+                    if (direction == Vector3.up && transform.parent.GetChild(i).localPosition.x == transform.localPosition.x)
+                    {
+                        if (transform.parent.GetChild(i).localPosition.y == transform.parent.GetComponent<ImagePuzzleScript>().height)
+                        {
+                            transform.parent.GetChild(i).localPosition -= new Vector3(0, transform.parent.GetComponent<ImagePuzzleScript>().height - 1, 0);
+                        }
+                        else
+                        {
+                            transform.parent.GetChild(i).localPosition += Vector3.up;
+                        }
+                    }
+                    else if (direction == Vector3.left && transform.parent.GetChild(i).localPosition.y == transform.localPosition.y)
+                    {
+                        if (transform.parent.GetChild(i).localPosition.x == 0)
+                        {
+                            transform.parent.GetChild(i).localPosition += new Vector3(transform.parent.GetComponent<ImagePuzzleScript>().width -1, 0, 0);
+                        }
+                        else
+                        {
+                            transform.parent.GetChild(i).localPosition += Vector3.left;
+                        }
+                    }
+                    else if (direction == Vector3.down && transform.parent.GetChild(i).localPosition.x == transform.localPosition.x)
+                    {
+                        if (transform.parent.GetChild(i).localPosition.y == 1)
+                        {
+                            transform.parent.GetChild(i).localPosition += new Vector3(0, transform.parent.GetComponent<ImagePuzzleScript>().height - 1, 0);
+                        }
+                        else
+                        {
+                            transform.parent.GetChild(i).localPosition += Vector3.down;
+                        }
+                    }
+                    else if (direction == Vector3.right && transform.parent.GetChild(i).localPosition.y == transform.localPosition.y)
+                    {
+                        if (transform.parent.GetChild(i).localPosition.x == transform.parent.GetComponent<ImagePuzzleScript>().width - 1)
+                        {
+                            transform.parent.GetChild(i).localPosition -= new Vector3(transform.parent.GetComponent<ImagePuzzleScript>().width - 1, 0, 0);
+                        }
+                        else
+                        {
+                            transform.parent.GetChild(i).localPosition += Vector3.right;
+                        }
+                    }
+                }
+            }
         }
     }
     public bool[] WallChecker()

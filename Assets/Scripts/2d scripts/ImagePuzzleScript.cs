@@ -10,45 +10,37 @@ public class ImagePuzzleScript : MonoBehaviour
     public string mode;
     public GameObject pushBlock;
     public GameObject item;
+    public GameObject border;
     public GameObject floorSwitch;
     public int piecesLeft;
-    public float puzzleTimer = 0;
-    public bool timerOn;
     public GameObject reward;
     public Texture2D fullImage;
+    public GameObject instructionSigns;
+    public PlayerScript2D playerScript;
 
-    void Update()
+    public void EndPuzzle()
     {
-        if (timerOn)
-        {
-            puzzleTimer += Time.deltaTime;
-        }
-        if (piecesLeft == 0)
-        {
-            if (reward != null)
-            {
-                reward.SetActive(true);
-            }
-            timerOn = false;
-            piecesLeft = -1;
-        }
+        piecesLeft = -1;
+        playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
+        playerScript.finishedPuzzle = true;
     }
-
     public void PuzzleSetUp()
     {
+        playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
         fullImage = Resize(fullImage, width * 100, height * 100);
         if (reward != null)
         {
             reward.SetActive(false);
         }
-        timerOn = false;
         piecesLeft = width * height;
         pieces = new Sprite[width * height];
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                pieces[(j * width) + i] = Sprite.Create(fullImage, new Rect(i * 100, (fullImage.height - 100) - (j * 100), 100, 100), new Vector2(0.5f, 0.5f));
+                Sprite newSprite = Sprite.Create(fullImage, new Rect(i * 100, (fullImage.height - 100) - (j * 100), 100, 100), new Vector2(0.5f, 0.5f));
+
+                pieces[(j * width) + i] = newSprite;
             }
         }
         int[] norm = new int[width*height];
@@ -63,6 +55,29 @@ public class ImagePuzzleScript : MonoBehaviour
             norm[t] = norm[r];
             norm[r] = tmp;
         }
+        string switchType = "insert";
+        for (int i = 0; i < instructionSigns.transform.childCount; i++)
+        {
+            if (instructionSigns.transform.GetChild(i).name == mode)
+            {
+                if (!playerScript.oldPuzzles.Contains(mode))
+                {
+                    instructionSigns.transform.GetChild(0).gameObject.SetActive(true);
+                    playerScript.oldPuzzles.Add(mode);
+                }
+                else
+                {
+                    instructionSigns.transform.GetChild(i).gameObject.SetActive(true);
+                }
+                break;
+                
+            }
+        }
+        if (mode.Contains("+"))
+        {
+            mode = mode[0..^1];
+            switchType = "insert+";
+        }
         switch (mode)
         {
             case "Blocks":
@@ -72,8 +87,8 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().id = norm[i];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
-                timerOn = true;
                 break;
             case "Items":
                 for (int i = 0; i < width * height; i++)
@@ -85,6 +100,7 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<ItemScript>().itemImage = pieces[norm[i] - 1];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
                 break;
             case "Menu":
@@ -95,29 +111,41 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().type = "menu";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
-                timerOn = true;
                 break;
             case "Control":
                 for (int i = 0; i < width * height; i++)
                 {
                     GameObject piece = Instantiate(pushBlock, transform);
-                    piece.GetComponent<BlockScript>().id = norm[i];
+                    piece.GetComponent<BlockScript>().id = norm[i]; 
                     piece.GetComponent<BlockScript>().type = "control";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
-                timerOn = true;
+                break;
+            case "Shuffle":
+                for (int i = 0; i < width * height; i++)
+                {
+                    GameObject piece = Instantiate(pushBlock, transform);
+                    piece.GetComponent<BlockScript>().id = norm[i];
+                    piece.GetComponent<BlockScript>().type = "shuffle";
+                    piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
+                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, height - (i / width));
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
+                }
                 break;
         }
         for (int i = 0; i < width * height; i++)
         {
             GameObject place = Instantiate(floorSwitch, transform);
             place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
-            place.GetComponent<SwitchScript>().switchEffect = "insert";
+            place.GetComponent<SwitchScript>().switchEffect = switchType;
             place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
             place.GetComponent<SpriteRenderer>().color = Color.cyan;
         }
+        
     }
     public Texture2D Resize(Texture2D source, int newWidth, int newHeight)
     {
