@@ -12,30 +12,17 @@ public class ImagePuzzleScript : MonoBehaviour
     public GameObject item;
     public GameObject floorSwitch;
     public int piecesLeft;
-    public float puzzleTimer = 0;
-    public bool timerOn;
     public GameObject reward;
     public Texture2D fullImage;
     public GameObject instructionSigns;
     public PlayerScript2D playerScript;
 
-    void Update()
+    public void EndPuzzle()
     {
-        if (timerOn)
-        {
-            puzzleTimer += Time.deltaTime;
-        }
-        if (piecesLeft == 0)
-        {
-            if (reward != null)
-            {
-                reward.SetActive(true);
-            }
-            timerOn = false;
-            piecesLeft = -1;
-        }
+        piecesLeft = -1;
+        playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
+        playerScript.finishedPuzzle = true;
     }
-
     public void PuzzleSetUp()
     {
         playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
@@ -44,7 +31,6 @@ public class ImagePuzzleScript : MonoBehaviour
         {
             reward.SetActive(false);
         }
-        timerOn = false;
         piecesLeft = width * height;
         pieces = new Sprite[width * height];
         for (int i = 0; i < width; i++)
@@ -99,7 +85,6 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
                 }
-                timerOn = true;
                 break;
             case "Items":
                 for (int i = 0; i < width * height; i++)
@@ -122,7 +107,6 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
                 }
-                timerOn = true;
                 break;
             case "Control":
                 for (int i = 0; i < width * height; i++)
@@ -133,7 +117,6 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
                 }
-                timerOn = true;
                 break;
             case "Shuffle":
                 for (int i = 0; i < width * height; i++)
@@ -144,7 +127,6 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, height - (i / width));
                 }
-                timerOn = true;
                 break;
         }
         for (int i = 0; i < width * height; i++)

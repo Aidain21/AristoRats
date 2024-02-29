@@ -72,6 +72,10 @@ public class SwitchScript : MonoBehaviour
                         Destroy(item.GetComponent<BoxCollider2D>());
                         Destroy(item.GetComponent<ItemScript>());
                         Destroy(gameObject);
+                        if (transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+                        {
+                            transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                        }
                         break;
                     }
                     break;
@@ -96,6 +100,7 @@ public class SwitchScript : MonoBehaviour
                                     Destroy(transform.parent.GetChild(i).gameObject);
                                 }
                             }
+                            transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
                             break;
                         }
                     }
@@ -211,6 +216,7 @@ public class SwitchScript : MonoBehaviour
                     item.GetComponent<PlayerScript2D>().entryPos = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
                     item.GetComponent<PlayerScript2D>().entryScene = SceneManager.GetActiveScene().name;
                     item.GetComponent<PlayerScript2D>().entryDirection = item.GetComponent<PlayerScript2D>().direction;
+                    item.GetComponent<PlayerScript2D>().puzzleName = name;
                     item.GetComponent<PlayerScript2D>().menuManager.puzzleSelector = new Selector(x2,y2);
                     item.GetComponent<PlayerScript2D>().menuManager.MakePuzzleMenu();
                     break;

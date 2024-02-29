@@ -43,6 +43,10 @@ public class BlockScript : MonoBehaviour
             transform.position += new Vector3(0, 0, 1);
             Destroy(GetComponent<BoxCollider2D>());
             Destroy(GetComponent<BlockScript>());
+            if (id > 0 && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+            {
+                transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+            }
         }        
     }
 

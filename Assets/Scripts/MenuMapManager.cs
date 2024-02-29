@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class MenuMapManager : MonoBehaviour
@@ -15,6 +16,8 @@ public class MenuMapManager : MonoBehaviour
     public Canvas menu;
     public TMP_Text cheeseText;
     public TMP_Text talkedToText;
+    public TMP_Text puzzleText;
+    public TMP_Text notesText;
     public Canvas options;
     //public Canvas map;
     public Canvas puzzle;
@@ -41,7 +44,7 @@ public class MenuMapManager : MonoBehaviour
             {
                 count += 1;
                 TMP_Text text = Instantiate(defMenu, menuTextArray.transform);
-                text.rectTransform.localPosition = new Vector2(0 * j, -100 * i);
+                text.rectTransform.localPosition = new Vector2(0 * j, -100 * i + 75);
                 text.name = count.ToString();
                 text.text = menuChoices[count - 1];
                 menuSelector.textArray[i][j] = text;
@@ -89,6 +92,18 @@ public class MenuMapManager : MonoBehaviour
         playerScript.inMenu = true;
         cheeseText.text = "Cheese: " + playerScript.invManager.cheese.ToString();
         talkedToText.text = "Friends made: " + playerScript.dialogueManager.eventScript.fullyTalkedTo.ToString() + "/" + playerScript.dialogueManager.eventScript.npcsInScene.ToString();
+        puzzleText.text = "Puzzles solved: " + playerScript.completedPuzzles.Count;
+        int notesFromScene = 0;
+        int totalNotes = GameObject.FindGameObjectsWithTag("Note").Length;
+        foreach (NoteScript note in playerScript.journalManager.notes)
+        {
+            if (note.scene == SceneManager.GetActiveScene().name)
+            {
+                notesFromScene += 1;
+                totalNotes += 1;
+            }
+        }
+        notesText.text = "Notes Found: " + notesFromScene + "/" + totalNotes;
         menuSelector.UpdateSelector();
     }
     public void CloseMenu()

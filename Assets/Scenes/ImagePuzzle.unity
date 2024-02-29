@@ -220,16 +220,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: 0yay:yay
+      value: '0Puzzle Instructions: This puzzle is called Shuffle, and it has you
+        cycle rows and columns of blocks, in order to reform the correct full image.
+        This one is pretty hard sometimes!'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: 1???:If you're a Default Sign and you know it, clap your hands! *clap*
-        *clap*
+      value: '0Puzzle Instructions: When facing a side of the mixed blocks, pressing
+        E will cause the row/column to shift in the direction you are facing, also
+        looping the piece opposite of you to in front of you.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Keep shifting those rows/columns, and once everything
+        is unscrambled, you will have solved the puzzle. Here''s a tip for you: Try
+        to form entire rows and columns, and then maintain them as long as possible
+        before solving another row/column.'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite
@@ -400,16 +410,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: 0yay:yay
+      value: '0Puzzle Instructions: This puzzle is called Blocks+ (A harder variant
+        of Blocks), and it has you push the pieces of a broken image together to
+        form the whole image again.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: 1???:If you're a Default Sign and you know it, clap your hands! *clap*
-        *clap*
+      value: '0Puzzle Instructions: You may have already known this, but the blocks
+        can be pushed/pulled with E. If there is something blocking the block from
+        being pushed forward, it will be instead pulled back.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Push the blocks to where you think they would
+        go in the full image, and only once all blocks are in the correct spots,
+        the puzzle will solve. Unlike Blocks, the blocks don''t insert themselves
+        when positioned correctly, so you will have to deal with blocks blocking
+        other blocks on the puzzle frame.'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite
@@ -16010,16 +16031,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: 0yay:yay
+      value: '0Puzzle Instructions: This puzzle is called Control, and it has you
+        control broken pieces and move them to form the whole image again.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: 1???:If you're a Default Sign and you know it, clap your hands! *clap*
-        *clap*
+      value: '0Puzzle Instructions: To begin, go up to any block surrounded by less
+        than 3 other blocks, and press E. You can now move the block with movement
+        keys, and stop controlling by putting it in the right place or pressing E
+        again.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Move the blocks to the correct spot, and that
+        will cause the block to insert itself into the ground. This will stop your
+        control, and cause it to not block other blocks. Once all blocks have been
+        inserted, you will have solved the puzzle!'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite
@@ -16575,16 +16606,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: 0yay:yay
+      value: '0Puzzle Instructions: This puzzle is called Control+ (A harder variant
+        of Control), and it has you control broken pieces and move them to form the
+        whole image again.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: 1???:If you're a Default Sign and you know it, clap your hands! *clap*
-        *clap*
+      value: '0Puzzle Instructions: To begin, go up to any block surrounded by less
+        than 3 other blocks, and press E. You can now move the block with movement
+        keys, and stop controlling by pressing E again.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Move all blocks to their correct spots to solve
+        the puzzle. Unlike Control, the blocks won''t insert themselves when positioned
+        correctly, so you will have to move around the blocks with your previously
+        moved blocks blocking the way.'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite

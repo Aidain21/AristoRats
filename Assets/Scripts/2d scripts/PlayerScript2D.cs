@@ -61,6 +61,10 @@ public class PlayerScript2D : MonoBehaviour
     public string entryScene;
     public Vector2 entryPos;
     public Vector3 entryDirection;
+    public string puzzleName;
+    public bool finishedPuzzle;
+    public List<string> completedPuzzles;
+    public GameObject wall;
     public List<string> oldPuzzles;
 
     public List<AudioClip> sfx;
@@ -128,14 +132,14 @@ public class PlayerScript2D : MonoBehaviour
             spinTimer = 0;
             if (spinning)
             {
-                StopCoroutine(IdleSpin(direction));
+                StopCoroutine(IdleSpin());
                 spinning = false;
             }
             
         }
         if (spinTimer > 10 && !spinning)
         {
-            StartCoroutine(IdleSpin(direction));
+            StartCoroutine(IdleSpin());
         }
         if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock) //Controls for overworld
         {
@@ -445,6 +449,10 @@ public class PlayerScript2D : MonoBehaviour
                                 Destroy(currentTarget.GetComponent<BoxCollider2D>());
                                 Destroy(currentTarget.GetComponent<BlockScript>());
                                 Destroy(currentTarget.transform.parent.GetChild(i).gameObject);
+                                if (currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+                                {
+                                    currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                                }
                                 
                             }
                             break;
@@ -711,6 +719,10 @@ public class PlayerScript2D : MonoBehaviour
                 cam.Follow = gameObject.transform;
                 invManager.blockControlText.GetComponent<Canvas>().enabled = false;
                 controllingBlock = false;
+                if (mover.GetComponent<BlockScript>().id > 0 && mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+                {
+                    mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                }
             }
             else if (mover.GetComponent<BlockScript>().id > 0 && mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == -1)
             {
@@ -721,34 +733,31 @@ public class PlayerScript2D : MonoBehaviour
             }
         }
     }
-    public IEnumerator IdleSpin(Vector3 start)
+    public IEnumerator IdleSpin()
     {
         spinning = true;
-        int i = 0;
-        if(start == Vector3.left)
-        {
-            i = 1;
-        }
-        else if (start == Vector3.down)
-        {
-            i = 2;
-        }
-        else if (start == Vector3.right)
-        {
-            i = 3;
-        }
+        
         while (spinning)
         {
-            GetComponent<SpriteRenderer>().sprite = idleSprites[i];
+            if (direction == Vector3.up)
+            {
+                direction = Vector3.left;
+            }
+            else if (direction == Vector3.left)
+            {
+                direction = Vector3.down;
+            }
+            else if (direction == Vector3.down)
+            {
+                direction = Vector3.right;
+
+            }
+            else if (direction == Vector3.right)
+            {
+                direction = Vector3.up;
+            }
             yield return new WaitForSeconds(0.5f);
-            if (i == 3)
-            {
-                i = 0;
-            }
-            else
-            {
-                i++;
-            }
+            
         }
     }
     public bool[] WallChecker()
@@ -918,7 +927,34 @@ public class PlayerScript2D : MonoBehaviour
             isLoading = false;
             SwitchSong(sceneName);
             dialogueManager.eventScript.RunPastEvents();
+            if (finishedPuzzle)
+            {
+                if (puzzleName != "rand")
+                {
+                    completedPuzzles.Add(puzzleName);
+                }
+                finishedPuzzle = false;
+            }
+            foreach (string puz in completedPuzzles)
+            {
+                GameObject puzzle = GameObject.Find(puz);
+                if (puzzle != null)
+                {
+                    GameObject newWall = Instantiate(wall, new Vector2(Mathf.RoundToInt(puzzle.transform.position.x), Mathf.RoundToInt(puzzle.transform.position.y)), Quaternion.identity);
+                    newWall.transform.localScale = new Vector3(Mathf.RoundToInt(puzzle.transform.localScale.x + 0.5f), Mathf.RoundToInt(puzzle.transform.localScale.y + 0.5f), 0);
+                    if (newWall.transform.localScale.x % 2 == 0)
+                    {
+                        newWall.transform.localScale = new Vector3(newWall.transform.localScale.x + 1, 1, 0);
+                    }
+                    else if (newWall.transform.localScale.y % 2 == 0)
+                    {
+                        newWall.transform.localScale = new Vector3(1, newWall.transform.localScale.y + 1, 0);
+                    }
+                    Destroy(puzzle);
+                }
+            }
         };
         funnyCheck = true;
+        
     }
 }

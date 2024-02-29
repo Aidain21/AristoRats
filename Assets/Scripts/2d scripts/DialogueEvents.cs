@@ -186,6 +186,16 @@ public class DialogueEvents : MonoBehaviour
                 GameObject.Find("LevelObjects/NPCs").transform.Find("Auto").gameObject.SetActive(true);
             }
             // Funny stuff end
+
+            //Randomized Puzzle!!!
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleRando", "0", "0" }))
+            {
+                UnityEngine.Object[] assets = Resources.LoadAll("Sprites", typeof(Texture2D));
+                string[] puzzleModes = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+" };
+                SwitchScript rand = GameObject.Find("rand").GetComponent<SwitchScript>();
+                rand.switchData = puzzleModes[UnityEngine.Random.Range(1, puzzleModes.Length - 1)] + " " + UnityEngine.Random.Range(1, 9) + "," + UnityEngine.Random.Range(1, 9);
+                rand.puzzleImage = (Texture2D) assets[UnityEngine.Random.Range(1, assets.Length - 1)];
+            }
         }
 
     }

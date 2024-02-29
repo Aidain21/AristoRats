@@ -194,11 +194,13 @@ public class DialogueManager : MonoBehaviour
 
     public IEnumerator TypeSentence(string sentence)
     {
+        float maxRectHeight = 0;
         if (playerCurrentlyTalking)
         {
             Sprite curSprite = playerScript.GetComponent<SpriteRenderer>().sprite;
             imageFrame.rectTransform.sizeDelta = new Vector2(curSprite.rect.width * (300 / curSprite.rect.height), 300);
             imageFrame.color = playerScript.GetComponent<SpriteRenderer>().color;
+            maxRectHeight = curSprite.rect.height;
         }
         else if (talkingToNPC)
         {
@@ -217,8 +219,13 @@ public class DialogueManager : MonoBehaviour
             dialogueText.text += letter;
             if (talkingToNPC && !playerCurrentlyTalking)
             {
+                
                 Sprite curSprite = playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite;
-                imageFrame.rectTransform.sizeDelta = new Vector2(curSprite.rect.width * (300 / curSprite.rect.height), 300);
+                if (curSprite.rect.height > maxRectHeight)
+                {
+                    maxRectHeight = curSprite.rect.height;
+                } 
+                imageFrame.rectTransform.sizeDelta = new Vector2(curSprite.rect.width * (300 / maxRectHeight), 300);
                 imageFrame.sprite = curSprite;
             }
             yield return new WaitForSeconds(typingSpeed);
