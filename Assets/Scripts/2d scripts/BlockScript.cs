@@ -94,7 +94,7 @@ public class BlockScript : MonoBehaviour
         }
         else if (type == "control")
         {
-            player.GetComponent<PlayerScript2D>().cam.Follow = gameObject.transform;
+            player.GetComponent<PlayerScript2D>().vcam.Follow = gameObject.transform;
             player.GetComponent<PlayerScript2D>().invManager.blockControlText.GetComponent<Canvas>().enabled = true;
             player.GetComponent<PlayerScript2D>().controllingBlock = true;
         }
