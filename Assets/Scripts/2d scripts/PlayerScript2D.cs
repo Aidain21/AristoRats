@@ -60,7 +60,7 @@ public class PlayerScript2D : MonoBehaviour
     public Texture2D puzzleImage;
     public Vector2 puzzleDims;
     public string puzzleType;
-    public GameObject reward;
+    public int reward;
     public string entryScene;
     public Vector2 entryPos;
     public Vector3 entryDirection;
@@ -198,7 +198,7 @@ public class PlayerScript2D : MonoBehaviour
             {
                 journalManager.OpenJournal();
             }
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.M))
             {
                 menuManager.OpenMenu();
             }
@@ -209,10 +209,6 @@ public class PlayerScript2D : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.I))
             {
                 invManager.OpenInventory();
-            }
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                //map
             }
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -370,7 +366,7 @@ public class PlayerScript2D : MonoBehaviour
 
         else if (inMenu)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.M))
             {
                 menuManager.CloseMenu();
             }

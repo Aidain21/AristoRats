@@ -62,7 +62,7 @@ public class MenuMapManager : MonoBehaviour
                 if (j == 0)
                 {
                     text.rectTransform.localPosition = new Vector2(0, -110 * i);
-                    if (i != 4 && i != 2 && i != 5)
+                    if (i != 4 && i != 2 && i != 5 && i != 3)
                     {
                         text.color = Color.yellow;
                     }
@@ -70,7 +70,7 @@ public class MenuMapManager : MonoBehaviour
                 else
                 {
                     text.rectTransform.localPosition = new Vector2(optionSelector.textArray[i][j-1].rectTransform.localPosition.x + optionSelector.textArray[i][j - 1].preferredWidth + 30, -110 * i);
-                    if ((i == 2 && j == 2) || (i == 4 && j == 2) || (i == 5 && j == 4))
+                    if ((i == 2 && j == 3) || (i == 4 && j == 2) || (i == 5 && j == 2) || (i == 3 && j == 2))
                     {
                         optionSelector.selections[i] = new Vector2(j,i);
                         text.color = Color.yellow;
