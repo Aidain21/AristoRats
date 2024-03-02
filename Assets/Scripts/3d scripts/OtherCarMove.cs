@@ -15,7 +15,7 @@ public class OtherCarMove : MonoBehaviour
     void Update()
     {
         deathTimer += Time.deltaTime;
-        transform.Translate(-0.8f, 0, 0);
+        transform.Translate(-0.6f, 0, 0);
         
         if (deathTimer >= 10f)
         {
