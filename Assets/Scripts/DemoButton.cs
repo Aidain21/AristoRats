@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 
 
 public class DemoBu : MonoBehaviour
 {
+    public TMP_InputField input;
 
     public int counter;
     public Button gameButton;
@@ -43,6 +45,14 @@ public class DemoBu : MonoBehaviour
     }
 
     
+    public void LoginButtonPressed()
+    {
+        PlayerPrefs.SetString("name", input.text);
+        PlayerPrefs.Save();
 
-    
+    }
+
+
+
+
 }
