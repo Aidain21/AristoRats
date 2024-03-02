@@ -125,6 +125,14 @@ public class SwitchScript : MonoBehaviour
                             test = item.transform.InverseTransformPoint(transform.position).y;
                             item.transform.position = new Vector3(warpEnd.position.x, warpEnd.position.y - test, 0) + item.GetComponent<PlayerScript2D>().direction;
                         }
+                        if (name.Contains("-"))
+                        {
+                            item.GetComponent<PlayerScript2D>().roomName = name[(name.IndexOf("-") + 2)..];
+                        }
+                        else
+                        {
+                            item.GetComponent<PlayerScript2D>().roomName = name;
+                        }
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(warpEnd.position.x, warpEnd.position.y, 0) + item.GetComponent<PlayerScript2D>().direction;
                     }
                     else
@@ -214,7 +222,15 @@ public class SwitchScript : MonoBehaviour
                     int y2 = Int32.Parse(switchData[(switchData.IndexOf(",") + 1)..]);
                     item.GetComponent<PlayerScript2D>().puzzleType = type;
                     item.GetComponent<PlayerScript2D>().puzzleDims = new Vector2(x2, y2);
-                    item.GetComponent<PlayerScript2D>().reward = null;
+                    item.GetComponent<PlayerScript2D>().reward = 0;
+                    if (name.Contains("L"))
+                    {
+                        item.GetComponent<PlayerScript2D>().reward = 3;
+                    }
+                    else if (name != "rand")
+                    {
+                        item.GetComponent<PlayerScript2D>().reward = 1;
+                    }
                     item.GetComponent<PlayerScript2D>().entryPos = new Vector2(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
                     item.GetComponent<PlayerScript2D>().entryScene = SceneManager.GetActiveScene().name;
                     item.GetComponent<PlayerScript2D>().entryDirection = item.GetComponent<PlayerScript2D>().direction;

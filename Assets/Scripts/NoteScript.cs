@@ -11,6 +11,7 @@ public class NoteScript : MonoBehaviour
     public int noteId;
     public string scene;
     public Vector3 pos;
+    public Texture2D image;
 
     void Start()
     {

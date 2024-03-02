@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class Selector
@@ -84,6 +85,7 @@ public class JournalManager : MonoBehaviour
     public TMP_Text def;
     public TMP_Text noteTitle;
     public TMP_Text noteLore;
+    public Image noteImage;
     public PlayerScript2D playerScript;
     public Canvas journal;
 
@@ -140,11 +142,14 @@ public class JournalManager : MonoBehaviour
         {
             noteTitle.text = "#" + (curNote.noteId + 1) + " - " + curNote.noteTitle;
             noteLore.text = curNote.noteLore;
+            noteImage.color = Color.white;
+            noteImage.sprite = Sprite.Create(curNote.image, new Rect(0, 0, curNote.image.width, curNote.image.height), new Vector2(0.5f, 0.5f));
         }
         else
         {
             noteTitle.text = "#?? - Missing Note";
             noteLore.text = "I don't have this note yet.";
+            noteImage.color = Color.clear;
         }
     }
     public bool HasNote(int noteId)

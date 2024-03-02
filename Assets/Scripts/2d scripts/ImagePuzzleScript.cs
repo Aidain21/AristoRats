@@ -13,7 +13,7 @@ public class ImagePuzzleScript : MonoBehaviour
     public GameObject border;
     public GameObject floorSwitch;
     public int piecesLeft;
-    public GameObject reward;
+    public int reward;
     public Texture2D fullImage;
     public GameObject instructionSigns;
     public PlayerScript2D playerScript;
@@ -23,15 +23,14 @@ public class ImagePuzzleScript : MonoBehaviour
         piecesLeft = -1;
         playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
         playerScript.finishedPuzzle = true;
+        playerScript.invManager.cheese += reward;
+        string[] temp = new string[] { "0You:Solved the puzzle, and got " + reward + " cheese!" };
+        playerScript.dialogueManager.StartDialogue("Player", temp, 0, playerScript.GetComponent<SpriteRenderer>().sprite);
     }
     public void PuzzleSetUp()
     {
         playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
         fullImage = Resize(fullImage, width * 100, height * 100);
-        if (reward != null)
-        {
-            reward.SetActive(false);
-        }
         piecesLeft = width * height;
         pieces = new Sprite[width * height];
         for (int i = 0; i < width; i++)

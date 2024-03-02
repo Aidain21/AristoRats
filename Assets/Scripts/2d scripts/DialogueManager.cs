@@ -238,7 +238,7 @@ public class DialogueManager : MonoBehaviour
             playerScript.currentTarget.GetComponent<SpriteRenderer>().sprite = playerScript.currentTarget.GetComponent<SignTextScript>().talkerImage;
             imageFrame.sprite = playerScript.currentTarget.GetComponent<SignTextScript>().talkerImage;
         }
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.75f);
         spaceText.text = "Space to Continue";
     }
 

@@ -32,7 +32,8 @@ public class PlayerScript2D : MonoBehaviour
     public GameObject currentTarget;
     public GameObject backpackMenu;
 
-    public CinemachineVirtualCamera cam;
+    public CinemachineVirtualCamera vcam;
+    public Texture2D recentCapture;
 
     public bool isLoading;
     public bool inMap;
@@ -46,6 +47,8 @@ public class PlayerScript2D : MonoBehaviour
     public bool inPuzzle;
     public bool controllingBlock;
 
+    public string roomName = "hi ther";
+
     public bool aboveTalker;
     public Vector2 spawnPoint;
     static PlayerScript2D instance;
@@ -57,7 +60,7 @@ public class PlayerScript2D : MonoBehaviour
     public Texture2D puzzleImage;
     public Vector2 puzzleDims;
     public string puzzleType;
-    public GameObject reward;
+    public int reward;
     public string entryScene;
     public Vector2 entryPos;
     public Vector3 entryDirection;
@@ -195,7 +198,7 @@ public class PlayerScript2D : MonoBehaviour
             {
                 journalManager.OpenJournal();
             }
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.M))
             {
                 menuManager.OpenMenu();
             }
@@ -206,10 +209,6 @@ public class PlayerScript2D : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.I))
             {
                 invManager.OpenInventory();
-            }
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                //map
             }
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -367,7 +366,7 @@ public class PlayerScript2D : MonoBehaviour
 
         else if (inMenu)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.M))
             {
                 menuManager.CloseMenu();
             }
@@ -415,7 +414,7 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 if (menuManager.optionSelector.selectorPos.y == 4)
                 {
-                    cam.m_Lens.OrthographicSize = menuManager.optionSelector.selectorPos.x + 3;
+                    vcam.m_Lens.OrthographicSize = menuManager.optionSelector.selectorPos.x + 3;
                 }
                 if (menuManager.optionSelector.selectorPos.y == 5)
                 {
@@ -519,7 +518,7 @@ public class PlayerScript2D : MonoBehaviour
             }
             if(Input.GetKeyDown(KeyCode.E))
             {
-                cam.Follow = gameObject.transform;
+                vcam.Follow = gameObject.transform;
                 invManager.blockControlText.GetComponent<Canvas>().enabled = false;
                 controllingBlock = false;
             }
@@ -719,7 +718,7 @@ public class PlayerScript2D : MonoBehaviour
                 Destroy(mover.GetComponent<BoxCollider2D>());
                 Destroy(mover.GetComponent<BlockScript>());
                 Destroy(mover.transform.GetChild(0).gameObject);
-                cam.Follow = gameObject.transform;
+                vcam.Follow = gameObject.transform;
                 invManager.blockControlText.GetComponent<Canvas>().enabled = false;
                 controllingBlock = false;
                 if (mover.GetComponent<BlockScript>().id > 0 && mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
@@ -730,7 +729,7 @@ public class PlayerScript2D : MonoBehaviour
             else if (mover.GetComponent<BlockScript>().id > 0 && mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == -1)
             {
                 mover.transform.position += new Vector3(0, 0, 1);
-                cam.Follow = gameObject.transform;
+                vcam.Follow = gameObject.transform;
                 invManager.blockControlText.GetComponent<Canvas>().enabled = false;
                 controllingBlock = false;
             }
@@ -843,11 +842,10 @@ public class PlayerScript2D : MonoBehaviour
                 else
                 {
                     journalManager.notes.Add(target.GetComponent<NoteScript>());
-                    NoteScript note = journalManager.notes[journalManager.notes.IndexOf(target.GetComponent<NoteScript>())];
+                    
+                    StartCoroutine(RecordFrame());
                     target.transform.parent = transform;
                     target.SetActive(false);
-                    string[] temp = new string[] { "0You:Found Note #" + (note.noteId + 1).ToString() + " - " + note.noteTitle + ". I should read it in my Journal later." };
-                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
                 }
                 break;
             default:
@@ -882,6 +880,8 @@ public class PlayerScript2D : MonoBehaviour
             
         }
     }
+
+
     public void SwitchSong(string scene)
     {
         AudioClip prevSong = GetComponent<AudioSource>().clip;
@@ -920,6 +920,15 @@ public class PlayerScript2D : MonoBehaviour
         return null;
     }
 
+    IEnumerator RecordFrame()
+    {
+        yield return new WaitForEndOfFrame();
+        var texture = ScreenCapture.CaptureScreenshotAsTexture();
+        NoteScript note = journalManager.notes[journalManager.notes.IndexOf(currentTarget.GetComponent<NoteScript>())];
+        note.image = texture;
+        string[] temp = new string[] { "0You:Found Note #" + (note.noteId + 1).ToString() + " - " + note.noteTitle + ". I should read it in my Journal later." };
+        dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
+    }
     public IEnumerator SwitchScene(string sceneName)
     {
         yield return null;
