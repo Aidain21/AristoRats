@@ -125,6 +125,14 @@ public class SwitchScript : MonoBehaviour
                             test = item.transform.InverseTransformPoint(transform.position).y;
                             item.transform.position = new Vector3(warpEnd.position.x, warpEnd.position.y - test, 0) + item.GetComponent<PlayerScript2D>().direction;
                         }
+                        if (name.Contains("-"))
+                        {
+                            item.GetComponent<PlayerScript2D>().roomName = name.Substring(name.IndexOf("-") + 2);
+                        }
+                        else
+                        {
+                            item.GetComponent<PlayerScript2D>().roomName = name;
+                        }
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(warpEnd.position.x, warpEnd.position.y, 0) + item.GetComponent<PlayerScript2D>().direction;
                     }
                     else

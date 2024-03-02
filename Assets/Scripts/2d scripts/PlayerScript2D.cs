@@ -47,6 +47,8 @@ public class PlayerScript2D : MonoBehaviour
     public bool inPuzzle;
     public bool controllingBlock;
 
+    public string roomName = "hi ther";
+
     public bool aboveTalker;
     public Vector2 spawnPoint;
     static PlayerScript2D instance;

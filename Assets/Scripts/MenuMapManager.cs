@@ -15,6 +15,7 @@ public class MenuMapManager : MonoBehaviour
     public string[] menuChoices;
     public Canvas menu;
     public TMP_Text cheeseText;
+    public TMP_Text roomText;
     public TMP_Text talkedToText;
     public TMP_Text puzzleText;
     public TMP_Text notesText;
@@ -93,6 +94,7 @@ public class MenuMapManager : MonoBehaviour
         cheeseText.text = "Cheese: " + playerScript.invManager.cheese.ToString();
         talkedToText.text = "Friends made: " + playerScript.dialogueManager.eventScript.fullyTalkedTo.ToString() + "/" + playerScript.dialogueManager.eventScript.npcsInScene.ToString();
         puzzleText.text = "Puzzles solved: " + playerScript.completedPuzzles.Count;
+        roomText.text = "Room: " + playerScript.roomName;
         int notesFromScene = 0;
         int totalNotes = GameObject.FindGameObjectsWithTag("Note").Length;
         foreach (NoteScript note in playerScript.journalManager.notes)

@@ -11,6 +11,16 @@ public class TileScreenButtons : MonoBehaviour
     public Button optionsButton;
     public Button quitButton;
     public TMP_InputField input;
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            PlayerPrefs.SetString("name", "SpeedRun");
+            PlayerPrefs.Save();
+            SceneManager.LoadScene("Forest");
+        }
+    }
     public void StartButtonPressed()
     {
         if (input.text.Length > 0)
@@ -28,7 +38,7 @@ public class TileScreenButtons : MonoBehaviour
     }
     public void QuitButtonPressed()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
+        //UnityEditor.EditorApplication.isPlaying = false;
     }
 }
     
