@@ -890,6 +890,7 @@ public class PlayerScript2D : MonoBehaviour
             "ImagePuzzle" => songs[1],
             "PuzzleTest" => songs[0],
             "Castle" => songs[2],
+            "Forest" => songs[3],
             _ => songs[0],
         };
         if (prevSong != GetComponent<AudioSource>().clip)

@@ -5036,7 +5036,7 @@ MonoBehaviour:
   puzzleImage: {fileID: 8228938214290033325, guid: f1436c99166234d04aef9e887783b6ca, type: 3}
   puzzleDims: {x: 2, y: 2}
   puzzleType: Blocks
-  reward: {fileID: 0}
+  reward: 0
   entryScene: PuzzleTest
   entryPos: {x: 9, y: 0}
   entryDirection: {x: 0, y: 0, z: 0}
@@ -5051,6 +5051,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3b837106d9bd06546a39a5180b8b55ee, type: 3}
   - {fileID: 8300000, guid: 9c21c6ec340d95b428bf728757106178, type: 3}
   - {fileID: 8300000, guid: e97fd71e0146c3c4ba043673f858ac0c, type: 3}
+  - {fileID: 8300000, guid: 55f5ff730a499ea4bb16aa11506e2bec, type: 3}
   sillyDude: 0
   funnyCheck: 0
   funnyTimer: 0
