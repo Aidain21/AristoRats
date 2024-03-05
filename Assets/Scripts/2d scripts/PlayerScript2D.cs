@@ -75,6 +75,7 @@ public class PlayerScript2D : MonoBehaviour
     public int sillyDude;
     public bool funnyCheck;
     public float funnyTimer;
+    public int sillyPress;
     void Awake()
     {
         //Cursor.visible = false;
@@ -198,19 +199,19 @@ public class PlayerScript2D : MonoBehaviour
             {
                 journalManager.OpenJournal();
             }
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.M))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.M))
             {
                 menuManager.OpenMenu();
             }
-            if (Input.GetKeyDown(KeyCode.B))
+            else if (Input.GetKeyDown(KeyCode.B))
             {
                 backpackMenu.SetActive(true);
             }
-            if (Input.GetKeyDown(KeyCode.I))
+            else if (Input.GetKeyDown(KeyCode.I))
             {
                 invManager.OpenInventory();
             }
-            if (Input.GetKeyDown(KeyCode.E))
+            else if (Input.GetKeyDown(KeyCode.E))
             {
                 RaycastHit2D hitData = Physics2D.Raycast(transform.position + direction * 0.51f, direction, 0.5f);
                 if (hitData.collider != null)
@@ -370,6 +371,12 @@ public class PlayerScript2D : MonoBehaviour
             {
                 menuManager.CloseMenu();
             }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                invManager.cheese += 1;
+                menuManager.CloseMenu();
+                menuManager.OpenMenu();
+            }
             if (Input.GetKeyDown(KeyCode.E))
             {
                 menuManager.CloseMenu();
@@ -381,8 +388,23 @@ public class PlayerScript2D : MonoBehaviour
                         menuManager.OpenOptions();
                         break;
                     case 2:
-                        invManager.cheese += 1;
-                        menuManager.OpenMenu();
+                        sillyPress += 1;
+                        string[] temp = sillyPress switch
+                        {
+                            1 => new string[] { "0Silly Button: You have pressed the silly button 1 time." },
+                            3 => new string[] { "0Silly Button: You have pressed the silly button 3 times. Don't spam if you want to see secrets!" },
+                            10 => new string[] { "0Silly Button: You have pressed the silly button 10 times. Keep it up!" },
+                            21 => new string[] { "0Silly Button: Whats  9 + 10? 21. You stupid. No I'm not." },
+                            42 => new string[] { "0Silly Button: I couldn't think of anything to put for 42..." },
+                            50 => new string[] { "0Silly Button: Halfway to 100!!! You are on a roll!" },
+                            69 => new string[] { "0Silly Button: 69 lol." },
+                            100 => new string[] { "0Silly Button: Great job reaching 100! Nothing beyond this point!" },
+                            101 => new string[] { "0#Silly Button: Or is there..." },
+                            999999999 => new string[] { "0Silly Button: No. There is no way you pressed the silly button nine hundred ninety nine million nine hundred ninety nine thousand nine hundred ninety nine times. You are either cheating in some way or looking at the code. If you are looking at the code, read the comment below this." },
+                            //Hello its ya boy
+                            _ => new string[] { "0Silly Button: You have pressed the silly button " + sillyPress + " times." },
+                        };
+                        dialogueManager.StartDialogue("SillyButton", temp, 0, dialogueManager.hasHiddenText);
                         break;
                     case 3:  
                         SceneManager.LoadScene("TitleScreen");
@@ -864,17 +886,20 @@ public class PlayerScript2D : MonoBehaviour
         }
         else if (curNote.scene == SceneManager.GetActiveScene().name && Vector3.Distance(transform.position, curNote.pos) <= 10)
         {
+            
             string[] temp = new string[] { "0You:I'm too close to where I found the note to justify traveling there." };
             dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
         }
         else
         {
+            roomName = curNote.noteTitle;
             StopAllCoroutines();
             moving = false;
             transform.position = curNote.pos;
             spawnPoint = curNote.pos;
             if(curNote.scene != SceneManager.GetActiveScene().name)
             {
+                invManager.RemovePuzzleStuff();
                 StartCoroutine(SwitchScene(curNote.scene));
             }
             

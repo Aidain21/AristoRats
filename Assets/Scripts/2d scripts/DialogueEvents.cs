@@ -47,6 +47,7 @@ public class DialogueEvents : MonoBehaviour
         }
         npcsInScene = GameObject.FindGameObjectsWithTag("Sign").Length;
         dontAdd = false;
+        playerScript.currentTarget = null;
     }
     public void EventTrigger() //use:   else if (Enumerable.SequenceEqual(dialogueData, new string[] { "NPC Object's name", "Talk Counter", "Current Line" }))
     {
@@ -78,6 +79,10 @@ public class DialogueEvents : MonoBehaviour
     }
     public void EndEventTrigger()
     {
+        if (Enumerable.SequenceEqual(dialogueData, new string[] { "SillyButton", "0", "0" }))
+        {
+            playerScript.menuManager.OpenMenu();
+        }
         if (SceneManager.GetActiveScene().name == "Castle")
         {
             //Guard Rat 2 (Basement) Takes Cheese and tells riddle.

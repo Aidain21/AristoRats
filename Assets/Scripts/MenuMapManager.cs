@@ -35,7 +35,7 @@ public class MenuMapManager : MonoBehaviour
     void Start()
     {
         Canvas.ForceUpdateCanvases();   
-        menuChoices = new string[] { "Continue", "Options", "Add 1 Cheese", "Quit (Won't Save)" };
+        menuChoices = new string[] { "Continue", "Options", "Silly Button", "Quit (Won't Save)" };
         menu.GetComponent<Canvas>().enabled = false;
         options.GetComponent<Canvas>().enabled = false;
         puzzle.GetComponent<Canvas>().enabled = false;
