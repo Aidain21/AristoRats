@@ -74,7 +74,7 @@ public class InventoryManager : MonoBehaviour
         else
         {
             titleText.text = "Inventory";
-            controlsText.text = "WASD - Select              E - Info               R - Drop            I/Esc - Close";
+            controlsText.text = "WASD - Select         E - Info          R - Drop       I/Esc - Close";
             cheeseText.text = "Cheese: " + cheese.ToString();
         }
         selector.UpdateSelector();

@@ -9,7 +9,7 @@ using TMPro;
 
 public class MenuMapManager : MonoBehaviour
 {
-    public Selector menuSelector = new(1,4);
+    public Selector menuSelector = new(1,5);
     public Selector optionSelector = new(new int[] {1,3,5,3,5,5},6);
     public Selector puzzleSelector = new(5,5);
     public List<Image> puzzleImages;
@@ -35,7 +35,7 @@ public class MenuMapManager : MonoBehaviour
     void Start()
     {
         Canvas.ForceUpdateCanvases();   
-        menuChoices = new string[] { "Continue", "Options", "Silly Button", "Quit (Won't Save)" };
+        menuChoices = new string[] { "Continue", "Options", "Silly Button", "Respawn", "Quit (Won't Save)" };
         menu.GetComponent<Canvas>().enabled = false;
         options.GetComponent<Canvas>().enabled = false;
         puzzle.GetComponent<Canvas>().enabled = false;
@@ -46,7 +46,7 @@ public class MenuMapManager : MonoBehaviour
             {
                 count += 1;
                 TMP_Text text = Instantiate(defMenu, menuTextArray.transform);
-                text.rectTransform.localPosition = new Vector2(0 * j, -100 * i + 75);
+                text.rectTransform.localPosition = new Vector2(0 * j, -100 * i + 125);
                 text.name = count.ToString();
                 text.text = menuChoices[count - 1];
                 menuSelector.textArray[i][j] = text;
@@ -150,14 +150,14 @@ public class MenuMapManager : MonoBehaviour
             {
                 count += 1;
                 TMP_Text text = Instantiate(defPuzzle, puzzleTextArray.transform);
-                text.rectTransform.localPosition = new Vector2(150 * j, -150 * i);
+                text.rectTransform.localPosition = new Vector2(125 * j, -125 * i);
                 text.name = count.ToString();
                 puzzleSelector.textArray[i][j] = text;
 
                 Image img = Instantiate(defImg, puzzleTextArray.transform);
                 img.color = new Color32(0, 0, 0, 0);
-                img.rectTransform.localPosition = new Vector2(150 * j, -150 * i);
-                img.rectTransform.sizeDelta = new Vector2(150, 150);
+                img.rectTransform.localPosition = new Vector2(125 * j, -125 * i);
+                img.rectTransform.sizeDelta = new Vector2(125, 125);
                 img.name = "Image" + count.ToString();
                 puzzleImages.Add(img);
             }

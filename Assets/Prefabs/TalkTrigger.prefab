@@ -100,12 +100,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 291af93e789281b4794a5692ef78d3f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  switchType: pressurePlate+
+  switchType: pressurePlate++
   switchEffect: talk
   switchData: 
   warpEnd: {fileID: 0}
   onValue: 0
   playerOnSpike: 0
+  puzzleImage: {fileID: 0}
   affectedObjects:
   - {fileID: 0}
 --- !u!114 &857032677876136663
@@ -120,7 +121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4990cb1561d8dc943a21ba7ee8fd555c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueName: GoodNameGoesHere
   dialogue:
   - 0You:What did I just step on?
   - 0You:Oh well its gone now.

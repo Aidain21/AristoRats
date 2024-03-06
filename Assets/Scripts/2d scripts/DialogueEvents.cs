@@ -77,7 +77,7 @@ public class DialogueEvents : MonoBehaviour
             }
         }
 
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "1", "0" }))
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "1", "0" }) || Enumerable.SequenceEqual(dialogueData, new string[] { "TreeGuy", "1", "2" }))
         {
             playerScript.GetComponent<AudioSource>().PlayOneShot(playerScript.sfx[1]);
         }
@@ -174,6 +174,11 @@ public class DialogueEvents : MonoBehaviour
             }
             // Stickman death
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Trash", "0", "3" }))
+            {
+                Destroy(playerScript.currentTarget);
+            }
+            // ???
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "VerySecret", "0", "6" }))
             {
                 Destroy(playerScript.currentTarget);
             }

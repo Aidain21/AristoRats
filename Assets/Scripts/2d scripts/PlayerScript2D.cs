@@ -81,13 +81,16 @@ public class PlayerScript2D : MonoBehaviour
         //Cursor.visible = false;
         if (instance == null)
         {
-            instance = this; 
+            instance = this;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             if (PlayerPrefs.HasKey("name"))
             {
                 playerName = PlayerPrefs.GetString("name");
                 PlayerPrefs.DeleteAll();
             }
             DontDestroyOnLoad(gameObject);
+            spawnPoint = transform.position;
         }
         else if (instance != this)
         {
@@ -394,19 +397,26 @@ public class PlayerScript2D : MonoBehaviour
                             1 => new string[] { "0Silly Button: You have pressed the silly button 1 time." },
                             3 => new string[] { "0Silly Button: You have pressed the silly button 3 times. Don't spam if you want to see secrets!" },
                             10 => new string[] { "0Silly Button: You have pressed the silly button 10 times. Keep it up!" },
-                            21 => new string[] { "0Silly Button: Whats  9 + 10? 21. You stupid. No I'm not." },
+                            21 => new string[] { "0Silly Button: Whats  9 + 10? 21." },
                             42 => new string[] { "0Silly Button: I couldn't think of anything to put for 42..." },
                             50 => new string[] { "0Silly Button: Halfway to 100!!! You are on a roll!" },
                             69 => new string[] { "0Silly Button: 69 lol." },
                             100 => new string[] { "0Silly Button: Great job reaching 100! Nothing beyond this point!" },
                             101 => new string[] { "0#Silly Button: Or is there..." },
+                            151 => new string[] { "0Silly Button: To decode, use a Caesar Cipher with a shift of 16." },
+                            171 => new string[] { "0Silly Button: You may have missed something important. Time to reset if you want it!" },
                             999999999 => new string[] { "0Silly Button: No. There is no way you pressed the silly button nine hundred ninety nine million nine hundred ninety nine thousand nine hundred ninety nine times. You are either cheating in some way or looking at the code. If you are looking at the code, read the comment below this." },
                             //Hello its ya boy
                             _ => new string[] { "0Silly Button: You have pressed the silly button " + sillyPress + " times." },
                         };
                         dialogueManager.StartDialogue("SillyButton", temp, 0, dialogueManager.hasHiddenText);
                         break;
-                    case 3:  
+                    case 3:
+                        transform.position = spawnPoint;
+                        break;
+                    case 4:
+                        Cursor.lockState = CursorLockMode.None;
+                        Cursor.visible = true;
                         SceneManager.LoadScene("TitleScreen");
                         Destroy(gameObject);
                         break;
@@ -488,7 +498,7 @@ public class PlayerScript2D : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
             {
                 menuManager.puzzleImages[Mathf.RoundToInt(menuManager.puzzleSelector.selectorPos.y) * menuManager.puzzleSelector.width + Mathf.RoundToInt(menuManager.puzzleSelector.selectorPos.x)].rectTransform.sizeDelta = new Vector2(100, 100);
-                menuManager.puzzleImages[Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.y) * menuManager.puzzleSelector.width + Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.x)].rectTransform.sizeDelta = new Vector2(150, 150);
+                menuManager.puzzleImages[Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.y) * menuManager.puzzleSelector.width + Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.x)].rectTransform.sizeDelta = new Vector2(125, 125);
             }
         }
         else if (controllingBlock && !currentTarget.GetComponent<BlockScript>().moving)

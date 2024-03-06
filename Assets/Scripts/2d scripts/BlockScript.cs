@@ -28,7 +28,7 @@ public class BlockScript : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, goal, time * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
-        if (id > 0 && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == -1)
+        if (id > 0 && GetComponent<SpriteRenderer>().sprite != null && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == -1)
         {
             transform.position += new Vector3(0, 0, 1);
         }
@@ -36,7 +36,7 @@ public class BlockScript : MonoBehaviour
         moving = false;
         if (inserted)
         {
-            if (id > 0)
+            if (id > 0 && GetComponent<SpriteRenderer>().sprite != null)
             {
                 transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
             }
@@ -44,7 +44,7 @@ public class BlockScript : MonoBehaviour
             Destroy(GetComponent<BoxCollider2D>());
             Destroy(GetComponent<BlockScript>());
             Destroy(transform.GetChild(0).gameObject);
-            if (id > 0 && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+            if (id > 0 && GetComponent<SpriteRenderer>().sprite != null && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
             {
                 transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
             }

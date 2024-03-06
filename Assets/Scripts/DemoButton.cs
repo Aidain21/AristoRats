@@ -7,38 +7,46 @@ using TMPro;
 
 
 
-public class DemoBu : MonoBehaviour
+public class DemoButton : MonoBehaviour
 {
     public TMP_InputField input;
 
     public int counter;
     public Button gameButton;
+    public Button loginButton;
     
 
 
     // Start is called before the first frame update
     void Start()
     {
+        loginButton.interactable = false;
+        gameButton.interactable = true;
         counter = 0;
-      
     }
 
     // Update is called once per frame
     void Update()
     {
-        gameButton.interactable = true;
+        if (input.text.Length > 2 && input.text.Length < 11)
+        {
+            loginButton.interactable = true;
+        }
+        else
+        {
+            loginButton.interactable = false;
+        }
     }
 
     public void ButtonPressed()
     {
         if (counter == 1)
         {
-            Debug.Log("Game");
             SceneManager.LoadScene("Forest");
             counter = 0;
-
         }
-        else{
+        else
+        {
             counter += 1;
         }
 

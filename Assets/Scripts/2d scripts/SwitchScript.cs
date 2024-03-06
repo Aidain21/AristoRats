@@ -17,6 +17,16 @@ public class SwitchScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (switchType == "pressurePlate++")
+        {
+            for (int i = 0; i < GameObject.Find("Player").transform.childCount; i++)
+            {
+                if (GameObject.Find("Player").transform.GetChild(i).name.Equals(name))
+                {
+                    Destroy(gameObject);
+                }
+            }
+        }
         if (switchType == "onoff")
         {
             onValue = true;
@@ -133,7 +143,6 @@ public class SwitchScript : MonoBehaviour
                         {
                             item.GetComponent<PlayerScript2D>().roomName = name;
                         }
-                        item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(warpEnd.position.x, warpEnd.position.y, 0) + item.GetComponent<PlayerScript2D>().direction;
                     }
                     else
                     {
@@ -258,6 +267,10 @@ public class SwitchScript : MonoBehaviour
             case "pressurePlate+":
                 Destroy(gameObject);
                 break;
+            case "pressurePlate++":
+                transform.parent = affectedObjects[0].GetComponent<PlayerScript2D>().transform;
+                gameObject.SetActive(false);
+                break;
         }
     }
 
@@ -290,9 +303,9 @@ public class SwitchScript : MonoBehaviour
             affectedObjects[0] = collision.gameObject;
             UseSwitch();
         }
-        if (collision.CompareTag("Player") && (switchType == "pressurePlate" || switchType == "pressurePlate+"))
+        if (collision.CompareTag("Player") && (switchType == "pressurePlate" || switchType == "pressurePlate+" || switchType == "pressurePlate++"))
         {
-            if (switchEffect == "warp" || switchEffect == "talk" || switchEffect == "puzzleData")
+            if (switchEffect == "warp" || switchEffect == "talk" || switchEffect == "puzzleData" || switchEffect == "activate")
             {
                 affectedObjects[0] = collision.gameObject;
             }
