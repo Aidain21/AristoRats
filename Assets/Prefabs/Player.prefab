@@ -2930,9 +2930,9 @@ MonoBehaviour:
   background: {fileID: 8787963313055384083}
   imageFrame: {fileID: 5105127137833425124}
   currentImage: {fileID: 0}
-  hasNewText: {fileID: 21300000, guid: f2e7b0402025c8a4fb0e5e0a27e63e3d, type: 3}
-  hasHiddenText: {fileID: 21300000, guid: e4cb3ff7bdbe82941beba48358876bfc, type: 3}
-  noMoreText: {fileID: 21300000, guid: 617778672b7cf5b4babfcaaba1a621d1, type: 3}
+  hasNewText: {fileID: 862904670, guid: 7f55b412ad4c0df4b9887a162161595c, type: 3}
+  hasHiddenText: {fileID: 1248317534, guid: 7f55b412ad4c0df4b9887a162161595c, type: 3}
+  noMoreText: {fileID: -1612831479, guid: 7f55b412ad4c0df4b9887a162161595c, type: 3}
   storedStatus: {fileID: 0}
   sentences: []
 --- !u!114 &2112590002134000536
@@ -5055,6 +5055,7 @@ MonoBehaviour:
   sillyDude: 0
   funnyCheck: 0
   funnyTimer: 0
+  sillyPress: 0
 --- !u!61 &7938383530957215042
 BoxCollider2D:
   m_ObjectHideFlags: 0

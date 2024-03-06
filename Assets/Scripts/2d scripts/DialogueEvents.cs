@@ -76,6 +76,11 @@ public class DialogueEvents : MonoBehaviour
                 storedEvents.Add((string[])dialogueData.Clone());
             }
         }
+
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "1", "0" }))
+        {
+            playerScript.GetComponent<AudioSource>().PlayOneShot(playerScript.sfx[1]);
+        }
     }
     public void EndEventTrigger()
     {
@@ -163,9 +168,9 @@ public class DialogueEvents : MonoBehaviour
                 SelectItem("TestKey", 3, 1);
             }
             // funny infinite talk!
-            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Infinite", "1", "5" }))
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Infinite", "2", "5" }))
             {
-                playerScript.dialogueManager.ChangeDialogue(1, true);
+                playerScript.dialogueManager.ChangeDialogue(2, true);
             }
             // Stickman death
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Trash", "0", "3" }))
@@ -176,19 +181,35 @@ public class DialogueEvents : MonoBehaviour
             // Funny Stuff start
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "0", "0" }))
             {
-                GameObject.Find("LevelObjects/NPCs").transform.Find("Easy").gameObject.SetActive(true);
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Easy").position = new Vector3(25, 0, 0);
+                if (!dontAdd)
+                {
+                    storedEvents.Add((string[])dialogueData.Clone());
+                }
             }
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Easy", "0", "0" }))
             {
-                GameObject.Find("LevelObjects/NPCs").transform.Find("Harder").gameObject.SetActive(true);
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Harder").position = new Vector3(25, 1, 0);
+                if (!dontAdd)
+                {
+                    storedEvents.Add((string[])dialogueData.Clone());
+                }
             }
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Harder", "0", "0" }))
             {
-                GameObject.Find("LevelObjects/NPCs").transform.Find("Insane").gameObject.SetActive(true);
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Insane").position = new Vector3(25, 2, 0);
+                if (!dontAdd)
+                {
+                    storedEvents.Add((string[])dialogueData.Clone());
+                }
             }
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Insane", "0", "0" }))
             {
-                GameObject.Find("LevelObjects/NPCs").transform.Find("Auto").gameObject.SetActive(true);
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Auto").position = new Vector3(25, 3, 0);
+                if (!dontAdd)
+                {
+                    storedEvents.Add((string[])dialogueData.Clone());
+                }
             }
             // Funny stuff end
 

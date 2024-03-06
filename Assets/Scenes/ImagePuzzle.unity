@@ -16096,7 +16096,7 @@ Transform:
   m_GameObject: {fileID: 927054724}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7, y: 0, z: 0}
+  m_LocalPosition: {x: -8, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -16123,7 +16123,7 @@ MonoBehaviour:
   border: {fileID: 3279107124325540570, guid: 675fe3c63d9e5c0408a9fd2cbec50ab7, type: 3}
   floorSwitch: {fileID: 6522425729884833140, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
   piecesLeft: 0
-  reward: {fileID: 0}
+  reward: 0
   fullImage: {fileID: 2800000, guid: a5d7f98a9d2b7964ca7b289aaa2e279f, type: 3}
   instructionSigns: {fileID: 44472007}
   playerScript: {fileID: 2022606009}
@@ -16497,7 +16497,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8921264606102001946, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8921264606102001946, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
       propertyPath: m_LocalPosition.z
