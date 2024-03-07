@@ -5046,6 +5046,7 @@ MonoBehaviour:
   oldPuzzles: []
   sfx:
   - {fileID: 8300000, guid: b3998ae7f25802f4ab483ef761adf94e, type: 3}
+  - {fileID: 8300000, guid: a9124ad465e38044a81f1e2b433fc1ec, type: 3}
   songs:
   - {fileID: 8300000, guid: 3b837106d9bd06546a39a5180b8b55ee, type: 3}
   - {fileID: 8300000, guid: 9c21c6ec340d95b428bf728757106178, type: 3}
