@@ -16,6 +16,8 @@ public class DialogueEvents : MonoBehaviour
     public List<Sprite> talkerStats = new();
     public int fullyTalkedTo;
     public int npcsInScene;
+    public int collectedNotes;
+    public int notesInScene;
     public Sprite norm;
 
     public void RunPastEvents()
@@ -46,6 +48,16 @@ public class DialogueEvents : MonoBehaviour
             }
         }
         npcsInScene = GameObject.FindGameObjectsWithTag("Sign").Length;
+        collectedNotes = 0;
+        notesInScene = GameObject.FindGameObjectsWithTag("Note").Length;
+        foreach (NoteScript note in playerScript.journalManager.notes)
+        {
+            if (note.scene == SceneManager.GetActiveScene().name)
+            {
+                collectedNotes += 1;
+                notesInScene += 1;
+            }
+        }
         dontAdd = false;
         playerScript.currentTarget = null;
     }

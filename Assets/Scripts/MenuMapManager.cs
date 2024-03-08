@@ -9,17 +9,13 @@ using TMPro;
 
 public class MenuMapManager : MonoBehaviour
 {
-    public Selector menuSelector = new(1,5);
+    public Selector menuSelector = new(1,6);
     public Selector optionSelector = new(new int[] {1,3,5,3,5,5},6);
     public Selector puzzleSelector = new(5,5);
     public List<Image> puzzleImages;
     public string[] menuChoices;
     public Canvas menu;
-    public TMP_Text cheeseText;
-    public TMP_Text roomText;
-    public TMP_Text talkedToText;
     public TMP_Text puzzleText;
-    public TMP_Text notesText;
     public Canvas options;
     //public Canvas map;
     public Canvas puzzle;
@@ -35,7 +31,7 @@ public class MenuMapManager : MonoBehaviour
     void Start()
     {
         Canvas.ForceUpdateCanvases();   
-        menuChoices = new string[] { "Continue", "Options", "Silly Button", "Respawn", "Quit (Won't Save)" };
+        menuChoices = new string[] { "Continue", "Options", "Progress Stats", "Silly Button", "Respawn", "Quit (Won't Save)" };
         menu.GetComponent<Canvas>().enabled = false;
         options.GetComponent<Canvas>().enabled = false;
         puzzle.GetComponent<Canvas>().enabled = false;
@@ -92,25 +88,12 @@ public class MenuMapManager : MonoBehaviour
     {
         menu.GetComponent<Canvas>().enabled = true;
         playerScript.inMenu = true;
-        cheeseText.text = "Cheese: " + playerScript.invManager.cheese.ToString();
-        talkedToText.text = "Friends made: " + playerScript.dialogueManager.eventScript.fullyTalkedTo.ToString() + "/" + playerScript.dialogueManager.eventScript.npcsInScene.ToString();
         puzzleText.text = "Puzzles solved: " + playerScript.completedPuzzles.Count;
-        roomText.text = "Room: " + playerScript.roomName;
-        int notesFromScene = 0;
-        int totalNotes = GameObject.FindGameObjectsWithTag("Note").Length;
-        foreach (NoteScript note in playerScript.journalManager.notes)
-        {
-            if (note.scene == SceneManager.GetActiveScene().name)
-            {
-                notesFromScene += 1;
-                totalNotes += 1;
-            }
-        }
-        notesText.text = "Notes Found: " + notesFromScene + "/" + totalNotes;
         menuSelector.UpdateSelector();
     }
     public void CloseMenu()
     {
+        playerScript.invManager.UpdateInfo();
         menu.GetComponent<Canvas>().enabled = false;
         playerScript.inMenu = false;
     }
@@ -123,6 +106,7 @@ public class MenuMapManager : MonoBehaviour
     }
     public void CloseOptions()
     {
+        playerScript.invManager.UpdateInfo();
         options.GetComponent<Canvas>().enabled = false;
         playerScript.inOptions = false;
     }
@@ -168,6 +152,7 @@ public class MenuMapManager : MonoBehaviour
 
     public void ClosePuzzle()
     {
+        playerScript.invManager.UpdateInfo();
         puzzle.GetComponent<Canvas>().enabled = false;
         playerScript.inPuzzle = false;
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class InventoryManager : MonoBehaviour
@@ -10,10 +11,13 @@ public class InventoryManager : MonoBehaviour
     public List<GameObject> inventory;
     public Canvas inventoryBox;
     public Canvas blockControlText;
+    public Canvas infoDisplay;
+    public TMP_Text itemsText;
+    public TMP_Text progressText;
+    public TMP_Text locationText;
     public int cheese;
     public TMP_Text titleText;
     public TMP_Text controlsText;
-    public TMP_Text cheeseText;
     public List<Image> images;
     public PlayerScript2D playerScript;
     public GameObject TextArray;
@@ -47,6 +51,17 @@ public class InventoryManager : MonoBehaviour
         Destroy(def);
         Destroy(def2);
     }
+
+    public void UpdateInfo()
+    {
+        itemsText.text = "Cheese: " + cheese + "\nInventory: " + inventory.Count + "/15";
+        locationText.text = SceneManager.GetActiveScene().name + " - " + playerScript.roomName;
+        if (SceneManager.GetActiveScene().name == "ImagePuzzle")
+        {
+            locationText.text = "Puzzle";
+        }
+        progressText.text = "Friends: " + playerScript.dialogueManager.eventScript.fullyTalkedTo + "/" + playerScript.dialogueManager.eventScript.npcsInScene + "\nNotes: " + playerScript.dialogueManager.eventScript.collectedNotes + "/" + playerScript.dialogueManager.eventScript.notesInScene;
+    }
     public void OpenInventory()
     {
         inventoryBox.GetComponent<Canvas>().enabled = true;
@@ -69,18 +84,17 @@ public class InventoryManager : MonoBehaviour
         {
             titleText.text = "Select an Item:";
             controlsText.text = "WASD - Select              E - Choose Item";
-            cheeseText.text = "";
         }
         else
         {
             titleText.text = "Inventory";
             controlsText.text = "WASD - Select         E - Info          R - Drop       I/Esc - Close";
-            cheeseText.text = "Cheese: " + cheese.ToString();
         }
         selector.UpdateSelector();
     }
     public void CloseInventory()
     {
+        UpdateInfo();
         inventoryBox.GetComponent<Canvas>().enabled = false;
         playerScript.inInventory = false;
     }

@@ -281,6 +281,7 @@ public class DialogueManager : MonoBehaviour
         }
         playerScript.inDialogue = false;
         textBox.GetComponent<Canvas>().enabled = false;
+        playerScript.invManager.UpdateInfo();
         if (!keepTalkerInfo)
         {
             playerScript.currentTarget = null;
@@ -292,8 +293,8 @@ public class DialogueManager : MonoBehaviour
     {
         if (playerScript.aboveTalker)
         {
-            background.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 75, 300);
-            imageFrame.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 75, 300);
+            background.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 125, 300);
+            imageFrame.GetComponent<RectTransform>().SetInsetAndSizeFromParentEdge(RectTransform.Edge.Top, 125, 300);
         }
         else
         {
