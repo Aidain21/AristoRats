@@ -143,6 +143,7 @@ public class SwitchScript : MonoBehaviour
                         {
                             item.GetComponent<PlayerScript2D>().roomName = name;
                         }
+                        item.GetComponent<PlayerScript2D>().invManager.UpdateInfo();
                     }
                     else
                     {
@@ -160,6 +161,18 @@ public class SwitchScript : MonoBehaviour
                         item.GetComponent<PlayerScript2D>().spawnPoint = new Vector3(x, y, 0) + item.GetComponent<PlayerScript2D>().direction;
                         
                         item.GetComponent<PlayerScript2D>().currentTarget = null;
+                        
+                        if (!name.Contains("SceneWarp"))
+                        {
+                            if (name.Contains("-"))
+                            {
+                                item.GetComponent<PlayerScript2D>().roomName = name[(name.IndexOf("-") + 2)..];
+                            }
+                            else
+                            {
+                                item.GetComponent<PlayerScript2D>().roomName = name;
+                            }
+                        }
                         StartCoroutine(item.GetComponent<PlayerScript2D>().SwitchScene(scene));
                         
                     }

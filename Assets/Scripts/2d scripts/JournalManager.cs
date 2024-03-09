@@ -132,6 +132,7 @@ public class JournalManager : MonoBehaviour
 
     public void CloseJournal()
     {
+        playerScript.invManager.UpdateInfo();
         journal.GetComponent<Canvas>().enabled = false;
         playerScript.inJournal = false;
     }

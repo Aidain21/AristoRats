@@ -16,10 +16,27 @@ public class DialogueEvents : MonoBehaviour
     public List<Sprite> talkerStats = new();
     public int fullyTalkedTo;
     public int npcsInScene;
+    public int collectedNotes;
+    public int notesInScene;
     public Sprite norm;
 
     public void RunPastEvents()
     {
+        bool statsExist = false;
+        for (int i = 0; i < playerScript.menuManager.collection.Count; i++)
+        {
+            if (playerScript.menuManager.collection[i][0].ToString() == playerScript.oldScene)
+            {
+                playerScript.menuManager.collection[i] = new List<object> { playerScript.oldScene, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene };
+                statsExist = true;
+                break;
+            }
+        }
+        if (!statsExist)
+        {
+            playerScript.menuManager.collection.Add(new List<object> { playerScript.oldScene, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene });
+        }
+        
         fullyTalkedTo = 0;
         dontAdd = true;
         for (int i = 0; i < storedEvents.Count; i++)
@@ -46,8 +63,32 @@ public class DialogueEvents : MonoBehaviour
             }
         }
         npcsInScene = GameObject.FindGameObjectsWithTag("Sign").Length;
+        collectedNotes = 0;
+        notesInScene = GameObject.FindGameObjectsWithTag("Note").Length;
+        foreach (NoteScript note in playerScript.journalManager.notes)
+        {
+            if (note.scene == SceneManager.GetActiveScene().name)
+            {
+                collectedNotes += 1;
+            }
+        }
         dontAdd = false;
         playerScript.currentTarget = null;
+
+        bool newStatsExist = false;
+        for (int i = 0; i < playerScript.menuManager.collection.Count(); i++)
+        {
+            if (playerScript.menuManager.collection[i][0].ToString() == SceneManager.GetActiveScene().name)
+            {
+                playerScript.menuManager.collection[i] = new List<object> { SceneManager.GetActiveScene().name, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene };
+                newStatsExist = true;
+                break;
+            }
+        }
+        if (!newStatsExist)
+        {
+            playerScript.menuManager.collection.Add(new List<object> { SceneManager.GetActiveScene().name, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene });
+        }
     }
     public void EventTrigger() //use:   else if (Enumerable.SequenceEqual(dialogueData, new string[] { "NPC Object's name", "Talk Counter", "Current Line" }))
     {

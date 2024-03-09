@@ -45,6 +45,7 @@ public class PlayerScript2D : MonoBehaviour
     public bool inMenu;
     public bool inOptions;
     public bool inPuzzle;
+    public bool inStats;
     public bool controllingBlock;
 
     public string roomName = "hi ther";
@@ -76,6 +77,8 @@ public class PlayerScript2D : MonoBehaviour
     public bool funnyCheck;
     public float funnyTimer;
     public int sillyPress;
+
+    public string oldScene;
     void Awake()
     {
         //Cursor.visible = false;
@@ -99,11 +102,13 @@ public class PlayerScript2D : MonoBehaviour
     }
     void Start()
     {
+        oldScene = SceneManager.GetActiveScene().name;
         timeBetweenTiles = 0.3f;
         swapy = 0.15f;
         prevDir = Vector3.zero;
         SwitchSong(SceneManager.GetActiveScene().name);
         dialogueManager.eventScript.RunPastEvents();
+        invManager.UpdateInfo();
     }
     void Update()
     {
@@ -130,7 +135,7 @@ public class PlayerScript2D : MonoBehaviour
             transform.position = new Vector3(23, 1, 0);
             sillyDude = 0;
         }
-        if (!isLoading && !moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && holdTimer == 0)
+        if (!isLoading && !moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && !inStats && holdTimer == 0)
         {
             spinTimer += Time.deltaTime;
         }
@@ -148,8 +153,8 @@ public class PlayerScript2D : MonoBehaviour
         {
             StartCoroutine(IdleSpin());
         }
-        if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock) //Controls for overworld
-        {
+        if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock && !inStats) //Controls for overworld
+        { 
             if (!moving)
             {
                 if (direction == Vector3.up)
@@ -391,6 +396,9 @@ public class PlayerScript2D : MonoBehaviour
                         menuManager.OpenOptions();
                         break;
                     case 2:
+                        menuManager.OpenStats();
+                        break;
+                    case 3:
                         sillyPress += 1;
                         string[] temp = sillyPress switch
                         {
@@ -411,10 +419,10 @@ public class PlayerScript2D : MonoBehaviour
                         };
                         dialogueManager.StartDialogue("SillyButton", temp, 0, dialogueManager.hasHiddenText);
                         break;
-                    case 3:
+                    case 4:
                         transform.position = spawnPoint;
                         break;
-                    case 4:
+                    case 5:
                         Cursor.lockState = CursorLockMode.None;
                         Cursor.visible = true;
                         SceneManager.LoadScene("TitleScreen");
@@ -555,7 +563,15 @@ public class PlayerScript2D : MonoBehaviour
                 controllingBlock = false;
             }
         }
-        
+        else if (inStats)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.M))
+            {
+                menuManager.CloseStats();
+                menuManager.OpenMenu();
+            }
+        }
+
     }
     public void GetSelectorMovement(Selector selector)
     {
@@ -874,7 +890,7 @@ public class PlayerScript2D : MonoBehaviour
                 else
                 {
                     journalManager.notes.Add(target.GetComponent<NoteScript>());
-                    
+                    dialogueManager.eventScript.collectedNotes += 1;
                     StartCoroutine(RecordFrame());
                     target.transform.parent = transform;
                     target.SetActive(false);
@@ -884,7 +900,8 @@ public class PlayerScript2D : MonoBehaviour
                 currentTarget = null;
                 break;
         }
-        
+        invManager.UpdateInfo();
+
     }
     public void NoteWarp()
     {
@@ -958,15 +975,18 @@ public class PlayerScript2D : MonoBehaviour
 
     IEnumerator RecordFrame()
     {
+        invManager.infoDisplay.enabled = false;
         yield return new WaitForEndOfFrame();
         var texture = ScreenCapture.CaptureScreenshotAsTexture();
         NoteScript note = journalManager.notes[journalManager.notes.IndexOf(currentTarget.GetComponent<NoteScript>())];
         note.image = texture;
+        invManager.infoDisplay.enabled = true;
         string[] temp = new string[] { "0You:Found Note #" + (note.noteId + 1).ToString() + " - " + note.noteTitle + ". I should read it in my Journal later." };
         dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
     }
     public IEnumerator SwitchScene(string sceneName)
     {
+        oldScene = SceneManager.GetActiveScene().name;
         yield return null;
         isLoading = true;
         var op = SceneManager.LoadSceneAsync(sceneName);
@@ -975,6 +995,7 @@ public class PlayerScript2D : MonoBehaviour
             isLoading = false;
             SwitchSong(sceneName);
             dialogueManager.eventScript.RunPastEvents();
+            invManager.UpdateInfo();
             if (finishedPuzzle)
             {
                 if (puzzleName != "rand")
@@ -1003,6 +1024,6 @@ public class PlayerScript2D : MonoBehaviour
             }
         };
         funnyCheck = true;
-        
+
     }
 }
