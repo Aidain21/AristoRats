@@ -192,6 +192,12 @@ public class DialogueEvents : MonoBehaviour
                     playerScript.invManager.cheese -= 2;
                 }
             }
+            //Wizard Rat (Tutorial) Spawns key
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "WizardRat", "1", "0" }))
+            {
+                SelectItem("TutorialKey", 3, 1);
+              
+            }
         }
         else if (SceneManager.GetActiveScene().name == "Forest")
         {
