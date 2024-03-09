@@ -15,6 +15,9 @@ public class MenuMapManager : MonoBehaviour
     public List<Image> puzzleImages;
     public string[] menuChoices;
     public Canvas menu;
+    public Canvas stats;
+    public List<List<object>> collection = new();
+    public int trackedSceneNumber = 5;
     public TMP_Text puzzleText;
     public Canvas options;
     //public Canvas map;
@@ -22,17 +25,21 @@ public class MenuMapManager : MonoBehaviour
     public GameObject menuTextArray;
     public GameObject optionsTextArray;
     public GameObject puzzleTextArray;
+    public GameObject statsTextArray;
     public TMP_Text defOpt;
     public TMP_Text defMenu;
     public TMP_Text defPuzzle;
+    public TMP_Text percent;
     public Image defImg;
     public Image curPiece;
     public PlayerScript2D playerScript;
     void Start()
     {
+        trackedSceneNumber = 5;
         Canvas.ForceUpdateCanvases();   
         menuChoices = new string[] { "Continue", "Options", "Progress Stats", "Silly Button", "Respawn", "Quit (Won't Save)" };
         menu.GetComponent<Canvas>().enabled = false;
+        stats.GetComponent<Canvas>().enabled = false;
         options.GetComponent<Canvas>().enabled = false;
         puzzle.GetComponent<Canvas>().enabled = false;
         int count = 0;
@@ -80,6 +87,14 @@ public class MenuMapManager : MonoBehaviour
                 
             }
         }
+        for (int i = 0; i < trackedSceneNumber; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                TMP_Text text = Instantiate(defMenu, statsTextArray.transform);
+                text.rectTransform.localPosition = new Vector2(j * 300 - 300, -100 * i + 25);
+            }
+        }
         MakePuzzleMenu();
         Destroy(defOpt);
         defMenu.gameObject.SetActive(false);
@@ -94,8 +109,44 @@ public class MenuMapManager : MonoBehaviour
     public void CloseMenu()
     {
         playerScript.invManager.UpdateInfo();
-        menu.GetComponent<Canvas>().enabled = false;
+        menu.GetComponent<Canvas>().enabled = false;    
         playerScript.inMenu = false;
+    }
+
+    public void OpenStats()
+    {
+        stats.GetComponent<Canvas>().enabled = true;
+        playerScript.inStats = true;
+        for (int i = 0; i < collection.Count; i++)
+        {
+            if (collection[i][0].ToString() == SceneManager.GetActiveScene().name)
+            {
+                playerScript.menuManager.collection[i] = new List<object> { SceneManager.GetActiveScene().name, playerScript.dialogueManager.eventScript.fullyTalkedTo, playerScript.dialogueManager.eventScript.npcsInScene, playerScript.dialogueManager.eventScript.collectedNotes, playerScript.dialogueManager.eventScript.notesInScene };
+                break;
+            }
+        }
+        int foundObjects = 0;
+        int totalObjects = 0;
+        for(int i = 0; i < collection.Count; i++)
+        {
+            foundObjects += (int) collection[i][1] + (int) collection[i][3];
+            totalObjects += (int)collection[i][2] + (int)collection[i][4];
+            statsTextArray.transform.GetChild(i*3).GetComponent<TMP_Text>().text = collection[i][0].ToString();
+            statsTextArray.transform.GetChild(i*3+1).GetComponent<TMP_Text>().text = collection[i][1].ToString() + "/" + collection[i][2].ToString();
+            statsTextArray.transform.GetChild(i*3+2).GetComponent<TMP_Text>().text = collection[i][3].ToString() + "/" + collection[i][4].ToString();
+        }
+        string percentage = ((float)foundObjects / totalObjects * 100).ToString();
+        if (percentage.Contains(".") && percentage[(percentage.IndexOf(".") + 1)..].Length > 2)
+        {
+            percentage = percentage.Substring(0, percentage.IndexOf(".") + 1) + percentage.Substring(percentage.IndexOf(".") + 1, 2);
+        }
+        percent.text = "Completion: " + percentage + "%";
+    }
+    public void CloseStats()
+    {
+        playerScript.invManager.UpdateInfo();
+        stats.GetComponent<Canvas>().enabled = false;
+        playerScript.inStats = false;
     }
 
     public void OpenOptions()

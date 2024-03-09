@@ -45,6 +45,7 @@ public class PlayerScript2D : MonoBehaviour
     public bool inMenu;
     public bool inOptions;
     public bool inPuzzle;
+    public bool inStats;
     public bool controllingBlock;
 
     public string roomName = "hi ther";
@@ -76,6 +77,8 @@ public class PlayerScript2D : MonoBehaviour
     public bool funnyCheck;
     public float funnyTimer;
     public int sillyPress;
+
+    public string oldScene;
     void Awake()
     {
         //Cursor.visible = false;
@@ -99,6 +102,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     void Start()
     {
+        oldScene = SceneManager.GetActiveScene().name;
         timeBetweenTiles = 0.3f;
         swapy = 0.15f;
         prevDir = Vector3.zero;
@@ -131,7 +135,7 @@ public class PlayerScript2D : MonoBehaviour
             transform.position = new Vector3(23, 1, 0);
             sillyDude = 0;
         }
-        if (!isLoading && !moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && holdTimer == 0)
+        if (!isLoading && !moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && !inStats && holdTimer == 0)
         {
             spinTimer += Time.deltaTime;
         }
@@ -149,7 +153,7 @@ public class PlayerScript2D : MonoBehaviour
         {
             StartCoroutine(IdleSpin());
         }
-        if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock) //Controls for overworld
+        if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock && !inStats) //Controls for overworld
         { 
             if (!moving)
             {
@@ -392,6 +396,7 @@ public class PlayerScript2D : MonoBehaviour
                         menuManager.OpenOptions();
                         break;
                     case 2:
+                        menuManager.OpenStats();
                         break;
                     case 3:
                         sillyPress += 1;
@@ -558,7 +563,15 @@ public class PlayerScript2D : MonoBehaviour
                 controllingBlock = false;
             }
         }
-        
+        else if (inStats)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.M))
+            {
+                menuManager.CloseStats();
+                menuManager.OpenMenu();
+            }
+        }
+
     }
     public void GetSelectorMovement(Selector selector)
     {
@@ -973,6 +986,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     public IEnumerator SwitchScene(string sceneName)
     {
+        oldScene = SceneManager.GetActiveScene().name;
         yield return null;
         isLoading = true;
         var op = SceneManager.LoadSceneAsync(sceneName);
