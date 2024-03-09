@@ -1018,7 +1018,7 @@ GameObject:
   - component: {fileID: 8049011643768592576}
   - component: {fileID: 1305780028233594422}
   - component: {fileID: 54321576811211951}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Journal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1445,7 +1445,7 @@ GameObject:
   - component: {fileID: 7002386325786273478}
   - component: {fileID: 5924798329257789279}
   - component: {fileID: 1103542274445032416}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1941,7 +1941,7 @@ GameObject:
   - component: {fileID: 4664242981708606680}
   - component: {fileID: 3447884763943603220}
   - component: {fileID: 4664302568013182426}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3239,7 +3239,7 @@ GameObject:
   - component: {fileID: 3123874033310183903}
   - component: {fileID: 1792997872020804675}
   - component: {fileID: 7359858200698398424}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3346,7 +3346,7 @@ GameObject:
   - component: {fileID: 2929865746086337432}
   - component: {fileID: 2177924447858797033}
   - component: {fileID: 7588084333342805909}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5460,7 +5460,7 @@ GameObject:
   - component: {fileID: 4973272426560208221}
   - component: {fileID: 7850160271652886376}
   - component: {fileID: 3765874331356096064}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CONTROL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6544,7 +6544,7 @@ GameObject:
   - component: {fileID: 1987779818708197833}
   - component: {fileID: 793646212119904050}
   - component: {fileID: 5555629260958067619}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7056,7 +7056,7 @@ GameObject:
   - component: {fileID: 8721478975544917235}
   - component: {fileID: 6195773609539740179}
   - component: {fileID: 5709088100301909905}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}

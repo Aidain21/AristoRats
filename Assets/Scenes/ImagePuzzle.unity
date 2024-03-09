@@ -224,22 +224,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: '0Puzzle Instructions: This puzzle is called Shuffle, and it has you
-        cycle rows and columns of blocks, in order to reform the correct full image.
-        This one is pretty hard sometimes!'
+      value: '0Puzzle Instructions: Puzzle Name: Shuffle Instructions: Cycle rows
+        and columns of blocks to form the full image.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
       value: '0Puzzle Instructions: When facing a side of the mixed blocks, pressing
-        E will cause the row/column to shift in the direction you are facing, also
-        looping the piece opposite of you to in front of you.'
+        E will cause the row/column to shift in the direction you are facing, causing
+        them to loop.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[2]
-      value: '0Puzzle Instructions: Keep shifting those rows/columns, and once everything
-        is unscrambled, you will have solved the puzzle. Here''s a tip for you: Try
-        to form entire rows and columns, and then maintain them as long as possible
-        before solving another row/column.'
+      value: '0Puzzle Instructions: Keep shifting those rows/columns. Once everything
+        is unscrambled, you will have solved the puzzle. Here''s a tip: Try to form
+        entire rows and columns, and maintain them as you solve other rows/columns.'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite
@@ -321,23 +319,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: '0Puzzle Instructions: This puzzle is called Items, and it has you pick
-        up, and put down pieces of a broken image in the right spots to form the
-        whole image again.'
+      value: '0Puzzle Instructions: Puzzle Name: Items Instructions: Move the pieces
+        to form the whole image.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: '0Puzzle Instructions: You may have already known this, but the pieces
-        can be picked up with E. Once picked up, it can be accessed from your Inventory
-        with I, and then dropped with R when selected.'
+      value: '0Puzzle Instructions: Use E to pick up the pieces. Once picked up,
+        it can be accessed from your Inventory with I and dropped with R when selected.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[2]
-      value: '0Puzzle Instructions: Place the pieces where you think they would go,
-        and if correct, the piece will insert itself into the ground. However, if
-        you incorrectly place a piece, it won''t insert itself, and will need to
-        be picked up again. Once all pieces have been inserted, you will have solved
-        the puzzle!'
+      value: '0Puzzle Instructions: If the piece is correct, the piece will insert
+        itself into the ground. However, if incorrectly placed, it won''t insert
+        itself, and you will have to try again. Good luck!'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite
@@ -414,23 +408,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: '0Puzzle Instructions: This puzzle is called Blocks+ (A harder variant
-        of Blocks), and it has you push the pieces of a broken image together to
-        form the whole image again.'
+      value: '0Puzzle Instructions: Puzzle Name: Blocks+(A harder variant of Blocks).
+        Instructions: Push the pieces of a broken image together to form the image.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: '0Puzzle Instructions: You may have already known this, but the blocks
-        can be pushed/pulled with E. If there is something blocking the block from
-        being pushed forward, it will be instead pulled back.'
+      value: '0Puzzle Instructions: Blocks can be pushed/pulled with E. If there
+        is something blocking the block from being pushed forward, it will be pulled
+        back instead.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[2]
       value: '0Puzzle Instructions: Push the blocks to where you think they would
-        go in the full image, and only once all blocks are in the correct spots,
-        the puzzle will solve. Unlike Blocks, the blocks don''t insert themselves
-        when positioned correctly, so you will have to deal with blocks blocking
-        other blocks on the puzzle frame.'
+        go in the image. Once all blocks are in the correct spots, the puzzle will
+        be solved. Unlike Blocks, the blocks don''t insert themselves when positioned
+        correctly, so blocks can block other blocks on the puzzle frame.'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite
@@ -16035,22 +16027,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: '0Puzzle Instructions: This puzzle is called Control, and it has you
-        control broken pieces and move them to form the whole image again.'
+      value: '0Puzzle Instructions: Puzzle Name: Control Instructions: Control broken
+        pieces and move them to form a whole image.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: '0Puzzle Instructions: To begin, go up to any block surrounded by less
-        than 3 other blocks, and press E. You can now move the block with movement
-        keys, and stop controlling by putting it in the right place or pressing E
-        again.'
+      value: '0Puzzle Instructions: Press E on a block surrounded by less than 3
+        other blocks. Now move the block with movement keys. To stop controlling
+        the block, put it in the right place or press E again.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[2]
-      value: '0Puzzle Instructions: Move the blocks to the correct spot, and that
-        will cause the block to insert itself into the ground. This will stop your
-        control, and cause it to not block other blocks. Once all blocks have been
-        inserted, you will have solved the puzzle!'
+      value: '0Puzzle Instructions: The block will insert itself once in the right
+        place. This will stop your control, and cause it to not block other blocks.
+        Insert all blocks to solve the puzzle!'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite
@@ -16320,21 +16310,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: '0Puzzle Instructions: This puzzle is called Blocks, and it has you
-        push the pieces of a broken image together to form the whole image again.'
+      value: '0Puzzle Instructions: Puzzle Name: Blocks Instructions: Push the pieces
+        of a broken image together to form the image.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: '0Puzzle Instructions: You may have already known this, but the blocks
-        can be pushed/pulled with E. If there is something blocking the block from
-        being pushed forward, it will be instead pulled back.'
+      value: '0Puzzle Instructions: Blocks can be pushed/pulled with E. If there
+        is something blocking the block from being pushed forward, it will instead
+        be pulled back.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[2]
       value: '0Puzzle Instructions: Push the blocks to where you think they would
-        go in the full image, and if you are correct, the block will insert itself
-        into the ground, so it won''t block other blocks. Once all blocks have been
-        inserted, you will have solved the puzzle!'
+        go. If you are correct, the block will insert itself into the ground, so
+        it won''t block other blocks. Insert all blocks to solve the puzzle!'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite
@@ -16416,23 +16405,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: '0Puzzle Instructions: This puzzle is called Menu, and it has you choose
-        where the blocks will go in a peculiar manner.'
+      value: '0Puzzle Instructions: Puzzle Name: Menu Instructions: Choose where
+        the blocks will go in a peculiar manner.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: '0Puzzle Instructions: Interact with a block using E, select where you
-        want it to go using movement keys, and press E again to send it to that spot,
-        or you can press Esc to cancel sending the block. You can see your current
-        block on the right side.'
+      value: 'Puzzle Instructions: Use E and the movement keys to interact with a
+        block and control where it goes. Press E again to send it to that spot. Press
+        Esc to cancel sending the block. Look to the right to see your current block.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[2]
       value: '0Puzzle Instructions: If you select the correct spot, the block will
-        insert itself into the ground, also updating inside the selection screen.
-        If incorrect, the selection screen won''t be updated, and you will have to
-        go interact with the block again to correct it. Once all blocks have been
-        inserted, you will have solved the puzzle!'
+        insert itself into the floor, also updating inside the selection screen.
+        If incorrect, the selection screen won''t be updated, so you will have to
+        go correct it. Insert all blocks to solve the puzzle!'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite
@@ -16476,6 +16463,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3072609828047421736, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5840144988072972835, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5840144988072972835, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
@@ -16609,22 +16604,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: '0Puzzle Instructions: This puzzle is called Control+ (A harder variant
-        of Control), and it has you control broken pieces and move them to form the
-        whole image again.'
+      value: '0Puzzle Instructions: Puzzle Name: Control+ (A harder variant of Control). 
+        Instructions: Control broken pieces and move them to form the image.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: '0Puzzle Instructions: To begin, go up to any block surrounded by less
-        than 3 other blocks, and press E. You can now move the block with movement
-        keys, and stop controlling by pressing E again.'
+      value: '0Puzzle Instructions: Press E on a block surrounded by less than 3
+        other blocks. Move the block with movement keys. To stop controlling them
+        press E again.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[2]
       value: '0Puzzle Instructions: Move all blocks to their correct spots to solve
-        the puzzle. Unlike Control, the blocks won''t insert themselves when positioned
-        correctly, so you will have to move around the blocks with your previously
-        moved blocks blocking the way.'
+        the puzzle. Unlike Control, blocks don''t insert themselves when positioned
+        correctly, so you will have to move the blocks with your previously moved
+        blocks blocking the way.'
       objectReference: {fileID: 0}
     - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: m_Sprite
@@ -16701,15 +16695,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[0]
-      value: '0Puzzle Instructions: This is your first time trying this puzzle, and
-        to keep it''s unique mechanics a suprise, I won''t tell you anyhing. Try
-        it out first, rather than reading boring instructions! To get you started,
-        all puzzles have you interact with the puzzle pieces with E.'
+      value: "0Puzzle Instructions: To keep this puzzle\u2019s unique mechanics a
+        surprise, I won't tell you anything. To get started, use E to interact with
+        all puzzle pieces."
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[1]
-      value: '0Puzzle Instructions: If you are stuck, or don''t care to be spoiled
-        and just want the instructions, leave and re-enter this room.'
+      value: '0Puzzle Instructions: If you are stuck, or just want the instructions,
+        leave and re-enter this room.'
       objectReference: {fileID: 0}
     - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
       propertyPath: dialogue.Array.data[2]
