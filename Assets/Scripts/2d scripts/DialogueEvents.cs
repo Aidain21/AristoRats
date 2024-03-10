@@ -32,7 +32,7 @@ public class DialogueEvents : MonoBehaviour
                 break;
             }
         }
-        if (!statsExist)
+        if (!statsExist && playerScript.oldScene != "ImagePuzzle")
         {
             playerScript.menuManager.collection.Add(new List<object> { playerScript.oldScene, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene });
         }
@@ -85,7 +85,7 @@ public class DialogueEvents : MonoBehaviour
                 break;
             }
         }
-        if (!newStatsExist)
+        if (!newStatsExist && SceneManager.GetActiveScene().name != "ImagePuzzle")
         {
             playerScript.menuManager.collection.Add(new List<object> { SceneManager.GetActiveScene().name, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene });
         }
@@ -263,10 +263,10 @@ public class DialogueEvents : MonoBehaviour
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleRando", "0", "0" }))
             {
                 UnityEngine.Object[] assets = Resources.LoadAll("Sprites", typeof(Texture2D));
-                string[] puzzleModes = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+" };
+                string[] puzzleModes = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+", "Swap+" };
                 SwitchScript rand = GameObject.Find("rand").GetComponent<SwitchScript>();
-                rand.switchData = puzzleModes[UnityEngine.Random.Range(1, puzzleModes.Length - 1)] + " " + UnityEngine.Random.Range(1, 9) + "," + UnityEngine.Random.Range(1, 9);
-                rand.puzzleImage = (Texture2D) assets[UnityEngine.Random.Range(1, assets.Length - 1)];
+                rand.switchData = puzzleModes[UnityEngine.Random.Range(1, puzzleModes.Length)] + " " + UnityEngine.Random.Range(1, 8) + "," + UnityEngine.Random.Range(1, 8);
+                rand.puzzleImage = (Texture2D) assets[UnityEngine.Random.Range(1, assets.Length)];
             }
         }
 

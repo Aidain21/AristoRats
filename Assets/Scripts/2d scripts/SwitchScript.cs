@@ -46,6 +46,10 @@ public class SwitchScript : MonoBehaviour
         {
             UseSwitch();
         }
+        if (switchEffect == "shift" && playerOnSpike && affectedObjects[0] != null && !affectedObjects[0].GetComponent<PlayerScript2D>().moving)
+        {
+            UseSwitch();
+        }
     }
 
     public void UseSwitch()
@@ -210,24 +214,24 @@ public class SwitchScript : MonoBehaviour
                         item.GetComponent<SwitchScript>().switchData = player.entryScene + " " + player.entryPos.x + "," + player.entryPos.y;
                         if (player.entryDirection == Vector3.up)
                         {
-                            item.transform.position = new Vector3(-3, -13, 1);
+                            item.transform.position = new Vector3(-5, -11, 1);
                             item.transform.Rotate(new Vector3(0, 0, 90));
-                            player.transform.position = new Vector3(-3, -12, 0);
-                            signs.transform.position = new Vector3(-5, -12, 0);
+                            player.transform.position = new Vector3(-5, -10, 0);
+                            signs.transform.position = new Vector3(-3, -10, 0);
 
                         }
                         else if (player.entryDirection == Vector3.left)
                         {
-                            item.transform.position = new Vector3(6, 0, 1);
-                            player.transform.position = new Vector3(5, 0, 0);
-                            signs.transform.position = new Vector3(5, -2, 0);
+                            item.transform.position = new Vector3(2, 0, 1);
+                            player.transform.position = new Vector3(1, 0, 0);
+                            signs.transform.position = new Vector3(1, -2, 0);
                         }
                         else if (player.entryDirection == Vector3.down)
                         {
-                            item.transform.position = new Vector3(-3, 13, 1);
+                            item.transform.position = new Vector3(-5, 11, 1);
                             item.transform.Rotate(new Vector3(0, 0, 90));
-                            player.transform.position = new Vector3(-3, 12, 0);
-                            signs.transform.position = new Vector3(-1, 12, 0);
+                            player.transform.position = new Vector3(-5, 10, 0);
+                            signs.transform.position = new Vector3(-3, 10, 0);
                         }
                         else if (player.entryDirection == Vector3.right)
                         {
@@ -259,6 +263,30 @@ public class SwitchScript : MonoBehaviour
                     item.GetComponent<PlayerScript2D>().puzzleName = name;
                     item.GetComponent<PlayerScript2D>().menuManager.puzzleSelector = new Selector(x2,y2);
                     item.GetComponent<PlayerScript2D>().menuManager.MakePuzzleMenu();
+                    break;
+                case "shift":
+                    if (!item.GetComponent<PlayerScript2D>().moving)
+                    {
+                        item.GetComponent<PlayerScript2D>().noControl = true;
+                        item.GetComponent<PlayerScript2D>().direction = transform.up;
+                        if (transform.up == Vector3.up)
+                        {
+                            item.GetComponent<SpriteRenderer>().sprite = item.GetComponent<PlayerScript2D>().idleSprites[0];
+                        }
+                        else if (transform.up == Vector3.left)
+                        {
+                            item.GetComponent<SpriteRenderer>().sprite = item.GetComponent<PlayerScript2D>().idleSprites[1];
+                        }
+                        else if (transform.up == Vector3.down)
+                        {
+                            item.GetComponent<SpriteRenderer>().sprite = item.GetComponent<PlayerScript2D>().idleSprites[2];
+                        }
+                        else if (transform.up == Vector3.right)
+                        {
+                            item.GetComponent<SpriteRenderer>().sprite = item.GetComponent<PlayerScript2D>().idleSprites[3];
+                        }
+                        StartCoroutine(item.GetComponent<PlayerScript2D>().GridMove(item, transform.position - -transform.up, 0.5f));
+                    }
                     break;
             }
         }
@@ -327,6 +355,11 @@ public class SwitchScript : MonoBehaviour
                 affectedObjects[0] = collision.gameObject;
                 playerOnSpike = true;
             }
+            if (switchEffect == "shift")
+            {
+                affectedObjects[0] = collision.gameObject;
+                playerOnSpike = true;
+            }
             if (switchEffect == "puzzle")
             {
                 affectedObjects = new GameObject[3];
@@ -342,6 +375,11 @@ public class SwitchScript : MonoBehaviour
         if (collision.CompareTag("Player") && switchType == "pressurePlate")
         {
             if (switchEffect == "spike")
+            {
+                affectedObjects[0] = collision.gameObject;
+                playerOnSpike = false;
+            }
+            if (switchEffect == "shift")
             {
                 affectedObjects[0] = collision.gameObject;
                 playerOnSpike = false;

@@ -92,6 +92,19 @@ public class BlockScript : MonoBehaviour
         {
             player.GetComponent<PlayerScript2D>().menuManager.OpenPuzzle();
         }
+        else if (type == "swap")
+        {
+            for (int i = 0; i < transform.parent.childCount; i++)
+            {
+                if (transform.parent.GetChild(i).name == "PushBlock(Clone)" && transform.parent.GetChild(i).position == transform.position + player.GetComponent<PlayerScript2D>().direction)
+                {
+                    Vector3 temp = transform.parent.GetChild(i).position;
+                    transform.parent.GetChild(i).position = transform.position;
+                    transform.position = temp;
+                    break;
+                }
+            }
+        }
         else if (type == "control")
         {
             player.GetComponent<PlayerScript2D>().vcam.Follow = gameObject.transform;
@@ -163,6 +176,25 @@ public class BlockScript : MonoBehaviour
         hitData = Physics2D.Raycast(transform.position + Vector3.right * 0.51f, Vector2.right, 0.5f);
         bool right = hitData.collider != null;
         return new bool[] { up, left, down, right };
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && type == "swap")
+        {
+            collision.GetComponent<PlayerScript2D>().currentTarget = gameObject;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && type == "swap")
+        {
+            if (collision.GetComponent<PlayerScript2D>().currentTarget == gameObject)
+            {
+                collision.GetComponent<PlayerScript2D>().currentTarget = null;
+            }
+        }
     }
 
 }

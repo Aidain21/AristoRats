@@ -135,6 +135,21 @@ public class ImagePuzzleScript : MonoBehaviour
                     Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
                 break;
+            case "Swap":
+                for (int i = 0; i < width * height; i++)
+                {
+                    GameObject piece = Instantiate(pushBlock, transform);
+                    piece.GetComponent<BlockScript>().id = norm[i];
+                    piece.GetComponent<BlockScript>().type = "swap";
+                    piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
+                    piece.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 0.5f);
+                    piece.AddComponent<Rigidbody2D>();
+                    piece.GetComponent<Rigidbody2D>().gravityScale = 0;
+                    piece.GetComponent<BoxCollider2D>().isTrigger = true;
+                    piece.GetComponent<BoxCollider2D>().size = new Vector2(0.3f, 0.3f);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
+                }
+                break;
         }
         for (int i = 0; i < width * height; i++)
         {

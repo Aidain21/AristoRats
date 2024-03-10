@@ -47,6 +47,7 @@ public class PlayerScript2D : MonoBehaviour
     public bool inPuzzle;
     public bool inStats;
     public bool controllingBlock;
+    public bool noControl;
 
     public string roomName = "hi ther";
 
@@ -153,7 +154,7 @@ public class PlayerScript2D : MonoBehaviour
         {
             StartCoroutine(IdleSpin());
         }
-        if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock && !inStats) //Controls for overworld
+        if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock && !inStats && !noControl) //Controls for overworld
         { 
             if (!moving)
             {
@@ -225,6 +226,10 @@ public class PlayerScript2D : MonoBehaviour
                 if (hitData.collider != null)
                 {
                     currentTarget = hitData.collider.gameObject;
+                    Interact(currentTarget);
+                }
+                else if (currentTarget != null && currentTarget.CompareTag("Block") && currentTarget.GetComponent<BlockScript>().type == "swap")
+                {
                     Interact(currentTarget);
                 }
             }
@@ -711,23 +716,25 @@ public class PlayerScript2D : MonoBehaviour
     public IEnumerator GridMove(GameObject mover, Vector3 end, float seconds, string anim = "")
     {
         if (mover.name == "Player")
-        {
-            GetComponent<Animator>().enabled = true;
-            if (timeBetweenTiles == 0.15f)
+        {   if (anim != "")
             {
-                GetComponent<Animator>().speed = 2;
-            }
-            else
-            {
-                GetComponent<Animator>().speed = 1;
-            }
-            if (sameDir)
-            {
-                GetComponent<Animator>().Play(anim, 0, 0.5f);
-            }
-            else
-            {
-                GetComponent<Animator>().Play(anim, 0, 0);
+                GetComponent<Animator>().enabled = true;
+                if (timeBetweenTiles == 0.15f)
+                {
+                    GetComponent<Animator>().speed = 2;
+                }
+                else
+                {
+                    GetComponent<Animator>().speed = 1;
+                }
+                if (sameDir)
+                {
+                    GetComponent<Animator>().Play(anim, 0, 0.5f);
+                }
+                else
+                {
+                    GetComponent<Animator>().Play(anim, 0, 0);
+                }
             }
             moving = true;
         }
@@ -752,6 +759,7 @@ public class PlayerScript2D : MonoBehaviour
         {
             GetComponent<Animator>().enabled = false;
             moving = false;
+            noControl = false;
         }
         if (mover.CompareTag("Block"))
         {
