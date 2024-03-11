@@ -30,6 +30,7 @@ public class PlayerScript2D : MonoBehaviour
     public MenuMapManager menuManager;
     //Tracks current dialogue instance and place in dialogue. dialogueData[0] is name, dialogueData[1] is position
     public GameObject currentTarget;
+    public GameObject follower = null;
     public GameObject backpackMenu;
 
     public CinemachineVirtualCamera vcam;
@@ -240,7 +241,6 @@ public class PlayerScript2D : MonoBehaviour
                 {
                     if (!hitData.collider.gameObject.GetComponent<BlockScript>().moving && hitData.collider.gameObject.GetComponent<BlockScript>().type == "push")
                     {
-                        GetComponent<AudioSource>().PlayOneShot(sfx[0]);
                         hitData.collider.gameObject.GetComponent<BlockScript>().Push(direction);
                     }
                 }
@@ -337,12 +337,14 @@ public class PlayerScript2D : MonoBehaviour
 
                     ItemScript itemScript = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)].GetComponent<ItemScript>();
                     itemScript.gameObject.transform.parent = GameObject.Find("LevelObjects").transform;
-                    string[] temp = new string[] { "0You:Dropped the " + itemScript.itemName + "." };
+                    if (itemScript.transform.childCount > 0)
+                    {
+                        itemScript.gameObject.transform.parent = GameObject.Find("Puzzle Box").transform;
+                    }
                     itemScript.gameObject.SetActive(true);
                     itemScript.transform.position = transform.position + direction;
                     invManager.inventory.Remove(itemScript.gameObject);
                     invManager.OpenInventory();
-                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
                 }
                 else if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x >= invManager.inventory.Count)
                 {
@@ -649,7 +651,7 @@ public class PlayerScript2D : MonoBehaviour
             holdTimer += Time.deltaTime;
             direction = Vector3.up;
             wallTouchList = WallChecker();
-            if (!wallTouchList[0] && holdTimer > 0.1f)
+            if ((!wallTouchList[0] || (follower != null && follower.transform.position == transform.position + direction)) && holdTimer > 0.1f)
             {
                 sameDir = prevDir == Vector3.up && !sameDir;
                 prevDir = direction;
@@ -665,7 +667,7 @@ public class PlayerScript2D : MonoBehaviour
             holdTimer += Time.deltaTime;
             direction = Vector3.left;
             wallTouchList = WallChecker();
-            if (!wallTouchList[1] && holdTimer > 0.1f)
+            if ((!wallTouchList[1] || (follower != null && follower.transform.position == transform.position + direction)) && holdTimer > 0.1f)
             {
                 sameDir = prevDir == Vector3.left && !sameDir;
                 prevDir = direction;
@@ -681,7 +683,7 @@ public class PlayerScript2D : MonoBehaviour
             holdTimer += Time.deltaTime;
             direction = Vector3.down;
             wallTouchList = WallChecker();
-            if (!wallTouchList[2] && holdTimer > 0.1f)
+            if ((!wallTouchList[2] || (follower != null && follower.transform.position == transform.position + direction)) && holdTimer > 0.1f)
             {
                 sameDir = prevDir == Vector3.down && !sameDir;
                 prevDir = direction;
@@ -697,7 +699,7 @@ public class PlayerScript2D : MonoBehaviour
             holdTimer += Time.deltaTime;
             direction = Vector3.right;
             wallTouchList = WallChecker();
-            if (!wallTouchList[3] && holdTimer > 0.1f)
+            if ((!wallTouchList[3] || (follower != null && follower.transform.position == transform.position + direction)) && holdTimer > 0.1f)
             {
                 sameDir = prevDir == Vector3.right && !sameDir;
                 prevDir = direction;
@@ -736,6 +738,10 @@ public class PlayerScript2D : MonoBehaviour
                     GetComponent<Animator>().Play(anim, 0, 0);
                 }
             }
+            if (follower != null)
+            {
+                StartCoroutine(GridMove(follower, transform.position, seconds));
+            }
             moving = true;
         }
         if (mover.CompareTag("Block"))
@@ -760,6 +766,11 @@ public class PlayerScript2D : MonoBehaviour
             GetComponent<Animator>().enabled = false;
             moving = false;
             noControl = false;
+            if (follower != null && follower.GetComponent<SignTextScript>() == null)
+            {
+                follower.transform.position += new Vector3(0, 0, 1);
+                follower = null;
+            }
         }
         if (mover.CompareTag("Block"))
         {
@@ -843,7 +854,6 @@ public class PlayerScript2D : MonoBehaviour
             case "Block":
                 if (!target.GetComponent<BlockScript>().moving)
                 {
-                    GetComponent<AudioSource>().PlayOneShot(sfx[0]);
                     target.GetComponent<BlockScript>().Push(direction);
                 }
                 if (target.GetComponent<BlockScript>().id != 0)
@@ -994,6 +1004,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     public IEnumerator SwitchScene(string sceneName)
     {
+        follower = null;
         oldScene = SceneManager.GetActiveScene().name;
         yield return null;
         isLoading = true;

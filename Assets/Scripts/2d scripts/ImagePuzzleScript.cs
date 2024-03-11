@@ -10,6 +10,7 @@ public class ImagePuzzleScript : MonoBehaviour
     public string mode;
     public GameObject pushBlock;
     public GameObject item;
+    public GameObject sign;
     public GameObject border;
     public GameObject floorSwitch;
     public int piecesLeft;
@@ -24,6 +25,10 @@ public class ImagePuzzleScript : MonoBehaviour
         playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
         playerScript.finishedPuzzle = true;
         playerScript.invManager.cheese += reward;
+        if (playerScript.inInventory)
+        {
+            playerScript.invManager.CloseInventory();
+        }
         string[] temp = new string[] { "0You:Solved the puzzle, and got " + reward + " cheese!" };
         playerScript.dialogueManager.StartDialogue("Player", temp, 0, playerScript.GetComponent<SpriteRenderer>().sprite);
     }
@@ -55,10 +60,12 @@ public class ImagePuzzleScript : MonoBehaviour
             norm[r] = tmp;
         }
         string switchType = "insert";
+        bool foundSign = false;
         for (int i = 0; i < instructionSigns.transform.childCount; i++)
         {
             if (instructionSigns.transform.GetChild(i).name == mode)
             {
+                foundSign = true;
                 if (!playerScript.oldPuzzles.Contains(mode))
                 {
                     instructionSigns.transform.GetChild(0).gameObject.SetActive(true);
@@ -71,6 +78,10 @@ public class ImagePuzzleScript : MonoBehaviour
                 break;
                 
             }
+        }
+        if (!foundSign)
+        {
+            instructionSigns.transform.GetChild(1).gameObject.SetActive(true);
         }
         if (mode.Contains("+"))
         {
@@ -147,6 +158,18 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<Rigidbody2D>().gravityScale = 0;
                     piece.GetComponent<BoxCollider2D>().isTrigger = true;
                     piece.GetComponent<BoxCollider2D>().size = new Vector2(0.3f, 0.3f);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
+                }
+                break;
+            case "Follow":
+                for (int i = 0; i < width * height; i++)
+                {
+                    GameObject piece = Instantiate(sign, transform);
+                    piece.name = "Follower " + norm[i].ToString();
+                    string[] temp = new string[] { "0Puzzle Piece:I will follow you!", "1Puzzle Piece: Bye Bye!", "3Puzzle Piece: Yes." };
+                    piece.GetComponent<SignTextScript>().dialogue = temp;
+                    piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
+                    piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
                     Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
                 break;

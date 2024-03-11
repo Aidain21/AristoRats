@@ -93,9 +93,26 @@ public class SwitchScript : MonoBehaviour
                         }
                         break;
                     }
+                    else if (item.CompareTag("Sign"))
+                    {
+                        transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                        item.transform.position += new Vector3(0, 0, 1);
+                        GameObject.Find("Player").GetComponent<PlayerScript2D>().dialogueManager.StartDialogue(item.GetComponent<SignTextScript>().name, item.GetComponent<SignTextScript>().dialogue, 3, item.GetComponent<SignTextScript>().talkerImage);
+                        Destroy(item.GetComponent<BoxCollider2D>());
+                        Destroy(item.GetComponent<SignTextScript>());
+                        Destroy(item.GetComponent<Animator>());
+                        Destroy(item.transform.GetChild(0).gameObject);
+                        Destroy(item.transform.GetChild(1).gameObject);
+                        Destroy(gameObject);
+                        if (transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
+                        {
+                            transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                        }
+                        break;
+                    }
                     break;
                 case "insert+":
-                    if (item.CompareTag("Block"))
+                    if (item.CompareTag("Block") || item.CompareTag("Item") || item.CompareTag("Sign"))
                     {
                         transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
                         if (transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
@@ -108,10 +125,22 @@ public class SwitchScript : MonoBehaviour
                                     Destroy(transform.parent.GetChild(i).GetComponent<BoxCollider2D>());
                                     Destroy(transform.parent.GetChild(i).GetChild(0).gameObject);
                                 }
-                            }
-                            for (int i = 0; i < transform.parent.childCount; i++)
-                            {
-                                if (transform.parent.GetChild(i).name.Equals("FloorSwitch(Clone)"))
+                                else if (transform.parent.GetChild(i).CompareTag("Item"))
+                                {
+                                    transform.parent.GetChild(i).position += new Vector3(0, 0, 1);
+                                    Destroy(transform.parent.GetChild(i).GetComponent<ItemScript>());
+                                    Destroy(transform.parent.GetChild(i).GetComponent<BoxCollider2D>());
+                                    Destroy(transform.parent.GetChild(i).GetChild(0).gameObject);
+                                }
+                                else if (transform.parent.GetChild(i).CompareTag("Sign"))
+                                {
+                                    transform.parent.GetChild(i).position += new Vector3(0, 0, 1);
+                                    Destroy(transform.parent.GetChild(i).GetComponent<SignTextScript>());
+                                    Destroy(transform.parent.GetChild(i).GetComponent<BoxCollider2D>());
+                                    Destroy(transform.parent.GetChild(i).GetChild(0).gameObject);
+                                    Destroy(transform.parent.GetChild(i).GetChild(1).gameObject);
+                                }
+                                else if (transform.parent.GetChild(i).name.Equals("FloorSwitch(Clone)"))
                                 {
                                     Destroy(transform.parent.GetChild(i).gameObject);
                                 }
@@ -344,6 +373,11 @@ public class SwitchScript : MonoBehaviour
             affectedObjects[0] = collision.gameObject;
             UseSwitch();
         }
+        if (collision.CompareTag("Sign") && switchType == "floor" && collision.name.Contains(switchData))
+        {
+            affectedObjects[0] = collision.gameObject;
+            UseSwitch();
+        }
         if (collision.CompareTag("Player") && (switchType == "pressurePlate" || switchType == "pressurePlate+" || switchType == "pressurePlate++"))
         {
             if (switchEffect == "warp" || switchEffect == "talk" || switchEffect == "puzzleData" || switchEffect == "activate")
@@ -388,6 +422,20 @@ public class SwitchScript : MonoBehaviour
         if (collision.CompareTag("Block") && switchType == "floor" && switchEffect == "insert+")
         {
             if (switchData == collision.GetComponent<BlockScript>().id.ToString() && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft > 0)
+            {
+                transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft += 1;
+            }
+        }
+        if (collision.CompareTag("Item") && switchType == "floor" && switchEffect == "insert+")
+        {
+            if (switchData == collision.name && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft > 0)
+            {
+                transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft += 1;
+            }
+        }
+        if (collision.CompareTag("Sign") && switchType == "floor" && switchEffect == "insert+")
+        {
+            if (collision.name.Contains(switchData) && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft > 0)
             {
                 transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft += 1;
             }

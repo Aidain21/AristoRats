@@ -125,6 +125,11 @@ public class DialogueEvents : MonoBehaviour
     }
     public void EndEventTrigger()
     {
+        if (Enumerable.SequenceEqual(dialogueData, new string[] { "Follower", "1", "0" }))
+        {
+            playerScript.dialogueManager.ChangeDialogue(0, false);
+            playerScript.follower = null;
+        }
         if (Enumerable.SequenceEqual(dialogueData, new string[] { "SillyButton", "0", "0" }))
         {
             playerScript.menuManager.OpenMenu();

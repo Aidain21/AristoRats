@@ -21,10 +21,9 @@ public class BlockScript : MonoBehaviour
     // Update is called once per frame
     public IEnumerator Moving(Vector3 goal, float time)
     {
-        
+        moving = true;
         while (new Vector3(transform.position.x, transform.position.y, transform.position.z) != goal)
-        {
-            moving = true;
+        { 
             transform.position = Vector3.MoveTowards(transform.position, goal, time * Time.deltaTime);
             yield return new WaitForEndOfFrame();
         }
@@ -56,15 +55,17 @@ public class BlockScript : MonoBehaviour
         if (type == "push")
         {
             walls = WallChecker();
-            if ((!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right))
+            if (((!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right)) && !moving)
             {
+                player.GetComponent<AudioSource>().PlayOneShot(player.GetComponent<PlayerScript2D>().sfx[0]);
                 StartCoroutine(Moving(transform.position + direction, 2.5f));
             }
             else if (!player.GetComponent<PlayerScript2D>().moving)
             {
                 bool[] pwalls = player.GetComponent<PlayerScript2D>().WallChecker();
-                if ((!pwalls[0] && direction == Vector3.down) || (!pwalls[1] && direction == Vector3.right) || (!pwalls[2] && direction == Vector3.up) || (!pwalls[3] && direction == Vector3.left))
+                if (((!pwalls[0] && direction == Vector3.down) || (!pwalls[1] && direction == Vector3.right) || (!pwalls[2] && direction == Vector3.up) || (!pwalls[3] && direction == Vector3.left)) && !moving)
                 {
+                    player.GetComponent<AudioSource>().PlayOneShot(player.GetComponent<PlayerScript2D>().sfx[0]);
                     StartCoroutine(Moving(transform.position - direction, 2.5f));
                     string temp;
                     if (direction == Vector3.up)
@@ -98,6 +99,7 @@ public class BlockScript : MonoBehaviour
             {
                 if (transform.parent.GetChild(i).name == "PushBlock(Clone)" && transform.parent.GetChild(i).position == transform.position + player.GetComponent<PlayerScript2D>().direction)
                 {
+                    player.GetComponent<AudioSource>().PlayOneShot(player.GetComponent<PlayerScript2D>().sfx[0]);
                     Vector3 temp = transform.parent.GetChild(i).position;
                     transform.parent.GetChild(i).position = transform.position;
                     transform.position = temp;
@@ -107,12 +109,14 @@ public class BlockScript : MonoBehaviour
         }
         else if (type == "control")
         {
+            player.GetComponent<AudioSource>().PlayOneShot(player.GetComponent<PlayerScript2D>().sfx[0]);
             player.GetComponent<PlayerScript2D>().vcam.Follow = gameObject.transform;
             player.GetComponent<PlayerScript2D>().invManager.blockControlText.GetComponent<Canvas>().enabled = true;
             player.GetComponent<PlayerScript2D>().controllingBlock = true;
         }
         else if (type == "shuffle")
         {
+            player.GetComponent<AudioSource>().PlayOneShot(player.GetComponent<PlayerScript2D>().sfx[0]);
             for (int i = 0; i < transform.parent.childCount; i++) 
             {
                 if (transform.parent.GetChild(i).name == "PushBlock(Clone)")

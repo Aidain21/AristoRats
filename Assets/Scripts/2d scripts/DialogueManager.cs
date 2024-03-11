@@ -48,6 +48,10 @@ public class DialogueManager : MonoBehaviour
         sentences.Clear();
         playerScript.inDialogue = true;
         eventScript.dialogueData[0] = name;
+        if (name.Contains("Follower"))
+        {
+            eventScript.dialogueData[0] = "Follower";
+        }
         eventScript.dialogueData[1] = talkCounter.ToString();
         if (!changed)
         {
@@ -206,6 +210,14 @@ public class DialogueManager : MonoBehaviour
         {
             imageFrame.rectTransform.sizeDelta = new Vector2(currentImage.rect.width * (300 / currentImage.rect.height), 300);
             imageFrame.color = playerScript.currentTarget.GetComponent<SpriteRenderer>().color;
+            if (playerScript.currentTarget.name.Contains("Follower") && eventScript.dialogueData[1] == "0")
+            {
+                if (playerScript.follower != null)
+                {
+                    playerScript.follower.GetComponent<SignTextScript>().talkCounter = 0;
+                }
+                playerScript.follower = playerScript.currentTarget;
+            }
         }
         typing = true;
         dialogueText.text = "";

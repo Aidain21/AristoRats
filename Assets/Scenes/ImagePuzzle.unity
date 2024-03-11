@@ -153,6 +153,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2104168442}
+  - {fileID: 1695757210}
   - {fileID: 500709665}
   - {fileID: 2136659765}
   - {fileID: 643717970}
@@ -16110,6 +16111,7 @@ MonoBehaviour:
   mode: Blocks
   pushBlock: {fileID: 4202955538110697831, guid: 1bf0d52168cd6ae4ba2bb3864c8de477, type: 3}
   item: {fileID: 6851348241922633678, guid: 5d2fcd5af2c377247921f38ed8f4ee9d, type: 3}
+  sign: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
   border: {fileID: 3279107124325540570, guid: 675fe3c63d9e5c0408a9fd2cbec50ab7, type: 3}
   floorSwitch: {fileID: 6522425729884833140, guid: 6ce1caa55b9ebce4299cfe6a681c0999, type: 3}
   piecesLeft: 0
@@ -16338,6 +16340,101 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+--- !u!1001 &1695757209
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 44472008}
+    m_Modifications:
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Name
+      value: Missing
+      objectReference: {fileID: 0}
+    - target: {fileID: 2189809167385676290, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[0]
+      value: '0Puzzle Instructions: The instructions for this puzzle have not been
+        written yet. Big sad.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[1]
+      value: '0Puzzle Instructions: If you are stuck, or just want the instructions,
+        leave and re-enter this room.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2579339231595687002, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: dialogue.Array.data[2]
+      value: '0Puzzle Instructions: Push the blocks to where you think they would
+        go in the full image, and if you are correct, the block will insert itself
+        into the ground, so it won''t block other blocks. Once all blocks have been
+        inserted, you will have solved the puzzle!'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3408804264834364506, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6fd332a8b070ce84b8c40f29e67b48de, type: 3}
+    - target: {fileID: 5423466057360024805, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+--- !u!4 &1695757210 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2083099067515372083, guid: 844326ab9bf627549afacea76aeea74e, type: 3}
+  m_PrefabInstance: {fileID: 1695757209}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1807622621 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6400448175617045446, guid: 02f8d91e88082f14cb58dac1f4b5dc73, type: 3}
@@ -16442,46 +16539,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 336816473096895760, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 336816473096895760, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 678503311396303443, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 678503311396303443, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 864847736745909038, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 864847736745909038, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1393524024979223340, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1393524024979223340, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3072609828047421736, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3072609828047421736, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5840144988072972835, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -16493,14 +16550,6 @@ PrefabInstance:
     - target: {fileID: 6997520163577216977, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 8479287165565655870, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8479287165565655870, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8921264606102001946, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
       propertyPath: m_LocalPosition.x
