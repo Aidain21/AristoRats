@@ -87,6 +87,7 @@ public class ImagePuzzleScript : MonoBehaviour
         if (!foundSign)
         {
             instructionSigns.transform.GetChild(1).gameObject.SetActive(true);
+            playerScript.oldPuzzles.Add(mode);
         }
         if (mode.Contains("+"))
         {

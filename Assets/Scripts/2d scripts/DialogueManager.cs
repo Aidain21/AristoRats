@@ -262,7 +262,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (playerScript.currentTarget != null && playerScript.currentTarget.CompareTag("Sign") && talkingToNPC)
         {
-            if (playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite != noMoreText && storedStatus == noMoreText)
+            if (playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite != noMoreText && storedStatus == noMoreText && eventScript.dialogueData[0] != "PuzzleMaker")
             {
                 eventScript.fullyTalkedTo += 1;
             }

@@ -59,7 +59,7 @@ public class InventoryManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "ImagePuzzle")
         {
             locationText.text = "Puzzle";
-            if (playerScript.puzzleType != "Shuffle+")
+            if (playerScript.puzzleType != "Shuffle+" && playerScript.puzzleType != "Swap+" && (playerScript.menuManager.optionSelector.selections[6].x == 0 || playerScript.menuManager.optionSelector.selections[6].x == 1))
             {
                 locationText.text += " - Pieces Left: " + GameObject.Find("Puzzle Box").GetComponent<ImagePuzzleScript>().piecesLeft;
             }

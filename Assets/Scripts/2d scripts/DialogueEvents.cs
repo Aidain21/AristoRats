@@ -56,6 +56,10 @@ public class DialogueEvents : MoveableObject
             if (playerScript.currentTarget != null)
             {
                 playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = Int32.Parse(storedTalks[i][1]);
+                if (talkerStats[i] != playerScript.dialogueManager.noMoreText)
+                {
+                    playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter += 1;
+                }
                 playerScript.currentTarget.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = talkerStats[i];
                 if (talkerStats[i] == playerScript.dialogueManager.noMoreText)
                 {
@@ -314,9 +318,8 @@ public class DialogueEvents : MoveableObject
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleRando", "0", "0" }))
             {
                 UnityEngine.Object[] assets = Resources.LoadAll("Sprites", typeof(Texture2D));
-                string[] puzzleModes = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+", "Swap+", "Items+", "Follow", "Follow+", "Input", "Input+" };
                 SwitchScript rand = GameObject.Find("rand").GetComponent<SwitchScript>();
-                rand.switchData = puzzleModes[UnityEngine.Random.Range(1, puzzleModes.Length)] + " " + UnityEngine.Random.Range(1, 8) + "," + UnityEngine.Random.Range(1, 8);
+                rand.switchData = playerScript.ALL_PUZZLE_MODES[UnityEngine.Random.Range(1, playerScript.ALL_PUZZLE_MODES.Length)] + " " + UnityEngine.Random.Range(1, 8) + "," + UnityEngine.Random.Range(1, 8);
                 rand.puzzleImage = (Texture2D) assets[UnityEngine.Random.Range(1, assets.Length)];
             }
 
@@ -324,11 +327,10 @@ public class DialogueEvents : MoveableObject
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleMaker", "0", "0" }))
             {
                 tempData = GetPlayerText(0);
-                string[] puzzleModes = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+", "Swap+", "Items+", "Follow", "Follow+", "Input", "Input+" };
                 bool success = false;
                 if (tempData != "gQprk73vInHt51GHQNA8rTtilfRaNiNTxjm00IUBFd3yeplTPJ" && tempData.Contains(" "))
                 {
-                    if (puzzleModes.Contains(tempData.Substring(0, tempData.IndexOf(" "))))
+                    if (playerScript.ALL_PUZZLE_MODES.Contains(tempData.Substring(0, tempData.IndexOf(" "))))
                     {
                         if (int.TryParse(tempData.Substring(tempData.IndexOf(" ") + 1, 1), out int x) && tempData.Substring(tempData.IndexOf(" ") + 2, 1) == "," && int.TryParse(tempData.Substring(tempData.IndexOf(" ") + 3, 1), out int y))
                         {

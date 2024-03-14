@@ -116,6 +116,7 @@ public class MoveableObject : MonoBehaviour
 }
 public class PlayerScript2D : MoveableObject
 {
+    public readonly string[] ALL_PUZZLE_MODES = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+", "Swap+", "Items+", "Follow", "Follow+", "Input", "Input+" };
     //if the player is going between tiles
     public bool moving;
     public float spinTimer;
@@ -693,6 +694,20 @@ public class PlayerScript2D : MoveableObject
                 menuManager.CloseStats();
                 menuManager.OpenMenu();
             }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (menuManager.puzzlePanel.activeSelf)
+                {
+                    menuManager.puzzlePanel.SetActive(false);
+                    menuManager.statsPanel.SetActive(true);
+                }
+                else
+                {
+                    menuManager.puzzlePanel.SetActive(true);
+                    menuManager.statsPanel.SetActive(false);
+                }
+                
+            }
         }
         else if (typing)
         {
@@ -889,7 +904,7 @@ public class PlayerScript2D : MoveableObject
                 {
                     target.GetComponent<BlockScript>().Push(direction);
                 }
-                if (target.GetComponent<BlockScript>().id != 0)
+                if (target.GetComponent<BlockScript>().id != 0 && menuManager.optionSelector.selections[6].x == 0)
                 {
                     for(int i = 0; i < target.transform.parent.childCount; i++)
                     {

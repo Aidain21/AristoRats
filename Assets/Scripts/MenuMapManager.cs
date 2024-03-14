@@ -10,16 +10,19 @@ using TMPro;
 public class MenuMapManager : MonoBehaviour
 {
     public Selector menuSelector = new(1,6);
-    public Selector optionSelector = new(new int[] {1,3,5,3,5,5},6);
+    public Selector optionSelector = new(new int[] {1,3,5,3,5,5,3},7);
     public Selector puzzleSelector = new(5,5);
     public List<Image> puzzleImages;
     public string[] menuChoices;
     public Canvas menu;
     public Canvas stats;
+    public GameObject statsPanel;
+    public GameObject puzzlePanel;
     public Canvas input;
     public TMP_InputField typeBox;
     public List<List<object>> collection = new();
     public int trackedSceneNumber = 5;
+    public int totalModesNumber;
     public TMP_Text puzzleText;
     public Canvas options;
     //public Canvas map;
@@ -28,6 +31,7 @@ public class MenuMapManager : MonoBehaviour
     public GameObject optionsTextArray;
     public GameObject puzzleTextArray;
     public GameObject statsTextArray;
+    public GameObject modesTextArray;
     public TMP_Text defOpt;
     public TMP_Text defMenu;
     public TMP_Text defPuzzle;
@@ -38,6 +42,7 @@ public class MenuMapManager : MonoBehaviour
     void Start()
     {
         trackedSceneNumber = 5;
+        totalModesNumber = playerScript.ALL_PUZZLE_MODES.Length;
         Canvas.ForceUpdateCanvases();   
         menuChoices = new string[] { "Continue", "Options", "Progress Stats", "Silly Button", "Respawn", "Quit (Won't Save)" };
         menu.GetComponent<Canvas>().enabled = false;
@@ -60,7 +65,7 @@ public class MenuMapManager : MonoBehaviour
             }
         }
         count = 0;
-        menuChoices = new string[] { "Back", "Hold to Run", "Toggle Between", "Hold to Walk", "Snail", "Slow", "Normal", "Fast", "Cheetah", "Spam Space", "Hold Space", "Disabled", "Very In", "In", "Default", "Out", "Very Out", "0%", "25%", "50%", "75%", "100%" };
+        menuChoices = new string[] { "Back", "Hold to Run", "Toggle Between", "Hold to Walk", "Snail", "Slow", "Normal", "Fast", "Cheetah", "Spam Space", "Hold Space", "Disabled", "Very In", "In", "Default", "Out", "Very Out", "0%", "25%", "50%", "75%", "100%", "Show Location", "Show Pieces Left", "None" };
         for (int i = 0; i < optionSelector.textArray.Length; i++)
         {
             for (int j = 0; j < optionSelector.textArray[i].Length; j++)
@@ -70,7 +75,7 @@ public class MenuMapManager : MonoBehaviour
                 if (j == 0)
                 {
                     text.rectTransform.localPosition = new Vector2(0, -110 * i);
-                    if (i != 4 && i != 2 && i != 5 && i != 3)
+                    if (i != 4 && i != 2 && i != 5 && i != 3 && i != 6)
                     {
                         text.color = Color.yellow;
                     }
@@ -78,7 +83,7 @@ public class MenuMapManager : MonoBehaviour
                 else
                 {
                     text.rectTransform.localPosition = new Vector2(optionSelector.textArray[i][j-1].rectTransform.localPosition.x + optionSelector.textArray[i][j - 1].preferredWidth + 30, -110 * i);
-                    if ((i == 2 && j == 3) || (i == 4 && j == 2) || (i == 5 && j == 2) || (i == 3 && j == 2))
+                    if ((i == 2 && j == 3) || (i == 4 && j == 2) || (i == 5 && j == 2) || (i == 3 && j == 2) || (i == 6 && j == 1))
                     {
                         optionSelector.selections[i] = new Vector2(j,i);
                         text.color = Color.yellow;
@@ -98,6 +103,11 @@ public class MenuMapManager : MonoBehaviour
                 TMP_Text text = Instantiate(defMenu, statsTextArray.transform);
                 text.rectTransform.localPosition = new Vector2(j * 300 - 300, -100 * i + 25);
             }
+        }
+        for (int i = 0; i < totalModesNumber; i++)
+        {
+            TMP_Text text = Instantiate(defMenu, modesTextArray.transform);
+            text.rectTransform.localPosition = new Vector2((i%3) * 300 - 300, -100 * (i/3) + 125);
         }
         MakePuzzleMenu();
         Destroy(defOpt);
@@ -150,7 +160,7 @@ public class MenuMapManager : MonoBehaviour
         for(int i = 0; i < collection.Count; i++)
         {
             foundObjects += (int) collection[i][1] + (int) collection[i][3];
-            totalObjects += (int)collection[i][2] + (int)collection[i][4];
+            totalObjects += (int) collection[i][2] + (int) collection[i][4];
             statsTextArray.transform.GetChild(i*3).GetComponent<TMP_Text>().text = collection[i][0].ToString();
             statsTextArray.transform.GetChild(i*3+1).GetComponent<TMP_Text>().text = collection[i][1].ToString() + "/" + collection[i][2].ToString();
             statsTextArray.transform.GetChild(i*3+2).GetComponent<TMP_Text>().text = collection[i][3].ToString() + "/" + collection[i][4].ToString();
@@ -161,7 +171,21 @@ public class MenuMapManager : MonoBehaviour
             percentage = percentage.Substring(0, percentage.IndexOf(".") + 1) + percentage.Substring(percentage.IndexOf(".") + 1, 2);
         }
         percent.text = "Completion: " + percentage + "%";
+        int curModes = 0;
+        for (int i = 0; i < playerScript.oldPuzzles.Count; i++)
+        {
+            modesTextArray.transform.GetChild(i).GetComponent<TMP_Text>().text = playerScript.oldPuzzles[i];
+            curModes++;
+        }
+        for (int i = curModes; i < totalModesNumber; i++)
+        {
+            modesTextArray.transform.GetChild(i).GetComponent<TMP_Text>().text = "???";
+        }
+
+        statsPanel.SetActive(true);
+        puzzlePanel.SetActive(false);
     }
+
     public void CloseStats()
     {
         playerScript.invManager.UpdateInfo();
