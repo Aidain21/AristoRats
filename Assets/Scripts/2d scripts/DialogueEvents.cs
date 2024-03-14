@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DialogueEvents : MonoBehaviour
+public class DialogueEvents : MoveableObject
 {
     public bool dontAdd;
     public GameObject player;
@@ -18,8 +18,9 @@ public class DialogueEvents : MonoBehaviour
     public int npcsInScene;
     public int collectedNotes;
     public int notesInScene;
-    public Sprite norm;
-
+    public string tempData;
+    public string data2;
+    public Texture2D tempImage;
     public void RunPastEvents()
     {
         bool statsExist = false;
@@ -95,7 +96,7 @@ public class DialogueEvents : MonoBehaviour
         // NPC in test room runs away from you.
         if (Enumerable.SequenceEqual(dialogueData, new string[] { "Testy", "2", "1" }))
         {
-            StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up * 9, 4f));
+            StartCoroutine(GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.up * 9, 4f));
             if (!dontAdd)
             {
                 storedEvents.Add((string[])dialogueData.Clone());
@@ -111,7 +112,7 @@ public class DialogueEvents : MonoBehaviour
         // First guard moves out of the way
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "FirstGuard", "3", "1" }))
         {
-            StartCoroutine(playerScript.GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.down * 3, 1f));
+            StartCoroutine(GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + Vector3.down * 3, 1f));
             if (!dontAdd)
             {
                 storedEvents.Add((string[])dialogueData.Clone());
@@ -125,11 +126,56 @@ public class DialogueEvents : MonoBehaviour
     }
     public void EndEventTrigger()
     {
+        // For Follow puzzle mdoe
         if (Enumerable.SequenceEqual(dialogueData, new string[] { "Follower", "1", "0" }))
         {
             playerScript.dialogueManager.ChangeDialogue(0, false);
             playerScript.follower = null;
         }
+
+        //For input Puzzle mode
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "TypeDude", "0", "0" }))
+        {
+            data2 = GetPlayerText(0);
+            bool success = false;
+            int distance = 0;
+            string[] commands = new string[] { "n", "s", "w", "e", "u", "d", "l", "r", "north", "east", "south", "west", "up", "down", "left", "right" };
+            if (data2 != "gQprk73vInHt51GHQNA8rTtilfRaNiNTxjm00IUBFd3yeplTPJ" && data2.Contains(" "))
+            {
+                if (commands.Contains(data2.Substring(0, data2.IndexOf(" "))))
+                {
+                    if (int.TryParse(data2[(data2.IndexOf(" ") + 1)..], out int x))
+                    {
+                        distance = x;
+                        success = true;
+                    }
+                }
+            }
+            if (success)
+            {
+                string temp = data2.Substring(0, data2.IndexOf(" "));
+                Vector3 dir = temp switch
+                { 
+                    "n" or "u" or "north" or "up" => Vector3.up,
+                    "e" or "r" or "east" or "right" => Vector3.right,
+                    "s" or "d" or "south" or "down" => Vector3.down,
+                    "w" or "l" or "west" or "left" => Vector3.left,
+                    _ => Vector3.zero,
+                };
+                bool[] walls = WallChecker(playerScript.currentTarget);
+                if ((!walls[0] && dir == Vector3.up) || (!walls[1] && dir == Vector3.left) || (!walls[2] && dir == Vector3.down) || (!walls[3] && dir == Vector3.right))
+                {
+                    StartCoroutine(GridMove(playerScript.currentTarget, playerScript.currentTarget.transform.position + dir, 0.25f, "", distance));
+                }
+                playerScript.dialogueManager.ChangeDialogue(0, false);
+                playerScript.currentTarget = null;
+            }
+            else
+            {
+                playerScript.dialogueManager.ChangeDialogue(0, true, dialogueData[2]);
+            }
+        }
+
         if (Enumerable.SequenceEqual(dialogueData, new string[] { "SillyButton", "0", "0" }))
         {
             playerScript.menuManager.OpenMenu();
@@ -166,7 +212,7 @@ public class DialogueEvents : MonoBehaviour
             //Maid Rat 3 (Main floor) Takes Medicine and gives Cheese.
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "MaidRat3", "1", "0" }))
             {
-                if (SelectItem("Medicine", 3, 1))
+                if (SelectItem("Medicine", 3, 1).Item1)
                 {
                     playerScript.invManager.cheese += 5;
                 }
@@ -183,7 +229,7 @@ public class DialogueEvents : MonoBehaviour
             //Maid Rat 4 (2nd floor) Takes Proof and gives Cheese.
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "MaidRat4", "1", "0" }))
             {
-                if (SelectItem("Photo of a Made Bed", 3, 1))
+                if (SelectItem("Photo of a Made Bed", 3, 1).Item1)
                 {
                     playerScript.invManager.cheese += 5;
                 }
@@ -268,15 +314,60 @@ public class DialogueEvents : MonoBehaviour
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleRando", "0", "0" }))
             {
                 UnityEngine.Object[] assets = Resources.LoadAll("Sprites", typeof(Texture2D));
-                string[] puzzleModes = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+", "Swap+" };
+                string[] puzzleModes = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+", "Swap+", "Items+", "Follow", "Follow+", "Input", "Input+" };
                 SwitchScript rand = GameObject.Find("rand").GetComponent<SwitchScript>();
                 rand.switchData = puzzleModes[UnityEngine.Random.Range(1, puzzleModes.Length)] + " " + UnityEngine.Random.Range(1, 8) + "," + UnityEngine.Random.Range(1, 8);
                 rand.puzzleImage = (Texture2D) assets[UnityEngine.Random.Range(1, assets.Length)];
             }
+
+            //Create Puzzle!!!! It took a lot of code ;-;
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleMaker", "0", "0" }))
+            {
+                tempData = GetPlayerText(0);
+                string[] puzzleModes = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+", "Swap+", "Items+", "Follow", "Follow+", "Input", "Input+" };
+                bool success = false;
+                if (tempData != "gQprk73vInHt51GHQNA8rTtilfRaNiNTxjm00IUBFd3yeplTPJ" && tempData.Contains(" "))
+                {
+                    if (puzzleModes.Contains(tempData.Substring(0, tempData.IndexOf(" "))))
+                    {
+                        if (int.TryParse(tempData.Substring(tempData.IndexOf(" ") + 1, 1), out int x) && tempData.Substring(tempData.IndexOf(" ") + 2, 1) == "," && int.TryParse(tempData.Substring(tempData.IndexOf(" ") + 3, 1), out int y))
+                        {
+                            if (x > 0 && x < 8 && y > 0 && y < 8)
+                            {
+                                success = true;
+                            }
+                        }
+                    }
+                }
+                if (success)
+                {
+                    playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = 2;
+                    playerScript.dialogueManager.StartDialogue(playerScript.currentTarget.name, playerScript.currentTarget.GetComponent<SignTextScript>().dialogue, 2, playerScript.currentTarget.GetComponent<SignTextScript>().talkerImage);
+                }
+                else
+                {
+                    playerScript.dialogueManager.ChangeDialogue(0, true, dialogueData[2]);
+                }
+            }
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleMaker", "2", "0" }))
+            {
+                tempImage = SelectItem("", 4, 0, true, true).Item2;
+            }
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleMaker", "0", "1" }) || Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleMaker", "2", "1" }))
+            {
+                playerScript.dialogueManager.ChangeDialogue(0, false);
+            }
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleMaker", "4", "0" }))
+            {
+                SwitchScript make = GameObject.Find("make").GetComponent<SwitchScript>();
+                make.switchData = tempData;
+                make.puzzleImage = tempImage;
+                playerScript.dialogueManager.ChangeDialogue(0, false);
+            }
         }
 
     }
-    public bool SelectItem(string wantedItem, int successDialogueCounter, int failDialogueCounter)
+    public (bool,Texture2D) SelectItem(string wantedItem, int successDialogueCounter, int failDialogueCounter, bool dontRemoveItem = false, bool takeAnyItem = false) 
     {
         if (playerScript.selection == null)
         {
@@ -284,13 +375,27 @@ public class DialogueEvents : MonoBehaviour
             playerScript.selectingItem = true;
             playerScript.invManager.OpenInventory();
         }
-        else if (playerScript.selection.CompareTag("Item") && playerScript.selection.GetComponent<ItemScript>().itemName == wantedItem)
+        else if (playerScript.selection.CompareTag("Item") && (playerScript.selection.GetComponent<ItemScript>().itemName == wantedItem || takeAnyItem))
         {
             playerScript.currentTarget.GetComponent<SignTextScript>().talkCounter = successDialogueCounter;
             playerScript.dialogueManager.StartDialogue(playerScript.currentTarget.name, playerScript.currentTarget.GetComponent<SignTextScript>().dialogue, successDialogueCounter, playerScript.currentTarget.GetComponent<SignTextScript>().talkerImage);
-            playerScript.invManager.inventory.Remove(playerScript.GetItem(wantedItem));
-            playerScript.selection = null;
-            return true;
+            if (!dontRemoveItem)
+            {
+                playerScript.invManager.inventory.Remove(playerScript.GetItem(wantedItem));playerScript.selection = null;
+                playerScript.selection = null;
+                return (true, null);
+            }
+            else
+            {
+                Sprite sprite = playerScript.selection.GetComponent<ItemScript>().itemImage;
+                Texture2D croppedTexture = new((int)sprite.rect.width, (int)sprite.rect.height);
+                croppedTexture.SetPixels32(sprite.texture.GetPixels32());
+                croppedTexture.Apply();
+                playerScript.selection = null;
+                return (true, croppedTexture);
+            }
+            
+            
         }
         else if (playerScript.selection.CompareTag("Item") && playerScript.selection.GetComponent<ItemScript>().itemName != wantedItem)
         {
@@ -303,6 +408,23 @@ public class DialogueEvents : MonoBehaviour
             playerScript.selection = null;
             playerScript.dialogueManager.ChangeDialogue(failDialogueCounter, true, dialogueData[2]);
         }
-        return false;
+        return (false, null);
+    }
+
+    public string GetPlayerText(int failDialogueCounter)
+    {
+        if (playerScript.input == "gQprk73vInHt51GHQNA8rTtilfRaNiNTxjm00IUBFd3yeplTPJ")
+        {
+            playerScript.dialogueManager.ChangeDialogue(failDialogueCounter, false);
+            playerScript.menuManager.OpenInput();
+        }
+        else
+        {
+            string temp = playerScript.input;
+            playerScript.input = "gQprk73vInHt51GHQNA8rTtilfRaNiNTxjm00IUBFd3yeplTPJ";
+            return temp;
+        }
+        return "";
     }
 }
+

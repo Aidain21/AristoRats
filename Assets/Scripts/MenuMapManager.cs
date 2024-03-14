@@ -16,6 +16,8 @@ public class MenuMapManager : MonoBehaviour
     public string[] menuChoices;
     public Canvas menu;
     public Canvas stats;
+    public Canvas input;
+    public TMP_InputField typeBox;
     public List<List<object>> collection = new();
     public int trackedSceneNumber = 5;
     public TMP_Text puzzleText;
@@ -42,6 +44,8 @@ public class MenuMapManager : MonoBehaviour
         stats.GetComponent<Canvas>().enabled = false;
         options.GetComponent<Canvas>().enabled = false;
         puzzle.GetComponent<Canvas>().enabled = false;
+        input.GetComponent<Canvas>().enabled = false;
+        typeBox.DeactivateInputField(true);
         int count = 0;
         for (int i = 0; i < menuSelector.textArray.Length; i++)
         {
@@ -111,6 +115,22 @@ public class MenuMapManager : MonoBehaviour
         playerScript.invManager.UpdateInfo();
         menu.GetComponent<Canvas>().enabled = false;    
         playerScript.inMenu = false;
+    }
+    public void OpenInput()
+    {
+        input.GetComponent<Canvas>().enabled = true;
+        playerScript.eventSystem.gameObject.SetActive(true);
+        typeBox.enabled = true;
+        typeBox.text = "";
+        typeBox.ActivateInputField();
+        playerScript.typing = true;
+    }
+    public void CloseInput()
+    {
+        playerScript.invManager.UpdateInfo();
+        typeBox.enabled = false;
+        playerScript.eventSystem.gameObject.SetActive(false);
+        input.GetComponent<Canvas>().enabled = false;
     }
 
     public void OpenStats()

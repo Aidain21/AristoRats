@@ -52,6 +52,10 @@ public class DialogueManager : MonoBehaviour
         {
             eventScript.dialogueData[0] = "Follower";
         }
+        if (name.Contains("TypeDude"))
+        {
+            eventScript.dialogueData[0] = "TypeDude";
+        }
         eventScript.dialogueData[1] = talkCounter.ToString();
         if (!changed)
         {

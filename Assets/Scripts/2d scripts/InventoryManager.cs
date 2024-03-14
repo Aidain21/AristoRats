@@ -59,6 +59,10 @@ public class InventoryManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "ImagePuzzle")
         {
             locationText.text = "Puzzle";
+            if (playerScript.puzzleType != "Shuffle+")
+            {
+                locationText.text += " - Pieces Left: " + GameObject.Find("Puzzle Box").GetComponent<ImagePuzzleScript>().piecesLeft;
+            }
         }
         progressText.text = "Friends: " + playerScript.dialogueManager.eventScript.fullyTalkedTo + "/" + playerScript.dialogueManager.eventScript.npcsInScene + "\nNotes: " + playerScript.dialogueManager.eventScript.collectedNotes + "/" + playerScript.dialogueManager.eventScript.notesInScene;
     }

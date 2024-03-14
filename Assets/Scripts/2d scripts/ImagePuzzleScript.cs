@@ -18,19 +18,24 @@ public class ImagePuzzleScript : MonoBehaviour
     public Texture2D fullImage;
     public GameObject instructionSigns;
     public PlayerScript2D playerScript;
+    public bool puzzleAlreadyEnded;
 
     public void EndPuzzle()
     {
-        piecesLeft = -1;
-        playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
-        playerScript.finishedPuzzle = true;
-        playerScript.invManager.cheese += reward;
-        if (playerScript.inInventory)
+        if (!puzzleAlreadyEnded)
         {
-            playerScript.invManager.CloseInventory();
+            piecesLeft = -1;
+            playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
+            playerScript.finishedPuzzle = true;
+            playerScript.invManager.cheese += reward;
+            if (playerScript.inInventory)
+            {
+                playerScript.invManager.CloseInventory();
+            }
+            string[] temp = new string[] { "0You:Solved the puzzle, and got " + reward + " cheese!" };
+            playerScript.dialogueManager.StartDialogue("Player", temp, 0, playerScript.GetComponent<SpriteRenderer>().sprite);
+            puzzleAlreadyEnded = true;
         }
-        string[] temp = new string[] { "0You:Solved the puzzle, and got " + reward + " cheese!" };
-        playerScript.dialogueManager.StartDialogue("Player", temp, 0, playerScript.GetComponent<SpriteRenderer>().sprite);
     }
     public void PuzzleSetUp()
     {
@@ -170,6 +175,18 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<SignTextScript>().dialogue = temp;
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
+                    Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
+                }
+                break;
+            case "Input":
+                for (int i = 0; i < width * height; i++)
+                {
+                    GameObject piece = Instantiate(sign, transform);
+                    piece.name = "TypeDude " + norm[i].ToString();
+                    string[] temp = new string[] { "0Puzzle Piece: Tell me where to go." , "0Puzzle Piece: Not proper syntax." };
+                    piece.GetComponent<SignTextScript>().dialogue = temp;
+                    piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
+                    piece.GetComponent<Transform>().localPosition = new Vector3(i % width, i / width - height, 0.5f);
                     Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
                 }
                 break;
