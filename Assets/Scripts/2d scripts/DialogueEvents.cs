@@ -125,6 +125,11 @@ public class DialogueEvents : MonoBehaviour
     }
     public void EndEventTrigger()
     {
+        if (Enumerable.SequenceEqual(dialogueData, new string[] { "WizardRat", "1", "0" }))
+            {
+                SelectItem("TutorialKey", 3, 1);
+              
+            }
         if (Enumerable.SequenceEqual(dialogueData, new string[] { "SillyButton", "0", "0" }))
         {
             playerScript.menuManager.OpenMenu();
@@ -193,11 +198,7 @@ public class DialogueEvents : MonoBehaviour
                 }
             }
             //Wizard Rat (Tutorial) Spawns key
-            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "WizardRat", "1", "0" }))
-            {
-                SelectItem("TutorialKey", 3, 1);
-              
-            }
+           
         }
         else if (SceneManager.GetActiveScene().name == "Forest")
         {
