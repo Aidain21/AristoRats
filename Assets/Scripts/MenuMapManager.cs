@@ -151,7 +151,7 @@ public class MenuMapManager : MonoBehaviour
         {
             if (collection[i][0].ToString() == SceneManager.GetActiveScene().name)
             {
-                playerScript.menuManager.collection[i] = new List<object> { SceneManager.GetActiveScene().name, playerScript.dialogueManager.eventScript.fullyTalkedTo, playerScript.dialogueManager.eventScript.npcsInScene, playerScript.dialogueManager.eventScript.collectedNotes, playerScript.dialogueManager.eventScript.notesInScene };
+                collection[i] = new List<object> { SceneManager.GetActiveScene().name, playerScript.dialogueManager.eventScript.fullyTalkedTo, playerScript.dialogueManager.eventScript.npcsInScene, playerScript.dialogueManager.eventScript.collectedNotes, playerScript.dialogueManager.eventScript.notesInScene };
                 break;
             }
         }

@@ -126,6 +126,7 @@ public class PlayerScript2D : MoveableObject
     //Closer to 0, the faster the move speed (default 0.3)
     public bool sameDir;
     public Vector3 prevDir;
+    public bool running;
     public float timeBetweenTiles;
     public float swapy;
     //made so the player can turn in spot without moving
@@ -294,12 +295,15 @@ public class PlayerScript2D : MoveableObject
             }
             if (Input.GetKey(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] != new Vector2(1, 1))
             {
+
                 if (menuManager.optionSelector.selections[1] == new Vector2(0, 1))
                 {
+                    running = true;
                     timeBetweenTiles = 0.15f;
                 }
                 else if (menuManager.optionSelector.selections[1] == new Vector2(2, 1))
                 {
+                    running = false;
                     timeBetweenTiles = 0.3f;
                 }
             }
@@ -307,15 +311,18 @@ public class PlayerScript2D : MoveableObject
             {
                 if (menuManager.optionSelector.selections[1] == new Vector2(0, 1))
                 {
+                    running = false;
                     timeBetweenTiles = 0.3f;
                 }
                 else if (menuManager.optionSelector.selections[1] == new Vector2(2, 1))
                 {
+                    running = true;
                     timeBetweenTiles = 0.15f;
                 }
             }
             if (Input.GetKeyDown(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] == new Vector2(1, 1))
             {
+                running = !running;
                 float temp = swapy;
                 swapy = timeBetweenTiles;
                 timeBetweenTiles = temp;
@@ -922,7 +929,7 @@ public class PlayerScript2D : MoveableObject
                     }
                 }
                 break;
-            case "OnOff":
+            case "Switch":
                 target.GetComponent<SwitchScript>().UseSwitch();
                 break;
             case "Item":

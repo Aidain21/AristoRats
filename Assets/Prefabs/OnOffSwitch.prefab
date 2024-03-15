@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8190527861168986493}
   m_Layer: 0
   m_Name: OnOffSwitch
-  m_TagString: OnOff
+  m_TagString: Switch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -145,6 +145,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   switchType: onoff
   switchEffect: onoff
+  switchData: 
+  warpEnd: {fileID: 0}
   onValue: 0
+  playerOnSpike: 0
+  puzzleImage: {fileID: 0}
   affectedObjects:
   - {fileID: 0}

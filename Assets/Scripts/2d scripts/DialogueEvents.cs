@@ -276,7 +276,19 @@ public class DialogueEvents : MoveableObject
             // ???
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "VerySecret", "0", "6" }))
             {
+                GameObject.Find("LevelObjects").transform.Find("???").gameObject.SetActive(true);
                 Destroy(playerScript.currentTarget);
+            }
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Invader", "1", "0" }))
+            {
+                SelectItem("???", 3, 1);
+            }
+            else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Invader", "1", "2" }))
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                SceneManager.LoadScene("TitleScreen");
+                Destroy(playerScript.gameObject);
             }
 
             // Funny Stuff start

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
+using UnityEngine.UI;
 
 public class SwitchScript : MonoBehaviour
 {
@@ -17,7 +19,25 @@ public class SwitchScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (switchType == "pressurePlate++")
+        if (switchEffect == "barrier")
+        {
+            transform.GetChild(0).localScale = new Vector3(1/transform.localScale.x, 1 / transform.localScale.y);
+            affectedObjects[0] = GameObject.Find("Player");
+            if (switchData[0] == 'T')
+            {
+                GetComponent<SpriteRenderer>().color = new Color32(250, 170, 0, 255);
+            }
+            if (switchData[1] == 'F')
+            {
+                transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Rat");
+            }
+            else
+            {
+                transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/NotePaper");
+            }
+            transform.GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = switchData[2..];
+        }
+        if (switchType == "pressurePlate++" || switchType == "physical++")
         {
             for (int i = 0; i < GameObject.Find("Player").transform.childCount; i++)
             {
@@ -45,6 +65,18 @@ public class SwitchScript : MonoBehaviour
         if (switchEffect == "spike" && playerOnSpike)
         {
             UseSwitch();
+        }
+        if (switchEffect == "speed" && playerOnSpike)
+        {
+            if (affectedObjects[0].GetComponent<PlayerScript2D>().running)
+            {
+                affectedObjects[0].GetComponent<PlayerScript2D>().timeBetweenTiles = 0.05f;
+            }
+            else
+            {
+                affectedObjects[0].GetComponent<PlayerScript2D>().timeBetweenTiles = 0.1f;
+            }
+            
         }
         if (switchEffect == "shift" && playerOnSpike && affectedObjects[0] != null && !affectedObjects[0].GetComponent<PlayerScript2D>().moving)
         {
@@ -75,7 +107,10 @@ public class SwitchScript : MonoBehaviour
                 case "insert": //for puzzles
                     if (item.CompareTag("Block"))
                     {
-                        transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                        if (GameObject.Find("Puzzle Box") != null)
+                        {
+                            transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                        }
                         GameObject.Find("Player").GetComponent<PlayerScript2D>().invManager.UpdateInfo();
                         Destroy(item.GetComponent<BoxCollider2D>());
                         Destroy(item.transform.GetChild(0).gameObject);
@@ -332,6 +367,60 @@ public class SwitchScript : MonoBehaviour
                         StartCoroutine(item.GetComponent<PlayerScript2D>().GridMove(item, item.transform.position - -transform.up, 0.5f));
                     }
                     break;
+                case "barrier":
+                    item.GetComponent<PlayerScript2D>().menuManager.OpenStats();
+                    item.GetComponent<PlayerScript2D>().menuManager.CloseStats();
+                    int required = Int32.Parse(switchData[2..]);
+                    int has = 0;
+                    string[] info = { SceneManager.GetActiveScene().name, "" };
+                    if (switchData[0] == 'S')
+                    {
+                        if (switchData[1] == 'F')
+                        {
+                            info[1] = "friends";
+                            has = item.GetComponent<PlayerScript2D>().dialogueManager.eventScript.fullyTalkedTo;
+                            
+                        }
+                        else if (switchData[1] == 'N')
+                        {
+                            info[1] = "notes";
+                            has = item.GetComponent<PlayerScript2D>().dialogueManager.eventScript.collectedNotes;
+                        }
+                    }
+                    else if (switchData[0] == 'T')
+                    {
+                        info[0] = "total";
+                        if (switchData[1] == 'F')
+                        {
+                            //totl
+                            info[1] = "friends";
+                            for (int i = 0; i < item.GetComponent<PlayerScript2D>().menuManager.collection.Count; i++)
+                            {
+                                has += (int)item.GetComponent<PlayerScript2D>().menuManager.collection[i][1];
+                            }
+                        }
+                        else if (switchData[1] == 'N')
+                        {
+                            info[1] = "notes";
+                            for (int i = 0; i < item.GetComponent<PlayerScript2D>().menuManager.collection.Count; i++)
+                            {
+                                has += (int)item.GetComponent<PlayerScript2D>().menuManager.collection[i][3];
+                            }
+                        }
+                    }
+
+                    if (has >= required)
+                    {
+                        transform.parent = affectedObjects[0].GetComponent<PlayerScript2D>().transform;
+                        gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        string[] temp = new string[] { "0You:I need " + required + " " + info[1] + " in " + info[0] + " to get rid of this barrier." };
+                        item.GetComponent<PlayerScript2D>().dialogueManager.StartDialogue("Player", temp, 0, item.GetComponent<SpriteRenderer>().sprite);
+                    }
+                    break;
+
             }
         }
         //what happens to the switch
@@ -399,12 +488,7 @@ public class SwitchScript : MonoBehaviour
             {
                 affectedObjects[0] = collision.gameObject;
             }
-            if (switchEffect == "spike")
-            {
-                affectedObjects[0] = collision.gameObject;
-                playerOnSpike = true;
-            }
-            if (switchEffect == "shift")
+            if (switchEffect == "spike" || switchEffect == "shift" || switchEffect == "speed")
             {
                 affectedObjects[0] = collision.gameObject;
                 playerOnSpike = true;
@@ -423,15 +507,22 @@ public class SwitchScript : MonoBehaviour
     {
         if (collision.CompareTag("Player") && switchType == "pressurePlate")
         {
-            if (switchEffect == "spike")
+            if (switchEffect == "spike" || switchEffect == "shift" || switchEffect == "speed")
             {
                 affectedObjects[0] = collision.gameObject;
                 playerOnSpike = false;
+                
             }
-            if (switchEffect == "shift")
+            if (switchEffect == "speed")
             {
-                affectedObjects[0] = collision.gameObject;
-                playerOnSpike = false;
+                if (affectedObjects[0].GetComponent<PlayerScript2D>().running)
+                {
+                    affectedObjects[0].GetComponent<PlayerScript2D>().timeBetweenTiles = 0.15f;
+                }
+                else
+                {
+                    affectedObjects[0].GetComponent<PlayerScript2D>().timeBetweenTiles = 0.3f;
+                }
             }
         }
         if (collision.CompareTag("Block") && switchType == "floor" && switchEffect == "insert+")
