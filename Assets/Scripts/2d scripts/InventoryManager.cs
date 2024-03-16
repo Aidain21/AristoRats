@@ -64,7 +64,7 @@ public class InventoryManager : MonoBehaviour
                 locationText.text += " - Pieces Left: " + GameObject.Find("Puzzle Box").GetComponent<ImagePuzzleScript>().piecesLeft;
             }
         }
-        progressText.text = "Friends: " + playerScript.dialogueManager.eventScript.fullyTalkedTo + "/" + playerScript.dialogueManager.eventScript.npcsInScene + "\nNotes: " + playerScript.dialogueManager.eventScript.collectedNotes + "/" + playerScript.dialogueManager.eventScript.notesInScene;
+        progressText.text = "Friends: " + playerScript.dialogueManager.eventScript.fullyTalkedTo + "/" + playerScript.dialogueManager.eventScript.npcsInScene + "\nNotes: " + playerScript.dialogueManager.eventScript.collectedNotes + "/" + playerScript.dialogueManager.eventScript.notesInScene + "\nPuzzles: " + playerScript.dialogueManager.eventScript.completedPuzzlesInScene + "/" + playerScript.dialogueManager.eventScript.puzzlesInScene;
     }
     public void OpenInventory()
     {
