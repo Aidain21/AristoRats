@@ -96,12 +96,12 @@ public class MenuMapManager : MonoBehaviour
                 
             }
         }
-        for (int i = 0; i < trackedSceneNumber; i++)
+        for (int i = 0; i < trackedSceneNumber + 1; i++)
         {
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < 4; j++)
             {
                 TMP_Text text = Instantiate(defMenu, statsTextArray.transform);
-                text.rectTransform.localPosition = new Vector2(j * 300 - 300, -100 * i + 25);
+                text.rectTransform.localPosition = new Vector2(j * 300 - 450, -85 * i + 25);
             }
         }
         for (int i = 0; i < totalModesNumber; i++)
@@ -151,21 +151,34 @@ public class MenuMapManager : MonoBehaviour
         {
             if (collection[i][0].ToString() == SceneManager.GetActiveScene().name)
             {
-                collection[i] = new List<object> { SceneManager.GetActiveScene().name, playerScript.dialogueManager.eventScript.fullyTalkedTo, playerScript.dialogueManager.eventScript.npcsInScene, playerScript.dialogueManager.eventScript.collectedNotes, playerScript.dialogueManager.eventScript.notesInScene };
+                collection[i] = new List<object> { SceneManager.GetActiveScene().name, playerScript.dialogueManager.eventScript.fullyTalkedTo, playerScript.dialogueManager.eventScript.npcsInScene, playerScript.dialogueManager.eventScript.collectedNotes, playerScript.dialogueManager.eventScript.notesInScene, playerScript.dialogueManager.eventScript.completedPuzzlesInScene, playerScript.dialogueManager.eventScript.puzzlesInScene };
                 break;
             }
         }
-        int foundObjects = 0;
-        int totalObjects = 0;
-        for(int i = 0; i < collection.Count; i++)
+        int foundFriends = 0;
+        int totalFriends = 0;
+        int foundNotes = 0;
+        int totalNotes = 0;
+        int foundPuzzles = 0;
+        int totalPuzzles = 0;
+        for (int i = 0; i < collection.Count; i++)
         {
-            foundObjects += (int) collection[i][1] + (int) collection[i][3];
-            totalObjects += (int) collection[i][2] + (int) collection[i][4];
-            statsTextArray.transform.GetChild(i*3).GetComponent<TMP_Text>().text = collection[i][0].ToString();
-            statsTextArray.transform.GetChild(i*3+1).GetComponent<TMP_Text>().text = collection[i][1].ToString() + "/" + collection[i][2].ToString();
-            statsTextArray.transform.GetChild(i*3+2).GetComponent<TMP_Text>().text = collection[i][3].ToString() + "/" + collection[i][4].ToString();
+            foundFriends += (int)collection[i][1];
+            totalFriends += (int)collection[i][2];
+            foundNotes += (int)collection[i][3];
+            totalNotes += (int)collection[i][4];
+            foundPuzzles += (int)collection[i][5];
+            totalPuzzles += (int)collection[i][6];
+            statsTextArray.transform.GetChild(i*4).GetComponent<TMP_Text>().text = collection[i][0].ToString();
+            statsTextArray.transform.GetChild(i*4+1).GetComponent<TMP_Text>().text = collection[i][1].ToString() + "/" + collection[i][2].ToString();
+            statsTextArray.transform.GetChild(i*4+2).GetComponent<TMP_Text>().text = collection[i][3].ToString() + "/" + collection[i][4].ToString();
+            statsTextArray.transform.GetChild(i*4+3).GetComponent<TMP_Text>().text = collection[i][5].ToString() + "/" + collection[i][6].ToString();
         }
-        string percentage = ((float)foundObjects / totalObjects * 100).ToString();
+        statsTextArray.transform.GetChild(statsTextArray.transform.childCount - 4).GetComponent<TMP_Text>().text = "Total";
+        statsTextArray.transform.GetChild(statsTextArray.transform.childCount - 3).GetComponent<TMP_Text>().text = foundFriends + "/" + totalFriends;
+        statsTextArray.transform.GetChild(statsTextArray.transform.childCount - 2).GetComponent<TMP_Text>().text = foundNotes + "/" + totalNotes;
+        statsTextArray.transform.GetChild(statsTextArray.transform.childCount - 1).GetComponent<TMP_Text>().text = foundPuzzles + "/" + totalPuzzles;
+        string percentage = ((float)(foundPuzzles+ foundFriends + foundNotes) / (totalPuzzles + totalNotes + totalFriends) * 100).ToString();
         if (percentage.Contains(".") && percentage[(percentage.IndexOf(".") + 1)..].Length > 2)
         {
             percentage = percentage.Substring(0, percentage.IndexOf(".") + 1) + percentage.Substring(percentage.IndexOf(".") + 1, 2);

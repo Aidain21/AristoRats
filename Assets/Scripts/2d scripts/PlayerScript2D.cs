@@ -10,6 +10,10 @@ public class MoveableObject : MonoBehaviour
 {
     public bool[] WallChecker(GameObject obj)
     {
+        if (obj.name == "Player" && obj.GetComponent<PlayerScript2D>().ignoreWalls)
+        {
+            return new bool[] { false, false, false, false };
+        }
         RaycastHit2D hitData = Physics2D.Raycast(obj.transform.position + Vector3.up * 0.51f, Vector2.up, 0.5f);
         bool up = hitData.collider != null;
         hitData = Physics2D.Raycast(obj.transform.position + Vector3.left * 0.51f, Vector2.left, 0.5f);
@@ -79,18 +83,16 @@ public class MoveableObject : MonoBehaviour
                 mover.GetComponent<PlayerScript2D>().follower = null;
             }
         }
-        if (mover.name.Contains("TypeDude"))
+        
+        if (moveTimes > 1)
         {
-            if (moveTimes > 1)
+            bool[] walls = WallChecker(mover);
+            if ((!walls[0] && dir == Vector3.up) || (!walls[1] && dir == Vector3.left) || (!walls[2] && dir == Vector3.down) || (!walls[3] && dir == Vector3.right))
             {
-                bool[] walls = WallChecker(mover);
-                if ((!walls[0] && dir == Vector3.up) || (!walls[1] && dir == Vector3.left) || (!walls[2] && dir == Vector3.down) || (!walls[3] && dir == Vector3.right))
-                {
-                    StartCoroutine(GridMove(mover, mover.transform.position + dir, 0.25f, "", moveTimes - 1));
-                }
+                StartCoroutine(GridMove(mover, mover.transform.position + dir, 0.25f, "", moveTimes - 1));
             }
-
         }
+
         if (mover.CompareTag("Block"))
         {
             mover.GetComponent<BlockScript>().moving = false;
@@ -133,6 +135,7 @@ public class PlayerScript2D : MoveableObject
     public float holdTimer;
     //current walls next to player
     public bool[] wallTouchList;
+    public bool ignoreWalls;
     //lets the player start dialogue
     public DialogueManager dialogueManager;
     public InventoryManager invManager;
@@ -701,6 +704,10 @@ public class PlayerScript2D : MoveableObject
                 menuManager.CloseStats();
                 menuManager.OpenMenu();
             }
+            if (Input.GetKeyDown(KeyCode.Equals) && menuManager.puzzlePanel.activeSelf)
+            {
+                ignoreWalls = !ignoreWalls;
+            }
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (menuManager.puzzlePanel.activeSelf)
@@ -1062,8 +1069,6 @@ public class PlayerScript2D : MoveableObject
         {
             isLoading = false;
             SwitchSong(sceneName);
-            dialogueManager.eventScript.RunPastEvents();
-            invManager.UpdateInfo();
             if (finishedPuzzle)
             {
                 if (puzzleName != "rand" && puzzleName != "make")
@@ -1072,6 +1077,8 @@ public class PlayerScript2D : MoveableObject
                 }
                 finishedPuzzle = false;
             }
+            dialogueManager.eventScript.RunPastEvents();
+            invManager.UpdateInfo();
             foreach (string puz in completedPuzzles)
             {
                 GameObject puzzle = GameObject.Find(puz);

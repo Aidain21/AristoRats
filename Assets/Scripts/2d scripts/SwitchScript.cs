@@ -31,9 +31,13 @@ public class SwitchScript : MonoBehaviour
             {
                 transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Rat");
             }
-            else
+            else if (switchData[1] == 'N')
             {
                 transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/NotePaper");
+            }
+            else
+            {
+                transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = Resources.Load<Sprite>("Sprites/Normal");
             }
             transform.GetChild(0).GetChild(1).GetComponent<TMP_Text>().text = switchData[2..];
         }
@@ -372,19 +376,27 @@ public class SwitchScript : MonoBehaviour
                     item.GetComponent<PlayerScript2D>().menuManager.CloseStats();
                     int required = Int32.Parse(switchData[2..]);
                     int has = 0;
-                    string[] info = { SceneManager.GetActiveScene().name, "" };
+                    string[] info = { SceneManager.GetActiveScene().name, "" , ""};
                     if (switchData[0] == 'S')
                     {
                         if (switchData[1] == 'F')
                         {
-                            info[1] = "friends";
+                            info[1] = "make";
+                            info[2] = "friends";
                             has = item.GetComponent<PlayerScript2D>().dialogueManager.eventScript.fullyTalkedTo;
-                            
+
                         }
                         else if (switchData[1] == 'N')
                         {
-                            info[1] = "notes";
+                            info[1] = "find";
+                            info[2] = "notes";
                             has = item.GetComponent<PlayerScript2D>().dialogueManager.eventScript.collectedNotes;
+                        }
+                        else if (switchData[1] == 'P')
+                        {
+                            info[1] = "solve";
+                            info[2] = "puzzles";
+                            has = item.GetComponent<PlayerScript2D>().dialogueManager.eventScript.completedPuzzlesInScene;
                         }
                     }
                     else if (switchData[0] == 'T')
@@ -392,8 +404,8 @@ public class SwitchScript : MonoBehaviour
                         info[0] = "total";
                         if (switchData[1] == 'F')
                         {
-                            //totl
-                            info[1] = "friends";
+                            info[1] = "make";
+                            info[2] = "friends";
                             for (int i = 0; i < item.GetComponent<PlayerScript2D>().menuManager.collection.Count; i++)
                             {
                                 has += (int)item.GetComponent<PlayerScript2D>().menuManager.collection[i][1];
@@ -401,14 +413,23 @@ public class SwitchScript : MonoBehaviour
                         }
                         else if (switchData[1] == 'N')
                         {
-                            info[1] = "notes";
+                            info[1] = "find";
+                            info[2] = "notes";
                             for (int i = 0; i < item.GetComponent<PlayerScript2D>().menuManager.collection.Count; i++)
                             {
                                 has += (int)item.GetComponent<PlayerScript2D>().menuManager.collection[i][3];
                             }
                         }
+                        else if (switchData[1] == 'P')
+                        {
+                            info[1] = "solve";
+                            info[2] = "puzzles";
+                            for (int i = 0; i < item.GetComponent<PlayerScript2D>().menuManager.collection.Count; i++)
+                            {
+                                has += (int)item.GetComponent<PlayerScript2D>().menuManager.collection[i][5];
+                            }
+                        }
                     }
-
                     if (has >= required)
                     {
                         transform.parent = affectedObjects[0].GetComponent<PlayerScript2D>().transform;
@@ -416,7 +437,7 @@ public class SwitchScript : MonoBehaviour
                     }
                     else
                     {
-                        string[] temp = new string[] { "0You:I need " + required + " " + info[1] + " in " + info[0] + " to get rid of this barrier." };
+                        string[] temp = new string[] { "0You:I need to " + info[1] + " " + required + " " + info[2] + " in " + info[0] + " to get rid of this barrier." };
                         item.GetComponent<PlayerScript2D>().dialogueManager.StartDialogue("Player", temp, 0, item.GetComponent<SpriteRenderer>().sprite);
                     }
                     break;

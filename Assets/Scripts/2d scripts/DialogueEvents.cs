@@ -18,24 +18,27 @@ public class DialogueEvents : MoveableObject
     public int npcsInScene;
     public int collectedNotes;
     public int notesInScene;
+    public int completedPuzzlesInScene;
+    public int puzzlesInScene;
     public string tempData;
     public string data2;
     public Texture2D tempImage;
     public void RunPastEvents()
     {
+        
         bool statsExist = false;
         for (int i = 0; i < playerScript.menuManager.collection.Count; i++)
         {
             if (playerScript.menuManager.collection[i][0].ToString() == playerScript.oldScene)
             {
-                playerScript.menuManager.collection[i] = new List<object> { playerScript.oldScene, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene };
+                playerScript.menuManager.collection[i] = new List<object> { playerScript.oldScene, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene, completedPuzzlesInScene, puzzlesInScene };
                 statsExist = true;
                 break;
             }
         }
         if (!statsExist && playerScript.oldScene != "ImagePuzzle")
         {
-            playerScript.menuManager.collection.Add(new List<object> { playerScript.oldScene, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene });
+            playerScript.menuManager.collection.Add(new List<object> { playerScript.oldScene, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene, completedPuzzlesInScene, puzzlesInScene });
         }
         
         fullyTalkedTo = 0;
@@ -69,12 +72,22 @@ public class DialogueEvents : MoveableObject
         }
         npcsInScene = GameObject.FindGameObjectsWithTag("Sign").Length;
         collectedNotes = 0;
+        completedPuzzlesInScene = 0;
         notesInScene = GameObject.FindGameObjectsWithTag("Note").Length;
+        puzzlesInScene = GameObject.FindGameObjectsWithTag("Puzzle").Length;
         foreach (NoteScript note in playerScript.journalManager.notes)
         {
             if (note.scene == SceneManager.GetActiveScene().name)
             {
                 collectedNotes += 1;
+            }
+        }
+        foreach (string puz in playerScript.completedPuzzles)
+        {
+            GameObject puzzle = GameObject.Find(puz);
+            if (puzzle != null)
+            {
+                completedPuzzlesInScene += 1;
             }
         }
         dontAdd = false;
@@ -85,14 +98,14 @@ public class DialogueEvents : MoveableObject
         {
             if (playerScript.menuManager.collection[i][0].ToString() == SceneManager.GetActiveScene().name)
             {
-                playerScript.menuManager.collection[i] = new List<object> { SceneManager.GetActiveScene().name, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene };
+                playerScript.menuManager.collection[i] = new List<object> { SceneManager.GetActiveScene().name, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene, completedPuzzlesInScene, puzzlesInScene };
                 newStatsExist = true;
                 break;
             }
         }
         if (!newStatsExist && SceneManager.GetActiveScene().name != "ImagePuzzle")
         {
-            playerScript.menuManager.collection.Add(new List<object> { SceneManager.GetActiveScene().name, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene });
+            playerScript.menuManager.collection.Add(new List<object> { SceneManager.GetActiveScene().name, fullyTalkedTo, npcsInScene, collectedNotes, notesInScene, completedPuzzlesInScene, puzzlesInScene });
         }
     }
     public void EventTrigger() //use:   else if (Enumerable.SequenceEqual(dialogueData, new string[] { "NPC Object's name", "Talk Counter", "Current Line" }))
@@ -126,6 +139,14 @@ public class DialogueEvents : MoveableObject
         else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "1", "0" }) || Enumerable.SequenceEqual(dialogueData, new string[] { "TreeGuy", "1", "2" }))
         {
             playerScript.GetComponent<AudioSource>().PlayOneShot(playerScript.sfx[1]);
+        }
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Arrow", "0", "0" }))
+        {
+            bool[] walls = WallChecker(playerScript.gameObject);
+            if (!walls[0])
+            {
+                StartCoroutine(GridMove(playerScript.gameObject, playerScript.transform.position + Vector3.up, 0.25f, "Up", 10));
+            }
         }
     }
     public void EndEventTrigger()
