@@ -23,6 +23,7 @@ public class InventoryManager : MonoBehaviour
     public GameObject TextArray;
     public TMP_Text def;
     public Image def2;
+    public int lastPieceCount;
 
     // Start is called before the first frame update
     void Start()
@@ -52,16 +53,20 @@ public class InventoryManager : MonoBehaviour
         Destroy(def2);
     }
 
-    public void UpdateInfo()
+    public void UpdateInfo(int pieces = -2)
     {
         itemsText.text = "Cheese: " + cheese + "\nInventory: " + inventory.Count + "/15";
         locationText.text = SceneManager.GetActiveScene().name + " - " + playerScript.roomName;
         if (SceneManager.GetActiveScene().name == "ImagePuzzle")
         {
+            if (pieces != -2)
+            {
+                lastPieceCount = pieces;
+            }
             locationText.text = "Puzzle";
             if (playerScript.puzzleType != "Shuffle+" && playerScript.puzzleType != "Swap+" && (playerScript.menuManager.optionSelector.selections[6].x == 0 || playerScript.menuManager.optionSelector.selections[6].x == 1))
             {
-                locationText.text += " - Pieces Left: " + GameObject.Find("Puzzle Box").GetComponent<ImagePuzzleScript>().piecesLeft;
+                locationText.text += " - Pieces Left: " + lastPieceCount;
             }
         }
         progressText.text = "Friends: " + playerScript.dialogueManager.eventScript.fullyTalkedTo + "/" + playerScript.dialogueManager.eventScript.npcsInScene + "\nNotes: " + playerScript.dialogueManager.eventScript.collectedNotes + "/" + playerScript.dialogueManager.eventScript.notesInScene + "\nPuzzles: " + playerScript.dialogueManager.eventScript.completedPuzzlesInScene + "/" + playerScript.dialogueManager.eventScript.puzzlesInScene;

@@ -5,6 +5,7 @@ using UnityEngine;
 public class BlockScript : MoveableObject
 {
     public bool moving;
+    public bool rotatable;
     public string type = "push";
     public bool inserted;
     public IEnumerator move;

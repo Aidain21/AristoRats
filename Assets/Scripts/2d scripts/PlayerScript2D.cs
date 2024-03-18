@@ -359,6 +359,15 @@ public class PlayerScript2D : MoveableObject
                     Interact(currentTarget);
                 }
             }
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                RaycastHit2D hitData = Physics2D.Raycast(transform.position + direction * 0.51f, direction, 0.5f);
+                if (hitData.collider != null)
+                {
+                    currentTarget = hitData.collider.gameObject;
+                    Interact(currentTarget, true);
+                }
+            }
             else if (Input.GetKey(KeyCode.E))
             {
                 RaycastHit2D hitData = Physics2D.Raycast(transform.position + direction * 0.51f, direction, 0.5f);
@@ -613,7 +622,7 @@ public class PlayerScript2D : MoveableObject
                             currentTarget.transform.position += new Vector3(0, 0, -0.5f);
                             if (currentTarget.GetComponent<BlockScript>().id == Int32.Parse(currentTarget.transform.parent.GetChild(i).GetComponent<SwitchScript>().switchData))
                             {
-                                currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                                currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().ChangePiecesLeft(-1);
                                 invManager.UpdateInfo();
                                 currentTarget.transform.position += new Vector3(0, 0, 0.5f);
                                 menuManager.puzzleImages[currentTarget.GetComponent<BlockScript>().id - 1].sprite = currentTarget.GetComponent<SpriteRenderer>().sprite;
@@ -902,18 +911,16 @@ public class PlayerScript2D : MoveableObject
             
         }
     }
-    
-
-    public void Interact(GameObject target)
+    public void Interact(GameObject target, bool rotate = false)
     {
-        switch (target.tag)
+        switch ((target.tag, rotate))
         {
-            case "Sign":
+            case ("Sign",false):
                 aboveTalker = transform.position.y > target.transform.position.y;
                 SignTextScript signScript = target.GetComponent<SignTextScript>();
                 dialogueManager.StartDialogue(signScript.name, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
                 break;
-            case "Block":
+            case ("Block",false):
                 if (!target.GetComponent<BlockScript>().moving)
                 {
                     target.GetComponent<BlockScript>().Push(direction);
@@ -936,10 +943,16 @@ public class PlayerScript2D : MoveableObject
                     }
                 }
                 break;
-            case "Switch":
+            case ("Block", true):
+                if (!target.GetComponent<BlockScript>().moving && target.GetComponent<BlockScript>().rotatable)
+                {
+                    target.transform.localRotation *= Quaternion.Euler(0,0,90);
+                }
+                break;
+            case ("Switch", false):
                 target.GetComponent<SwitchScript>().UseSwitch();
                 break;
-            case "Item":
+            case ("Item", false):
                 if (invManager.inventory.Count == invManager.selector.width * invManager.selector.height)
                 {
                     string[] temp = new string[] { "0You:I don't have any room left to pick items up. I should drop or use one." };
@@ -954,14 +967,14 @@ public class PlayerScript2D : MoveableObject
                     target.SetActive(false);
                 }
                 break;
-            case "Cheese":
+            case ("Cheese", false):
                 target.transform.parent = transform;
                 invManager.cheese += target.GetComponent<CheeseScript>().amount;
                 string[] cheesy = new string[] { "0You:I just found " + target.GetComponent<CheeseScript>().amount + " pieces of cheese."};
                 dialogueManager.StartDialogue("Player", cheesy, 0, GetComponent<SpriteRenderer>().sprite);
                 target.SetActive(false);
                 break;
-            case "Note":
+            case ("Note", false):
                 if (journalManager.HasNote(target.GetComponent<NoteScript>().noteId))
                 {
                     string[] temp = new string[] { "0Aidan:Uh-oh. You can't have multiple notes with the same Id. Probably should change one of them." };
