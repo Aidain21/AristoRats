@@ -24,6 +24,13 @@ public class ImagePuzzleScript : MonoBehaviour
     {
         if (!puzzleAlreadyEnded)
         {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).CompareTag("Block"))
+                {
+                    transform.GetChild(i).localPosition = new Vector3(transform.GetChild(i).localPosition.x, transform.GetChild(i).localPosition.y, 1);
+                }
+            }
             piecesLeft = -1;
             playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
             playerScript.finishedPuzzle = true;
@@ -35,6 +42,7 @@ public class ImagePuzzleScript : MonoBehaviour
             string[] temp = new string[] { "0You:Solved the puzzle, and got " + reward + " cheese!" };
             playerScript.dialogueManager.StartDialogue("Player", temp, 0, playerScript.GetComponent<SpriteRenderer>().sprite);
             puzzleAlreadyEnded = true;
+            
         }
     }
     public void PuzzleSetUp()
@@ -53,9 +61,14 @@ public class ImagePuzzleScript : MonoBehaviour
             }
         }
         int[] norm = new int[width*height];
+        int[] randRotation = new int[width * height];
         for (int i = 0; i < width * height; i++)
         {
             norm[i] = i + 1;
+            if (mode.Contains("-"))
+            {
+                randRotation[i] = Random.Range(0, 4) * 90;
+            }
         }
         Shuffle(norm);
         string switchType = "insert";
@@ -102,8 +115,12 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().id = norm[i];
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
-                    piece.GetComponent<BlockScript>().rotatable = (switchType == "insert-");
                     Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
+                    if (switchType == "insert-")
+                    {
+                        piece.GetComponent<BlockScript>().rotatable = true;
+                        piece.transform.localRotation = Quaternion.Euler(0, 0, randRotation[i]);
+                    }
                 }
                 break;
             case "Items":
@@ -127,8 +144,12 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().type = "menu";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
-                    piece.GetComponent<BlockScript>().rotatable = (switchType == "insert-");
                     Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
+                    if (switchType == "insert-")
+                    {
+                        piece.GetComponent<BlockScript>().rotatable = true;
+                        piece.transform.localRotation = Quaternion.Euler(0, 0, randRotation[i]);
+                    }
                 }
                 break;
             case "Control":
@@ -139,8 +160,12 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().type = "control";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, i / width - height);
-                    piece.GetComponent<BlockScript>().rotatable = (switchType == "insert-");
                     Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
+                    if (switchType == "insert-")
+                    {
+                        piece.GetComponent<BlockScript>().rotatable = true;
+                        piece.transform.localRotation = Quaternion.Euler(0, 0, randRotation[i]);
+                    }
                 }
                 break;
             case "Shuffle":
@@ -151,8 +176,12 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<BlockScript>().type = "shuffle";
                     piece.GetComponent<SpriteRenderer>().sprite = pieces[norm[i] - 1];
                     piece.GetComponent<Transform>().localPosition = new Vector2(i % width, height - (i / width));
-                    piece.GetComponent<BlockScript>().rotatable = (switchType == "insert-");
                     Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
+                    if (switchType == "insert-")
+                    {
+                        piece.GetComponent<BlockScript>().rotatable = true;
+                        piece.transform.localRotation = Quaternion.Euler(0, 0, randRotation[i]);
+                    }
                 }
                 break;
             case "Swap":
@@ -167,8 +196,12 @@ public class ImagePuzzleScript : MonoBehaviour
                     piece.GetComponent<Rigidbody2D>().gravityScale = 0;
                     piece.GetComponent<BoxCollider2D>().isTrigger = true;
                     piece.GetComponent<BoxCollider2D>().size = new Vector2(0.3f, 0.3f);
-                    piece.GetComponent<BlockScript>().rotatable = (switchType == "insert-");
                     Instantiate(border, piece.transform).transform.localPosition += new Vector3(0, 0, 1);
+                    if (switchType == "insert-")
+                    {
+                        piece.GetComponent<BlockScript>().rotatable = true;
+                        piece.transform.localRotation = Quaternion.Euler(0, 0, randRotation[i]);
+                    }
                 }
                 break;
             case "Follow":

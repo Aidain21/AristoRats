@@ -140,7 +140,7 @@ public class DialogueEvents : MoveableObject
         {
             playerScript.GetComponent<AudioSource>().PlayOneShot(playerScript.sfx[1]);
         }
-        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Arrow", "0", "0" }))
+        else if (Enumerable.SequenceEqual(dialogueData, new string[] { "UPPPPP", "0", "0" }))
         {
             bool[] walls = WallChecker(playerScript.gameObject);
             if (!walls[0])
@@ -315,7 +315,7 @@ public class DialogueEvents : MoveableObject
             // Funny Stuff start
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Normal", "0", "0" }))
             {
-                GameObject.Find("LevelObjects/NPCs").transform.Find("Easy").position = new Vector3(25, 0, 0);
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Easy").position = new Vector3(27, 0, 0);
                 if (!dontAdd)
                 {
                     storedEvents.Add((string[])dialogueData.Clone());
@@ -323,7 +323,7 @@ public class DialogueEvents : MoveableObject
             }
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Easy", "0", "0" }))
             {
-                GameObject.Find("LevelObjects/NPCs").transform.Find("Harder").position = new Vector3(25, 1, 0);
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Harder").position = new Vector3(27, 1, 0);
                 if (!dontAdd)
                 {
                     storedEvents.Add((string[])dialogueData.Clone());
@@ -331,7 +331,7 @@ public class DialogueEvents : MoveableObject
             }
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Harder", "0", "0" }))
             {
-                GameObject.Find("LevelObjects/NPCs").transform.Find("Insane").position = new Vector3(25, 2, 0);
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Insane").position = new Vector3(27, 2, 0);
                 if (!dontAdd)
                 {
                     storedEvents.Add((string[])dialogueData.Clone());
@@ -339,7 +339,7 @@ public class DialogueEvents : MoveableObject
             }
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "Insane", "0", "0" }))
             {
-                GameObject.Find("LevelObjects/NPCs").transform.Find("Auto").position = new Vector3(25, 3, 0);
+                GameObject.Find("LevelObjects/NPCs").transform.Find("Auto").position = new Vector3(27, 3, 0);
                 if (!dontAdd)
                 {
                     storedEvents.Add((string[])dialogueData.Clone());

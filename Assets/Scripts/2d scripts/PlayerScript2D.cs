@@ -93,7 +93,7 @@ public class MoveableObject : MonoBehaviour
             }
         }
 
-        if (mover.CompareTag("Block"))
+        if (mover.CompareTag("Block") && mover.GetComponent<BlockScript>() != null)
         {
             mover.GetComponent<BlockScript>().moving = false;
             if (mover.GetComponent<BoxCollider2D>() == null)
@@ -118,7 +118,7 @@ public class MoveableObject : MonoBehaviour
 }
 public class PlayerScript2D : MoveableObject
 {
-    public readonly string[] ALL_PUZZLE_MODES = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+", "Swap+", "Items+", "Follow", "Follow+", "Input", "Input+" };
+    public readonly string[] ALL_PUZZLE_MODES = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+", "Swap+", "Items+", "Follow", "Follow+", "Input", "Input+", "Blocks-", "Control-" };
     //if the player is going between tiles
     public bool moving;
     public float spinTimer;
@@ -440,7 +440,7 @@ public class PlayerScript2D : MoveableObject
                 if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count)
                 {
                     ItemScript itemScript = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)].GetComponent<ItemScript>();
-                    dialogueManager.StartDialogue(itemScript.itemName, itemScript.itemLore, 0, GetComponent<SpriteRenderer>().sprite);
+                    dialogueManager.StartDialogue(itemScript.gameObject.name, itemScript.itemLore, 0, GetComponent<SpriteRenderer>().sprite);
                 }
                 else
                 {
@@ -652,46 +652,51 @@ public class PlayerScript2D : MoveableObject
                 menuManager.puzzleImages[Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.y) * menuManager.puzzleSelector.width + Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.x)].rectTransform.sizeDelta = new Vector2(125, 125);
             }
         }
-        else if (controllingBlock && currentTarget != null && !currentTarget.GetComponent<BlockScript>().moving)
+        else if (controllingBlock && currentTarget != null && currentTarget.GetComponent<BoxCollider2D>() != null)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            if (!currentTarget.GetComponent<BlockScript>().moving)
             {
-                holdTimer += Time.deltaTime;
-                direction = Vector3.up;
-                wallTouchList = WallChecker(currentTarget);
-                if (!wallTouchList[0] && holdTimer > 0.1f)
+
+                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
                 {
-                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    holdTimer += Time.deltaTime;
+                    direction = Vector3.up;
+                    wallTouchList = WallChecker(currentTarget);
+                    if (!wallTouchList[0] && holdTimer > 0.1f)
+                    {
+                        StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    }
                 }
-            }
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            {
-                holdTimer += Time.deltaTime;
-                direction = Vector3.left;
-                wallTouchList = WallChecker(currentTarget);
-                if (!wallTouchList[1] && holdTimer > 0.1f)
+                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
                 {
-                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    holdTimer += Time.deltaTime;
+                    direction = Vector3.left;
+                    wallTouchList = WallChecker(currentTarget);
+                    if (!wallTouchList[1] && holdTimer > 0.1f)
+                    {
+                        StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    }
                 }
-            }
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-            {
-                holdTimer += Time.deltaTime;
-                direction = Vector3.down;
-                wallTouchList = WallChecker(currentTarget);
-                if (!wallTouchList[2] && holdTimer > 0.1f)
+                if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
                 {
-                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    holdTimer += Time.deltaTime;
+                    direction = Vector3.down;
+                    wallTouchList = WallChecker(currentTarget);
+                    if (!wallTouchList[2] && holdTimer > 0.1f)
+                    {
+                        StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    }
                 }
-            }
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-            {
-                holdTimer += Time.deltaTime;
-                direction = Vector3.right;
-                wallTouchList = WallChecker(currentTarget);
-                if (!wallTouchList[3] && holdTimer > 0.1f)
+                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
                 {
-                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    holdTimer += Time.deltaTime;
+                    direction = Vector3.right;
+                    wallTouchList = WallChecker(currentTarget);
+                    if (!wallTouchList[3] && holdTimer > 0.1f)
+                    {
+                        StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    }
+
                 }
 
             }
@@ -704,6 +709,10 @@ public class PlayerScript2D : MoveableObject
                 vcam.Follow = gameObject.transform;
                 invManager.blockControlText.GetComponent<Canvas>().enabled = false;
                 controllingBlock = false;
+            }
+            if (Input.GetKeyDown(KeyCode.R) && currentTarget.GetComponent<BlockScript>().rotatable)
+            {
+                currentTarget.GetComponent<BlockScript>().Rotate();
             }
         }
         else if (inStats)
@@ -944,9 +953,9 @@ public class PlayerScript2D : MoveableObject
                 }
                 break;
             case ("Block", true):
-                if (!target.GetComponent<BlockScript>().moving && target.GetComponent<BlockScript>().rotatable)
+                if (!target.GetComponent<BlockScript>().moving && target.GetComponent<BlockScript>().rotatable && target.GetComponent<BlockScript>().type != "control")
                 {
-                    target.transform.localRotation *= Quaternion.Euler(0,0,90);
+                    target.GetComponent<BlockScript>().Rotate();
                 }
                 break;
             case ("Switch", false):
@@ -963,7 +972,7 @@ public class PlayerScript2D : MoveableObject
                     target.transform.parent = transform;
                     invManager.inventory.Add(target);
                     ItemScript itemScript = target.GetComponent<ItemScript>();
-                    dialogueManager.StartDialogue(itemScript.itemName, itemScript.pickupText, 0, itemScript.itemImage);
+                    dialogueManager.StartDialogue(itemScript.gameObject.name, itemScript.pickupText, 0, itemScript.itemImage);
                     target.SetActive(false);
                 }
                 break;
@@ -1011,6 +1020,7 @@ public class PlayerScript2D : MoveableObject
             moving = false;
             transform.position = curNote.pos;
             spawnPoint = curNote.pos;
+            invManager.UpdateInfo();
             if(curNote.scene != SceneManager.GetActiveScene().name)
             {
                 invManager.RemovePuzzleStuff();

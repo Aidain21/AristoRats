@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BlockScript : MoveableObject
 {
@@ -11,6 +12,7 @@ public class BlockScript : MoveableObject
     public IEnumerator move;
     public bool[] walls = { false, false, false, false }; //ULDR
     public GameObject player;
+    public GameObject currentCollider;
     public int id = 0;
     // Start is called before the first frame update
     void Start()
@@ -139,11 +141,50 @@ public class BlockScript : MoveableObject
             }
         }
     }
+
+    public void Rotate()
+    {
+        if (type == "push" || type == "control")
+        {
+            transform.localRotation *= Quaternion.Euler(0, 0, 90);
+            transform.localRotation = Quaternion.Euler(0, 0, Mathf.RoundToInt(transform.localRotation.eulerAngles.z));
+        }
+
+
+        if (currentCollider != null && id != 0)
+        {
+            if (id.ToString() == currentCollider.GetComponent<SwitchScript>().switchData && transform.localRotation == currentCollider.transform.localRotation)
+            {
+                rotatable = false;
+                currentCollider.GetComponent<SwitchScript>().affectedObjects[0] = gameObject;
+                currentCollider.GetComponent<SwitchScript>().UseSwitch();
+                
+                if (type == "control")
+                {
+                    player.GetComponent<PlayerScript2D>().vcam.Follow = player.transform;
+                    player.GetComponent<PlayerScript2D>().invManager.blockControlText.GetComponent<Canvas>().enabled = false;
+                    player.GetComponent<PlayerScript2D>().controllingBlock = false;
+                }
+
+                if (SceneManager.GetActiveScene().name == "ImagePuzzle" && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft <= 0)
+                {
+                    transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                }
+                transform.position += new Vector3(0, 0, 1);
+                player.GetComponent<PlayerScript2D>().currentTarget = null;
+                Destroy(this);
+            }
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player") && type == "swap")
         {
             collision.GetComponent<PlayerScript2D>().currentTarget = gameObject;
+        }
+        if (collision.GetComponent<SwitchScript>() != null && collision.GetComponent<SwitchScript>().switchType == "floor")
+        {
+            currentCollider = collision.gameObject;
         }
     }
 
@@ -155,6 +196,10 @@ public class BlockScript : MoveableObject
             {
                 collision.GetComponent<PlayerScript2D>().currentTarget = null;
             }
+        }
+        if (collision.GetComponent<SwitchScript>() != null && collision.GetComponent<SwitchScript>().switchType == "floor" && currentCollider == collision.gameObject)
+        {
+            currentCollider = null;
         }
     }
 
