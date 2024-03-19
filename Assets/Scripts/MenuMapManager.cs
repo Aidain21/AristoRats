@@ -107,7 +107,7 @@ public class MenuMapManager : MonoBehaviour
         for (int i = 0; i < totalModesNumber; i++)
         {
             TMP_Text text = Instantiate(defMenu, modesTextArray.transform);
-            text.rectTransform.localPosition = new Vector2((i%3) * 300 - 300, -100 * (i/3) + 125);
+            text.rectTransform.localPosition = new Vector2((i%3) * 400 - 400, -150 * (i/3) + 125);
         }
         MakePuzzleMenu();
         Destroy(defOpt);
@@ -185,14 +185,23 @@ public class MenuMapManager : MonoBehaviour
         }
         percent.text = "Completion: " + percentage + "%";
         int curModes = 0;
-        for (int i = 0; i < playerScript.oldPuzzles.Count; i++)
+        for (int i = 0; i < playerScript.oldPuzzles.Count; i+=2)
         {
-            modesTextArray.transform.GetChild(i).GetComponent<TMP_Text>().text = playerScript.oldPuzzles[i];
+            modesTextArray.transform.GetChild(i / 2).GetComponent<TMP_Text>().color = Color.yellow;
+            if (playerScript.puzzleType == playerScript.oldPuzzles[i])
+            {
+                modesTextArray.transform.GetChild(i / 2).GetComponent<TMP_Text>().color = Color.green;
+            }
+            modesTextArray.transform.GetChild(i/2).GetComponent<TMP_Text>().text = playerScript.oldPuzzles[i] + "\nBest: " + playerScript.oldPuzzles[i+1] + " sec";
+            if (playerScript.oldPuzzles[i + 1] == "999999")
+            {
+                modesTextArray.transform.GetChild(i / 2).GetComponent<TMP_Text>().text = playerScript.oldPuzzles[i] + "\nNot Solved";
+            }
             curModes++;
         }
         for (int i = curModes; i < totalModesNumber; i++)
         {
-            modesTextArray.transform.GetChild(i).GetComponent<TMP_Text>().text = "???";
+            modesTextArray.transform.GetChild(i).GetComponent<TMP_Text>().text = "???" + "\nNot Solved";
         }
 
         statsPanel.SetActive(true);

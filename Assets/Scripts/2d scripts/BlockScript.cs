@@ -8,7 +8,6 @@ public class BlockScript : MoveableObject
     public bool moving;
     public bool rotatable;
     public string type = "push";
-    public bool inserted;
     public IEnumerator move;
     public bool[] walls = { false, false, false, false }; //ULDR
     public GameObject player;
@@ -170,7 +169,6 @@ public class BlockScript : MoveableObject
                 {
                     transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
                 }
-                transform.position += new Vector3(0, 0, 1);
                 player.GetComponent<PlayerScript2D>().currentTarget = null;
                 Destroy(this);
             }

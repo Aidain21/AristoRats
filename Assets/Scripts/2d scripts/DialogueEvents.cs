@@ -72,9 +72,9 @@ public class DialogueEvents : MoveableObject
         }
         npcsInScene = GameObject.FindGameObjectsWithTag("Sign").Length;
         collectedNotes = 0;
+        puzzlesInScene = 0;
         completedPuzzlesInScene = 0;
         notesInScene = GameObject.FindGameObjectsWithTag("Note").Length;
-        puzzlesInScene = GameObject.FindGameObjectsWithTag("Puzzle").Length;
         foreach (NoteScript note in playerScript.journalManager.notes)
         {
             if (note.scene == SceneManager.GetActiveScene().name)
@@ -82,6 +82,14 @@ public class DialogueEvents : MoveableObject
                 collectedNotes += 1;
             }
         }
+        foreach (GameObject puz in GameObject.FindGameObjectsWithTag("Puzzle"))
+        {
+            if (!puz.name.Contains("#"))
+            {
+                puzzlesInScene += 1;
+            }
+        }
+
         foreach (string puz in playerScript.completedPuzzles)
         {
             GameObject puzzle = GameObject.Find(puz);
@@ -351,7 +359,7 @@ public class DialogueEvents : MoveableObject
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleRando", "0", "0" }))
             {
                 UnityEngine.Object[] assets = Resources.LoadAll("Sprites", typeof(Texture2D));
-                SwitchScript rand = GameObject.Find("rand").GetComponent<SwitchScript>();
+                SwitchScript rand = GameObject.Find("#rand").GetComponent<SwitchScript>();
                 rand.switchData = playerScript.ALL_PUZZLE_MODES[UnityEngine.Random.Range(1, playerScript.ALL_PUZZLE_MODES.Length)] + " " + UnityEngine.Random.Range(1, 8) + "," + UnityEngine.Random.Range(1, 8);
                 rand.puzzleImage = (Texture2D) assets[UnityEngine.Random.Range(1, assets.Length)];
             }
@@ -394,7 +402,7 @@ public class DialogueEvents : MoveableObject
             }
             else if (Enumerable.SequenceEqual(dialogueData, new string[] { "PuzzleMaker", "4", "0" }))
             {
-                SwitchScript make = GameObject.Find("make").GetComponent<SwitchScript>();
+                SwitchScript make = GameObject.Find("#make").GetComponent<SwitchScript>();
                 make.switchData = tempData;
                 make.puzzleImage = tempImage;
                 playerScript.dialogueManager.ChangeDialogue(0, false);

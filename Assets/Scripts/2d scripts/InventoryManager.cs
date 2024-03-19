@@ -55,7 +55,7 @@ public class InventoryManager : MonoBehaviour
 
     public void UpdateInfo(int pieces = -2)
     {
-        itemsText.text = "Cheese: " + cheese + "\nInventory: " + inventory.Count + "/15";
+        itemsText.text = "Cheese: " + cheese + "\nInventory: " + inventory.Count + "/15" + "\nNot in Puzzle";
         locationText.text = SceneManager.GetActiveScene().name + " - " + playerScript.roomName;
         if (SceneManager.GetActiveScene().name == "ImagePuzzle")
         {
@@ -63,10 +63,18 @@ public class InventoryManager : MonoBehaviour
             {
                 lastPieceCount = pieces;
             }
-            locationText.text = "Puzzle";
+            locationText.text = "Mode: (" + playerScript.puzzleType + ")";
             if (playerScript.puzzleType != "Shuffle+" && playerScript.puzzleType != "Swap+" && (playerScript.menuManager.optionSelector.selections[6].x == 0 || playerScript.menuManager.optionSelector.selections[6].x == 1))
             {
                 locationText.text += " - Pieces Left: " + lastPieceCount;
+            }
+            if (!playerScript.finishedPuzzle)
+            {
+                itemsText.text = "Cheese: " + cheese + "\nInventory: " + inventory.Count + "/15" + "\nTime: " + playerScript.lastPTimerInt + " sec";
+            }
+            else
+            {
+                itemsText.text = "Cheese: " + cheese + "\nInventory: " + inventory.Count + "/15" + "\n" + playerScript.endMessage;
             }
         }
         progressText.text = "Friends: " + playerScript.dialogueManager.eventScript.fullyTalkedTo + "/" + playerScript.dialogueManager.eventScript.npcsInScene + "\nNotes: " + playerScript.dialogueManager.eventScript.collectedNotes + "/" + playerScript.dialogueManager.eventScript.notesInScene + "\nPuzzles: " + playerScript.dialogueManager.eventScript.completedPuzzlesInScene + "/" + playerScript.dialogueManager.eventScript.puzzlesInScene;

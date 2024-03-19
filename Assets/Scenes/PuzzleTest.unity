@@ -284,7 +284,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5097861291456098227, guid: 580dc3f869a4b2e4297bf96497f52dae, type: 3}
       propertyPath: switchData
-      value: TP30
+      value: TP20
       objectReference: {fileID: 0}
     - target: {fileID: 8859505659294319663, guid: 580dc3f869a4b2e4297bf96497f52dae, type: 3}
       propertyPath: m_Name
@@ -443,6 +443,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3072609828047421736, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5840144988072972835, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5840144988072972835, guid: 82fea62d44df4fa4d90c919b7f378e2a, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
@@ -901,7 +909,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 150473764265941519, guid: 74c6602d190f7654895d85f61f214bac, type: 3}
       propertyPath: m_Name
-      value: make
+      value: '#make'
       objectReference: {fileID: 0}
     - target: {fileID: 7143149181382550141, guid: 74c6602d190f7654895d85f61f214bac, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7801,7 +7809,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 150473764265941519, guid: 74c6602d190f7654895d85f61f214bac, type: 3}
       propertyPath: m_Name
-      value: rand
+      value: '#rand'
       objectReference: {fileID: 0}
     - target: {fileID: 7143149181382550141, guid: 74c6602d190f7654895d85f61f214bac, type: 3}
       propertyPath: m_LocalPosition.x

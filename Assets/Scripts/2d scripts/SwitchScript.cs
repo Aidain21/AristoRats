@@ -126,7 +126,6 @@ public class SwitchScript : MonoBehaviour
                     {
                         transform.parent.gameObject.GetComponent<ImagePuzzleScript>().ChangePiecesLeft(-1);
                         GameObject.Find("Player").GetComponent<PlayerScript2D>().invManager.UpdateInfo();
-                        item.transform.position += new Vector3(0, 0, 1);
                         Destroy(item.GetComponent<BoxCollider2D>());
                         Destroy(item.GetComponent<ItemScript>());
                         Destroy(item.transform.GetChild(0).gameObject);
@@ -142,7 +141,6 @@ public class SwitchScript : MonoBehaviour
                     {
                         transform.parent.gameObject.GetComponent<ImagePuzzleScript>().ChangePiecesLeft(-1);
                         GameObject.Find("Player").GetComponent<PlayerScript2D>().invManager.UpdateInfo();
-                        item.transform.position += new Vector3(0, 0, 1);
                         GameObject.Find("Player").GetComponent<PlayerScript2D>().dialogueManager.StartDialogue(item.GetComponent<SignTextScript>().name, item.GetComponent<SignTextScript>().dialogue, 3, item.GetComponent<SignTextScript>().talkerImage);
                         Destroy(item.GetComponent<BoxCollider2D>());
                         Destroy(item.GetComponent<SignTextScript>());
@@ -171,20 +169,17 @@ public class SwitchScript : MonoBehaviour
                                 if (transform.parent.GetChild(i).name.Equals("PushBlock(Clone)"))
                                 {
                                     blockType = transform.parent.GetChild(i).GetComponent<BlockScript>().type;
-                                    transform.parent.GetChild(i).position += new Vector3(0, 0, 1);
                                     Destroy(transform.parent.GetChild(i).GetComponent<BoxCollider2D>());
                                     Destroy(transform.parent.GetChild(i).GetChild(0).gameObject);
                                 }
                                 else if (transform.parent.GetChild(i).CompareTag("Item"))
                                 {
-                                    transform.parent.GetChild(i).position += new Vector3(0, 0, 1);
                                     Destroy(transform.parent.GetChild(i).GetComponent<ItemScript>());
                                     Destroy(transform.parent.GetChild(i).GetComponent<BoxCollider2D>());
                                     Destroy(transform.parent.GetChild(i).GetChild(0).gameObject);
                                 }
                                 else if (transform.parent.GetChild(i).CompareTag("Sign"))
                                 {
-                                    transform.parent.GetChild(i).position += new Vector3(0, 0, 1);
                                     Destroy(transform.parent.GetChild(i).GetComponent<SignTextScript>());
                                     Destroy(transform.parent.GetChild(i).GetComponent<BoxCollider2D>());
                                     Destroy(transform.parent.GetChild(i).GetChild(0).gameObject);
@@ -275,6 +270,8 @@ public class SwitchScript : MonoBehaviour
                 case "puzzle":
                     PlayerScript2D player = affectedObjects[2].GetComponent<PlayerScript2D>();
                     GameObject signs = GameObject.Find("InstructionSigns");
+                    player.pTimer = 0;
+                    player.lastPTimerInt = 0;
                     player.invManager.UpdateInfo();
                     if (item.name == "Puzzle Box")
                     {
@@ -334,7 +331,7 @@ public class SwitchScript : MonoBehaviour
                     {
                         item.GetComponent<PlayerScript2D>().reward = 3;
                     }
-                    else if (name != "rand" && name != "make")
+                    else if (!name.Contains("#"))
                     {
                         item.GetComponent<PlayerScript2D>().reward = 1;
                     }

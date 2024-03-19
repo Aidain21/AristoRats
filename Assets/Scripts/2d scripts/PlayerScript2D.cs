@@ -67,7 +67,8 @@ public class MoveableObject : MonoBehaviour
             {
                 yield break;
             }
-            mover.transform.position = Vector3.Lerp(start, end, (elapsedTime / seconds));
+            Vector3 data = Vector3.Lerp(start, end, (elapsedTime / seconds));
+            mover.transform.position = new Vector3(data.x, data.y, mover.transform.position.z);
             elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
@@ -79,7 +80,6 @@ public class MoveableObject : MonoBehaviour
             mover.GetComponent<PlayerScript2D>().noControl = false;
             if (mover.GetComponent<PlayerScript2D>().follower != null && mover.GetComponent<PlayerScript2D>().follower.GetComponent<SignTextScript>() == null)
             {
-                mover.GetComponent<PlayerScript2D>().follower.transform.position += new Vector3(0, 0, 1);
                 mover.GetComponent<PlayerScript2D>().follower = null;
             }
         }
@@ -109,7 +109,6 @@ public class MoveableObject : MonoBehaviour
                 {
                     mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
                 }
-                mover.transform.position += new Vector3(0, 0, 1);
                 Destroy(mover.GetComponent<BlockScript>());
                 GameObject.Find("Player").GetComponent<PlayerScript2D>().currentTarget = null;
             }
@@ -123,6 +122,9 @@ public class PlayerScript2D : MoveableObject
     public bool moving;
     public float spinTimer;
     public bool spinning;
+    public float pTimer;
+    public int lastPTimerInt;
+    public string endMessage;
     //a vector of the player's current direciton
     public Vector3 direction;
     //Closer to 0, the faster the move speed (default 0.3)
@@ -221,6 +223,9 @@ public class PlayerScript2D : MoveableObject
     }
     void Start()
     {
+        endMessage = "";
+        pTimer = 0;
+        lastPTimerInt = 0;
         eventSystem.gameObject.SetActive(false);
         oldScene = SceneManager.GetActiveScene().name;
         timeBetweenTiles = 0.3f;
@@ -233,6 +238,15 @@ public class PlayerScript2D : MoveableObject
     }
     void Update()
     {
+        if (SceneManager.GetActiveScene().name == "ImagePuzzle" && !finishedPuzzle)
+        {
+            pTimer += Time.deltaTime;
+            if ((int) pTimer > lastPTimerInt)
+            {
+                lastPTimerInt = (int)pTimer;
+                invManager.UpdateInfo();
+            }
+        }
         if (sillyDude > 0)
         {
             funnyTimer += Time.deltaTime;
@@ -476,7 +490,7 @@ public class PlayerScript2D : MoveableObject
                         itemScript.gameObject.transform.parent = GameObject.Find("Puzzle Box").transform;
                     }
                     itemScript.gameObject.SetActive(true);
-                    itemScript.transform.position = transform.position + direction;
+                    itemScript.transform.position = new Vector3(transform.position.x + direction.x, transform.position.y + direction.y, itemScript.transform.position.z);
                     invManager.inventory.Remove(itemScript.gameObject);
                     invManager.OpenInventory();
                 }
@@ -1094,7 +1108,7 @@ public class PlayerScript2D : MoveableObject
             SwitchSong(sceneName);
             if (finishedPuzzle)
             {
-                if (puzzleName != "rand" && puzzleName != "make")
+                if (!puzzleName.Contains("#"))
                 {
                     completedPuzzles.Add(puzzleName);
                 }

@@ -575,8 +575,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -200, y: -65}
-  m_SizeDelta: {x: 380, y: 110}
+  m_AnchoredPosition: {x: -200, y: -90}
+  m_SizeDelta: {x: 380, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1965465242779713780
 CanvasRenderer:
@@ -1457,6 +1457,7 @@ MonoBehaviour:
   TextArray: {fileID: 3846436346566139112}
   def: {fileID: 7845691742640518106}
   def2: {fileID: 2233123555945205821}
+  lastPieceCount: 0
 --- !u!1 &1272926185666561362
 GameObject:
   m_ObjectHideFlags: 0
@@ -3630,7 +3631,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -25}
-  m_SizeDelta: {x: 1200, y: 850}
+  m_SizeDelta: {x: 1250, y: 850}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8445441935384409783
 CanvasRenderer:
@@ -6124,8 +6125,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 900, y: 800}
+  m_AnchoredPosition: {x: 0, y: -25}
+  m_SizeDelta: {x: 1250, y: 850}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6191679496664884945
 CanvasRenderer:
@@ -6623,6 +6624,8 @@ MonoBehaviour:
   moving: 0
   spinTimer: 0
   spinning: 0
+  pTimer: 0
+  lastPTimerInt: 0
   direction: {x: 0, y: 0, z: 0}
   sameDir: 0
   prevDir: {x: 0, y: 0, z: 0}
@@ -8438,7 +8441,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 370.1, y: 102.02}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6034654700386825575
 CanvasRenderer:
@@ -8471,6 +8474,8 @@ MonoBehaviour:
   m_text: 'Cheese: 99999
 
     Inventory: 99/99
+
+    Time: #### sec
 
 '
   m_isRightToLeft: 0
@@ -8553,8 +8558,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 0
+  m_HorizontalFit: 2
+  m_VerticalFit: 2
 --- !u!1 &9047131355968396595
 GameObject:
   m_ObjectHideFlags: 0
