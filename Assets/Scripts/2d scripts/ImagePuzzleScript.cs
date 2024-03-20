@@ -9,10 +9,12 @@ public class ImagePuzzleScript : MonoBehaviour
     public int height;
     public Sprite[] pieces;
     public string mode;
+    public string fullMode;
     public GameObject pushBlock;
     public GameObject item;
     public GameObject sign;
     public GameObject border;
+    public GameObject arrow;
     public GameObject floorSwitch;
     public int piecesLeft;
     public int reward;
@@ -34,10 +36,10 @@ public class ImagePuzzleScript : MonoBehaviour
             }
             piecesLeft = -1;
             playerScript = GameObject.Find("Player").GetComponent<PlayerScript2D>();
-            if (int.Parse(playerScript.oldPuzzles[playerScript.oldPuzzles.IndexOf(mode) + 1]) > playerScript.lastPTimerInt)
+            if (int.Parse(playerScript.oldPuzzles[playerScript.oldPuzzles.IndexOf(fullMode) + 1]) > playerScript.lastPTimerInt)
             {
                 playerScript.endMessage = "New Record!!!";
-                playerScript.oldPuzzles[playerScript.oldPuzzles.IndexOf(mode) + 1] = playerScript.lastPTimerInt.ToString();
+                playerScript.oldPuzzles[playerScript.oldPuzzles.IndexOf(fullMode) + 1] = playerScript.lastPTimerInt.ToString();
             }
             else
             {
@@ -74,6 +76,7 @@ public class ImagePuzzleScript : MonoBehaviour
         }
         int[] norm = new int[width*height];
         int[] randRotation = new int[width * height];
+        int puzzleRotation = 0;
         for (int i = 0; i < width * height; i++)
         {
             norm[i] = i + 1;
@@ -110,14 +113,18 @@ public class ImagePuzzleScript : MonoBehaviour
             playerScript.oldPuzzles.Add(mode);
             playerScript.oldPuzzles.Add("999999");
         }
+        fullMode = mode;
         if (mode.Contains("+"))
         {
+            
             mode = mode[0..^1];
             switchType = "insert+";
         }
         else if (mode.Contains("-"))
         {
             mode = mode[0..^1];
+            puzzleRotation = UnityEngine.Random.Range(0, 4) * 90;
+            Debug.Log(puzzleRotation);
             switchType = "insert-";
         }
         switch (mode)
@@ -248,7 +255,30 @@ public class ImagePuzzleScript : MonoBehaviour
             GameObject place = Instantiate(floorSwitch, transform);
             place.GetComponent<SwitchScript>().switchData = (i + 1).ToString();
             place.GetComponent<SwitchScript>().switchEffect = switchType;
-            place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
+            switch (puzzleRotation)
+            {
+                case 0:
+                    place.GetComponent<Transform>().localPosition = new Vector3(i % width, height - (i / width), 1);
+                    break;
+                case 90:
+                    place.GetComponent<Transform>().localPosition = new Vector3(i / width, i % width + 1, 1);
+                    place.GetComponent<Transform>().localRotation = Quaternion.Euler(0, 0, 90);
+                    break;
+                case 180:
+                    place.GetComponent<Transform>().localPosition = new Vector3(height - i % width - 1, (i / width) + 1, 1);
+                    place.GetComponent<Transform>().localRotation *= Quaternion.Euler(0, 0, 180);
+                    break;
+                case 270:
+                    place.GetComponent<Transform>().localPosition = new Vector3(height - i / width - 1, height - i % width, 1);
+                    place.GetComponent<Transform>().localRotation *= Quaternion.Euler(0, 0, 270);
+                    break;
+            }
+            if (i == 0 && switchType == "insert-")
+            {
+                GameObject arr = Instantiate(arrow, transform);
+                arr.transform.localPosition = place.GetComponent<Transform>().localPosition + place.GetComponent<Transform>().up;
+                arr.transform.localRotation *= Quaternion.Euler(0, 0, puzzleRotation);
+            }
             place.GetComponent<SpriteRenderer>().color = Color.cyan;
         }
         

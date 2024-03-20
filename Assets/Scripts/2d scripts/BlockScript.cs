@@ -152,7 +152,7 @@ public class BlockScript : MoveableObject
 
         if (currentCollider != null && id != 0)
         {
-            if (id.ToString() == currentCollider.GetComponent<SwitchScript>().switchData && transform.localRotation == currentCollider.transform.localRotation)
+            if (id.ToString() == currentCollider.GetComponent<SwitchScript>().switchData && transform.localRotation.eulerAngles == currentCollider.transform.localRotation.eulerAngles)
             {
                 rotatable = false;
                 currentCollider.GetComponent<SwitchScript>().affectedObjects[0] = gameObject;

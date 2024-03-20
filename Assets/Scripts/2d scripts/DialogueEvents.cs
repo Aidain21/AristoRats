@@ -375,7 +375,7 @@ public class DialogueEvents : MoveableObject
                     {
                         if (int.TryParse(tempData.Substring(tempData.IndexOf(" ") + 1, 1), out int x) && tempData.Substring(tempData.IndexOf(" ") + 2, 1) == "," && int.TryParse(tempData.Substring(tempData.IndexOf(" ") + 3, 1), out int y))
                         {
-                            if (x > 0 && x < 8 && y > 0 && y < 8)
+                            if (x > 0 && x < 8 && y > 0 && y < 8 && tempData.Substring(tempData.IndexOf(" ") + 3, 1) == tempData.Substring(tempData.Length - 1, 1))
                             {
                                 success = true;
                             }

@@ -485,7 +485,7 @@ public class SwitchScript : MonoBehaviour
             {
                 UseSwitch();
             }
-            else if (switchData == collision.GetComponent<BlockScript>().id.ToString() && (switchEffect != "insert-" || transform.localRotation == collision.transform.localRotation))
+            else if (switchData == collision.GetComponent<BlockScript>().id.ToString() && (switchEffect != "insert-" || transform.localRotation.eulerAngles == collision.transform.localRotation.eulerAngles))
             {
 
                 affectedObjects[0] = collision.gameObject;
