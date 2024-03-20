@@ -4,25 +4,140 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cinemachine;
+using UnityEngine.EventSystems;
 
-
-public class PlayerScript2D : MonoBehaviour
+public class MoveableObject : MonoBehaviour
 {
+    public bool[] WallChecker(GameObject obj)
+    {
+        if (obj.name == "Player" && obj.GetComponent<PlayerScript2D>().ignoreWalls)
+        {
+            return new bool[] { false, false, false, false };
+        }
+        RaycastHit2D hitData = Physics2D.Raycast(obj.transform.position + Vector3.up * 0.51f, Vector2.up, 0.5f);
+        bool up = hitData.collider != null;
+        hitData = Physics2D.Raycast(obj.transform.position + Vector3.left * 0.51f, Vector2.left, 0.5f);
+        bool left = hitData.collider != null;
+        hitData = Physics2D.Raycast(obj.transform.position + Vector3.down * 0.51f, Vector2.down, 0.5f);
+        bool down = hitData.collider != null;
+        hitData = Physics2D.Raycast(obj.transform.position + Vector3.right * 0.51f, Vector2.right, 0.5f);
+        bool right = hitData.collider != null;
+        return new bool[] { up, left, down, right };
+    }
+    public IEnumerator GridMove(GameObject mover, Vector3 end, float seconds, string anim = "", int moveTimes = 1)
+    {
+        Vector3 dir = end - mover.transform.position;
+        if (mover.name == "Player")
+        {
+            if (anim != "")
+            {
+                mover.GetComponent<Animator>().enabled = true;
+                if (mover.GetComponent<PlayerScript2D>().timeBetweenTiles == 0.15f)
+                {
+                    mover.GetComponent<Animator>().speed = 2;
+                }
+                else
+                {
+                    mover.GetComponent<Animator>().speed = 1;
+                }
+                if (mover.GetComponent<PlayerScript2D>().sameDir)
+                {
+                    mover.GetComponent<Animator>().Play(anim, 0, 0.5f);
+                }
+                else
+                {
+                    mover.GetComponent<Animator>().Play(anim, 0, 0);
+                }
+            }
+            if (mover.GetComponent<PlayerScript2D>().follower != null)
+            {
+                StartCoroutine(GridMove(mover.GetComponent<PlayerScript2D>().follower, transform.position, seconds));
+            }
+            mover.GetComponent<PlayerScript2D>().moving = true;
+        }
+        if (mover.CompareTag("Block"))
+        {
+            mover.GetComponent<BlockScript>().moving = true;
+        }
+        Vector3 start = mover.transform.position;
+        float elapsedTime = 0;
+        while (elapsedTime < seconds)
+        {
+            if (GameObject.Find("Player").GetComponent<PlayerScript2D>().isLoading && mover.name != "Player")
+            {
+                yield break;
+            }
+            Vector3 data = Vector3.Lerp(start, end, (elapsedTime / seconds));
+            mover.transform.position = new Vector3(data.x, data.y, mover.transform.position.z);
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        mover.transform.position = new Vector3(Mathf.Round(mover.transform.position.x), Mathf.Round(mover.transform.position.y), mover.transform.position.z);
+        if (mover.name == "Player")
+        {
+            mover.GetComponent<Animator>().enabled = false;
+            mover.GetComponent<PlayerScript2D>().moving = false;
+            mover.GetComponent<PlayerScript2D>().noControl = false;
+            if (mover.GetComponent<PlayerScript2D>().follower != null && mover.GetComponent<PlayerScript2D>().follower.GetComponent<SignTextScript>() == null)
+            {
+                mover.GetComponent<PlayerScript2D>().follower = null;
+            }
+        }
+        
+        if (moveTimes > 1)
+        {
+            bool[] walls = WallChecker(mover);
+            if ((!walls[0] && dir == Vector3.up) || (!walls[1] && dir == Vector3.left) || (!walls[2] && dir == Vector3.down) || (!walls[3] && dir == Vector3.right))
+            {
+                StartCoroutine(GridMove(mover, mover.transform.position + dir, 0.25f, "", moveTimes - 1));
+            }
+        }
+
+        if (mover.CompareTag("Block") && mover.GetComponent<BlockScript>() != null)
+        {
+            mover.GetComponent<BlockScript>().moving = false;
+            if (mover.GetComponent<BoxCollider2D>() == null)
+            {
+                if (mover.GetComponent<BlockScript>().type == "control")
+                {
+                    GameObject.Find("Player").GetComponent<PlayerScript2D>().vcam.Follow = GameObject.Find("Player").transform;
+                    GameObject.Find("Player").GetComponent<PlayerScript2D>().invManager.blockControlText.GetComponent<Canvas>().enabled = false;
+                    GameObject.Find("Player").GetComponent<PlayerScript2D>().controllingBlock = false;
+                }
+                
+                if (SceneManager.GetActiveScene().name == "ImagePuzzle" && mover.GetComponent<BlockScript>().id > 0 && mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft <= 0)
+                {
+                    mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                }
+                Destroy(mover.GetComponent<BlockScript>());
+                GameObject.Find("Player").GetComponent<PlayerScript2D>().currentTarget = null;
+            }
+        }
+    }
+}
+public class PlayerScript2D : MoveableObject
+{
+    public readonly string[] ALL_PUZZLE_MODES = new string[] { "Blocks", "Items", "Control", "Shuffle+", "Menu", "Blocks+", "Control+", "Swap+", "Items+", "Follow", "Follow+", "Input", "Input+", "Blocks-", "Control-" };
     //if the player is going between tiles
     public bool moving;
     public float spinTimer;
     public bool spinning;
+    public float pTimer;
+    public int lastPTimerInt;
+    public string endMessage;
     //a vector of the player's current direciton
     public Vector3 direction;
     //Closer to 0, the faster the move speed (default 0.3)
     public bool sameDir;
     public Vector3 prevDir;
+    public bool running;
     public float timeBetweenTiles;
     public float swapy;
     //made so the player can turn in spot without moving
     public float holdTimer;
     //current walls next to player
     public bool[] wallTouchList;
+    public bool ignoreWalls;
     //lets the player start dialogue
     public DialogueManager dialogueManager;
     public InventoryManager invManager;
@@ -30,16 +145,20 @@ public class PlayerScript2D : MonoBehaviour
     public MenuMapManager menuManager;
     //Tracks current dialogue instance and place in dialogue. dialogueData[0] is name, dialogueData[1] is position
     public GameObject currentTarget;
+    public GameObject follower = null;
     public GameObject backpackMenu;
 
     public CinemachineVirtualCamera vcam;
     public Texture2D recentCapture;
+    public EventSystem eventSystem;
 
     public bool isLoading;
     public bool inMap;
     public bool inJournal;
     public bool selectingItem;
     public GameObject selection = null;
+    public string input = "gQprk73vInHt51GHQNA8rTtilfRaNiNTxjm00IUBFd3yeplTPJ";
+    public bool typing;
     public bool inDialogue;
     public bool inInventory;
     public bool inMenu;
@@ -47,6 +166,7 @@ public class PlayerScript2D : MonoBehaviour
     public bool inPuzzle;
     public bool inStats;
     public bool controllingBlock;
+    public bool noControl;
 
     public string roomName = "hi ther";
 
@@ -84,9 +204,10 @@ public class PlayerScript2D : MonoBehaviour
         //Cursor.visible = false;
         if (instance == null)
         {
-            instance = this;
-            Cursor.lockState = CursorLockMode.Locked;
+
             Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            instance = this;
             if (PlayerPrefs.HasKey("name"))
             {
                 playerName = PlayerPrefs.GetString("name");
@@ -102,6 +223,10 @@ public class PlayerScript2D : MonoBehaviour
     }
     void Start()
     {
+        endMessage = "";
+        pTimer = 0;
+        lastPTimerInt = 0;
+        eventSystem.gameObject.SetActive(false);
         oldScene = SceneManager.GetActiveScene().name;
         timeBetweenTiles = 0.3f;
         swapy = 0.15f;
@@ -109,9 +234,19 @@ public class PlayerScript2D : MonoBehaviour
         SwitchSong(SceneManager.GetActiveScene().name);
         dialogueManager.eventScript.RunPastEvents();
         invManager.UpdateInfo();
+        input = "gQprk73vInHt51GHQNA8rTtilfRaNiNTxjm00IUBFd3yeplTPJ";
     }
     void Update()
     {
+        if (SceneManager.GetActiveScene().name == "ImagePuzzle" && !finishedPuzzle)
+        {
+            pTimer += Time.deltaTime;
+            if ((int) pTimer > lastPTimerInt)
+            {
+                lastPTimerInt = (int)pTimer;
+                invManager.UpdateInfo();
+            }
+        }
         if (sillyDude > 0)
         {
             funnyTimer += Time.deltaTime;
@@ -135,7 +270,7 @@ public class PlayerScript2D : MonoBehaviour
             transform.position = new Vector3(23, 1, 0);
             sillyDude = 0;
         }
-        if (!isLoading && !moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && !inStats && holdTimer == 0)
+        if (!isLoading && !moving && !inInventory && !inJournal && !inMap && !inDialogue && !inOptions && !inMenu && !inPuzzle && !controllingBlock && !inStats && !typing && holdTimer == 0)
         {
             spinTimer += Time.deltaTime;
         }
@@ -153,8 +288,8 @@ public class PlayerScript2D : MonoBehaviour
         {
             StartCoroutine(IdleSpin());
         }
-        if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock && !inStats) //Controls for overworld
-        { 
+        if (!isLoading && !inDialogue && !inMap && !inJournal && !inInventory && !inOptions && !inMenu && !inPuzzle && !controllingBlock && !inStats && !noControl && !typing) //Controls for overworld
+        {
             if (!moving)
             {
                 if (direction == Vector3.up)
@@ -175,30 +310,36 @@ public class PlayerScript2D : MonoBehaviour
                 }
                 GetPlayerMovement();
             }
-            if (Input.GetKey(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] != new Vector2(1,1))
+            if (Input.GetKey(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] != new Vector2(1, 1))
             {
-                if (menuManager.optionSelector.selections[1] == new Vector2(0,1))
+
+                if (menuManager.optionSelector.selections[1] == new Vector2(0, 1))
                 {
+                    running = true;
                     timeBetweenTiles = 0.15f;
                 }
                 else if (menuManager.optionSelector.selections[1] == new Vector2(2, 1))
                 {
+                    running = false;
                     timeBetweenTiles = 0.3f;
-                } 
+                }
             }
             else
             {
                 if (menuManager.optionSelector.selections[1] == new Vector2(0, 1))
                 {
+                    running = false;
                     timeBetweenTiles = 0.3f;
                 }
                 else if (menuManager.optionSelector.selections[1] == new Vector2(2, 1))
                 {
+                    running = true;
                     timeBetweenTiles = 0.15f;
                 }
             }
             if (Input.GetKeyDown(KeyCode.LeftShift) && menuManager.optionSelector.selections[1] == new Vector2(1, 1))
             {
+                running = !running;
                 float temp = swapy;
                 swapy = timeBetweenTiles;
                 timeBetweenTiles = temp;
@@ -227,6 +368,19 @@ public class PlayerScript2D : MonoBehaviour
                     currentTarget = hitData.collider.gameObject;
                     Interact(currentTarget);
                 }
+                else if (currentTarget != null && currentTarget.CompareTag("Block") && currentTarget.GetComponent<BlockScript>() != null && currentTarget.GetComponent<BlockScript>().type == "swap")
+                {
+                    Interact(currentTarget);
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                RaycastHit2D hitData = Physics2D.Raycast(transform.position + direction * 0.51f, direction, 0.5f);
+                if (hitData.collider != null)
+                {
+                    currentTarget = hitData.collider.gameObject;
+                    Interact(currentTarget, true);
+                }
             }
             else if (Input.GetKey(KeyCode.E))
             {
@@ -235,14 +389,13 @@ public class PlayerScript2D : MonoBehaviour
                 {
                     if (!hitData.collider.gameObject.GetComponent<BlockScript>().moving && hitData.collider.gameObject.GetComponent<BlockScript>().type == "push")
                     {
-                        GetComponent<AudioSource>().PlayOneShot(sfx[0]);
                         hitData.collider.gameObject.GetComponent<BlockScript>().Push(direction);
                     }
                 }
 
             }
         }
-        else if (inDialogue && !selectingItem) //Controls for in dialogue
+        else if (inDialogue && !selectingItem && !typing) //Controls for in dialogue
         {
             if (Input.GetKeyDown(KeyCode.Space) && menuManager.optionSelector.selections[3] != new Vector2(1, 3))
             {
@@ -301,7 +454,7 @@ public class PlayerScript2D : MonoBehaviour
                 if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count)
                 {
                     ItemScript itemScript = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)].GetComponent<ItemScript>();
-                    dialogueManager.StartDialogue(itemScript.itemName, itemScript.itemLore, 0, GetComponent<SpriteRenderer>().sprite);
+                    dialogueManager.StartDialogue(itemScript.gameObject.name, itemScript.itemLore, 0, GetComponent<SpriteRenderer>().sprite);
                 }
                 else
                 {
@@ -325,19 +478,21 @@ public class PlayerScript2D : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.R) && !selectingItem)
             {
-                bool[] walls = WallChecker();
+                bool[] walls = WallChecker(gameObject);
                 bool frontClear = (!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right);
                 if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x < invManager.inventory.Count && frontClear)
                 {
 
                     ItemScript itemScript = invManager.inventory[Mathf.RoundToInt(invManager.selector.selection.y) * invManager.selector.width + Mathf.RoundToInt(invManager.selector.selection.x)].GetComponent<ItemScript>();
                     itemScript.gameObject.transform.parent = GameObject.Find("LevelObjects").transform;
-                    string[] temp = new string[] { "0You:Dropped the " + itemScript.itemName + "." };
+                    if (itemScript.transform.childCount > 0)
+                    {
+                        itemScript.gameObject.transform.parent = GameObject.Find("Puzzle Box").transform;
+                    }
                     itemScript.gameObject.SetActive(true);
-                    itemScript.transform.position = transform.position + direction;
+                    itemScript.transform.position = new Vector3(transform.position.x + direction.x, transform.position.y + direction.y, itemScript.transform.position.z);
                     invManager.inventory.Remove(itemScript.gameObject);
                     invManager.OpenInventory();
-                    dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
                 }
                 else if (invManager.selector.selection.y * invManager.selector.width + invManager.selector.selection.x >= invManager.inventory.Count)
                 {
@@ -481,7 +636,8 @@ public class PlayerScript2D : MonoBehaviour
                             currentTarget.transform.position += new Vector3(0, 0, -0.5f);
                             if (currentTarget.GetComponent<BlockScript>().id == Int32.Parse(currentTarget.transform.parent.GetChild(i).GetComponent<SwitchScript>().switchData))
                             {
-                                currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
+                                currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().ChangePiecesLeft(-1);
+                                invManager.UpdateInfo();
                                 currentTarget.transform.position += new Vector3(0, 0, 0.5f);
                                 menuManager.puzzleImages[currentTarget.GetComponent<BlockScript>().id - 1].sprite = currentTarget.GetComponent<SpriteRenderer>().sprite;
                                 menuManager.puzzleImages[currentTarget.GetComponent<BlockScript>().id - 1].color = Color.white;
@@ -494,7 +650,8 @@ public class PlayerScript2D : MonoBehaviour
                                 {
                                     currentTarget.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
                                 }
-                                
+                                currentTarget = null;
+
                             }
                             break;
                         }
@@ -509,58 +666,67 @@ public class PlayerScript2D : MonoBehaviour
                 menuManager.puzzleImages[Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.y) * menuManager.puzzleSelector.width + Mathf.RoundToInt(menuManager.puzzleSelector.prevSelectorPos.x)].rectTransform.sizeDelta = new Vector2(125, 125);
             }
         }
-        else if (controllingBlock && !currentTarget.GetComponent<BlockScript>().moving)
+        else if (controllingBlock && currentTarget != null && currentTarget.GetComponent<BoxCollider2D>() != null)
         {
-            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+            if (!currentTarget.GetComponent<BlockScript>().moving)
             {
-                holdTimer += Time.deltaTime;
-                direction = Vector3.up;
-                wallTouchList = currentTarget.GetComponent<BlockScript>().WallChecker();
-                if (!wallTouchList[0] && holdTimer > 0.1f)
+
+                if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
                 {
-                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    holdTimer += Time.deltaTime;
+                    direction = Vector3.up;
+                    wallTouchList = WallChecker(currentTarget);
+                    if (!wallTouchList[0] && holdTimer > 0.1f)
+                    {
+                        StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    }
                 }
-            }
-            if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-            {
-                holdTimer += Time.deltaTime;
-                direction = Vector3.left;
-                wallTouchList = currentTarget.GetComponent<BlockScript>().WallChecker();
-                if (!wallTouchList[1] && holdTimer > 0.1f)
+                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
                 {
-                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    holdTimer += Time.deltaTime;
+                    direction = Vector3.left;
+                    wallTouchList = WallChecker(currentTarget);
+                    if (!wallTouchList[1] && holdTimer > 0.1f)
+                    {
+                        StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    }
                 }
-            }
-            if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-            {
-                holdTimer += Time.deltaTime;
-                direction = Vector3.down;
-                wallTouchList = currentTarget.GetComponent<BlockScript>().WallChecker();
-                if (!wallTouchList[2] && holdTimer > 0.1f)
+                if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
                 {
-                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    holdTimer += Time.deltaTime;
+                    direction = Vector3.down;
+                    wallTouchList = WallChecker(currentTarget);
+                    if (!wallTouchList[2] && holdTimer > 0.1f)
+                    {
+                        StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    }
                 }
-            }
-            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-            {
-                holdTimer += Time.deltaTime;
-                direction = Vector3.right;
-                wallTouchList = currentTarget.GetComponent<BlockScript>().WallChecker();
-                if (!wallTouchList[3] && holdTimer > 0.1f)
+                if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
                 {
-                    StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    holdTimer += Time.deltaTime;
+                    direction = Vector3.right;
+                    wallTouchList = WallChecker(currentTarget);
+                    if (!wallTouchList[3] && holdTimer > 0.1f)
+                    {
+                        StartCoroutine(GridMove(currentTarget, currentTarget.transform.position + direction, timeBetweenTiles));
+                    }
+
                 }
-                
+
             }
             if (!Input.anyKey)
             {
                 holdTimer = 0;
             }
-            if(Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 vcam.Follow = gameObject.transform;
                 invManager.blockControlText.GetComponent<Canvas>().enabled = false;
                 controllingBlock = false;
+            }
+            if (Input.GetKeyDown(KeyCode.R) && currentTarget.GetComponent<BlockScript>().rotatable)
+            {
+                currentTarget.GetComponent<BlockScript>().Rotate();
             }
         }
         else if (inStats)
@@ -569,6 +735,38 @@ public class PlayerScript2D : MonoBehaviour
             {
                 menuManager.CloseStats();
                 menuManager.OpenMenu();
+            }
+            if (Input.GetKeyDown(KeyCode.Equals) && menuManager.puzzlePanel.activeSelf)
+            {
+                ignoreWalls = !ignoreWalls;
+            }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                if (menuManager.puzzlePanel.activeSelf)
+                {
+                    menuManager.puzzlePanel.SetActive(false);
+                    menuManager.statsPanel.SetActive(true);
+                }
+                else
+                {
+                    menuManager.puzzlePanel.SetActive(true);
+                    menuManager.statsPanel.SetActive(false);
+                }
+                
+            }
+        }
+        else if (typing)
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.Mouse1) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                menuManager.typeBox.ActivateInputField();
+            }
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                typing = false;
+                input = menuManager.typeBox.text;
+                menuManager.CloseInput();
+                dialogueManager.eventScript.EndEventTrigger();
             }
         }
 
@@ -643,8 +841,8 @@ public class PlayerScript2D : MonoBehaviour
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.up;
-            wallTouchList = WallChecker();
-            if (!wallTouchList[0] && holdTimer > 0.1f)
+            wallTouchList = WallChecker(gameObject);
+            if ((!wallTouchList[0] || (follower != null && follower.transform.position == transform.position + direction)) && holdTimer > 0.1f)
             {
                 sameDir = prevDir == Vector3.up && !sameDir;
                 prevDir = direction;
@@ -659,8 +857,8 @@ public class PlayerScript2D : MonoBehaviour
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.left;
-            wallTouchList = WallChecker();
-            if (!wallTouchList[1] && holdTimer > 0.1f)
+            wallTouchList = WallChecker(gameObject);
+            if ((!wallTouchList[1] || (follower != null && follower.transform.position == transform.position + direction)) && holdTimer > 0.1f)
             {
                 sameDir = prevDir == Vector3.left && !sameDir;
                 prevDir = direction;
@@ -675,8 +873,8 @@ public class PlayerScript2D : MonoBehaviour
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.down;
-            wallTouchList = WallChecker();
-            if (!wallTouchList[2] && holdTimer > 0.1f)
+            wallTouchList = WallChecker(gameObject);
+            if ((!wallTouchList[2] || (follower != null && follower.transform.position == transform.position + direction)) && holdTimer > 0.1f)
             {
                 sameDir = prevDir == Vector3.down && !sameDir;
                 prevDir = direction;
@@ -691,8 +889,8 @@ public class PlayerScript2D : MonoBehaviour
         {
             holdTimer += Time.deltaTime;
             direction = Vector3.right;
-            wallTouchList = WallChecker();
-            if (!wallTouchList[3] && holdTimer > 0.1f)
+            wallTouchList = WallChecker(gameObject);
+            if ((!wallTouchList[3] || (follower != null && follower.transform.position == transform.position + direction)) && holdTimer > 0.1f)
             {
                 sameDir = prevDir == Vector3.right && !sameDir;
                 prevDir = direction;
@@ -708,81 +906,7 @@ public class PlayerScript2D : MonoBehaviour
             holdTimer = 0;
         }
     }
-    public IEnumerator GridMove(GameObject mover, Vector3 end, float seconds, string anim = "")
-    {
-        if (mover.name == "Player")
-        {
-            GetComponent<Animator>().enabled = true;
-            if (timeBetweenTiles == 0.15f)
-            {
-                GetComponent<Animator>().speed = 2;
-            }
-            else
-            {
-                GetComponent<Animator>().speed = 1;
-            }
-            if (sameDir)
-            {
-                GetComponent<Animator>().Play(anim, 0, 0.5f);
-            }
-            else
-            {
-                GetComponent<Animator>().Play(anim, 0, 0);
-            }
-            moving = true;
-        }
-        if (mover.CompareTag("Block"))
-        {
-            mover.GetComponent<BlockScript>().moving = true;
-        }
-        Vector3 start = mover.transform.position;
-        float elapsedTime = 0;
-        while (elapsedTime < seconds)
-        {
-            if (isLoading && mover.name != "Player")
-            {
-                yield break;
-            }
-            mover.transform.position = Vector3.Lerp(start, end, (elapsedTime / seconds));
-            elapsedTime += Time.deltaTime;
-            yield return new WaitForEndOfFrame();
-        }
-        mover.transform.position = new Vector3(Mathf.Round(mover.transform.position.x), Mathf.Round(mover.transform.position.y), 0);
-        if (mover.name == "Player")
-        {
-            GetComponent<Animator>().enabled = false;
-            moving = false;
-        }
-        if (mover.CompareTag("Block"))
-        {
-            mover.GetComponent<BlockScript>().moving = false;
-            if (mover.GetComponent<BlockScript>().inserted)
-            {
-                if (mover.GetComponent<BlockScript>().id > 0)
-                {
-                    mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
-                }
-                mover.transform.position += new Vector3(0, 0, 1);
-                Destroy(mover.GetComponent<BoxCollider2D>());
-                Destroy(mover.GetComponent<BlockScript>());
-                Destroy(mover.transform.GetChild(0).gameObject);
-                vcam.Follow = gameObject.transform;
-                invManager.blockControlText.GetComponent<Canvas>().enabled = false;
-                controllingBlock = false;
-                if (mover.GetComponent<BlockScript>().id > 0 && mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
-                {
-                    mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
-                }
-            }
-            else if (mover.GetComponent<BlockScript>().id > 0 && mover.transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == -1)
-            {
-                mover.transform.position += new Vector3(0, 0, 1);
-                vcam.Follow = gameObject.transform;
-                invManager.blockControlText.GetComponent<Canvas>().enabled = false;
-                controllingBlock = false;
-            }
-        }
-    }
+
     public IEnumerator IdleSpin()
     {
         spinning = true;
@@ -810,35 +934,21 @@ public class PlayerScript2D : MonoBehaviour
             
         }
     }
-    public bool[] WallChecker()
+    public void Interact(GameObject target, bool rotate = false)
     {
-        RaycastHit2D hitData = Physics2D.Raycast(transform.position + Vector3.up * 0.51f, Vector2.up, 0.5f);
-        bool up = hitData.collider != null;
-        hitData = Physics2D.Raycast(transform.position + Vector3.left * 0.51f, Vector2.left, 0.5f);
-        bool left = hitData.collider != null;
-        hitData = Physics2D.Raycast(transform.position + Vector3.down * 0.51f, Vector2.down, 0.5f);
-        bool down = hitData.collider != null;
-        hitData = Physics2D.Raycast(transform.position + Vector3.right * 0.51f, Vector2.right, 0.5f);
-        bool right = hitData.collider != null;
-        return new bool[] { up, left, down, right };
-    }
-
-    public void Interact(GameObject target)
-    {
-        switch (target.tag)
+        switch ((target.tag, rotate))
         {
-            case "Sign":
+            case ("Sign",false):
                 aboveTalker = transform.position.y > target.transform.position.y;
                 SignTextScript signScript = target.GetComponent<SignTextScript>();
                 dialogueManager.StartDialogue(signScript.name, signScript.dialogue, signScript.talkCounter, signScript.talkerImage);
                 break;
-            case "Block":
+            case ("Block",false):
                 if (!target.GetComponent<BlockScript>().moving)
                 {
-                    GetComponent<AudioSource>().PlayOneShot(sfx[0]);
                     target.GetComponent<BlockScript>().Push(direction);
                 }
-                if (target.GetComponent<BlockScript>().id != 0)
+                if (target.GetComponent<BlockScript>().id != 0 && menuManager.optionSelector.selections[6].x == 0)
                 {
                     for(int i = 0; i < target.transform.parent.childCount; i++)
                     {
@@ -856,10 +966,16 @@ public class PlayerScript2D : MonoBehaviour
                     }
                 }
                 break;
-            case "OnOff":
+            case ("Block", true):
+                if (!target.GetComponent<BlockScript>().moving && target.GetComponent<BlockScript>().rotatable && target.GetComponent<BlockScript>().type != "control")
+                {
+                    target.GetComponent<BlockScript>().Rotate();
+                }
+                break;
+            case ("Switch", false):
                 target.GetComponent<SwitchScript>().UseSwitch();
                 break;
-            case "Item":
+            case ("Item", false):
                 if (invManager.inventory.Count == invManager.selector.width * invManager.selector.height)
                 {
                     string[] temp = new string[] { "0You:I don't have any room left to pick items up. I should drop or use one." };
@@ -870,18 +986,18 @@ public class PlayerScript2D : MonoBehaviour
                     target.transform.parent = transform;
                     invManager.inventory.Add(target);
                     ItemScript itemScript = target.GetComponent<ItemScript>();
-                    dialogueManager.StartDialogue(itemScript.itemName, itemScript.pickupText, 0, itemScript.itemImage);
+                    dialogueManager.StartDialogue(itemScript.gameObject.name, itemScript.pickupText, 0, itemScript.itemImage);
                     target.SetActive(false);
                 }
                 break;
-            case "Cheese":
+            case ("Cheese", false):
                 target.transform.parent = transform;
                 invManager.cheese += target.GetComponent<CheeseScript>().amount;
                 string[] cheesy = new string[] { "0You:I just found " + target.GetComponent<CheeseScript>().amount + " pieces of cheese."};
                 dialogueManager.StartDialogue("Player", cheesy, 0, GetComponent<SpriteRenderer>().sprite);
                 target.SetActive(false);
                 break;
-            case "Note":
+            case ("Note", false):
                 if (journalManager.HasNote(target.GetComponent<NoteScript>().noteId))
                 {
                     string[] temp = new string[] { "0Aidan:Uh-oh. You can't have multiple notes with the same Id. Probably should change one of them." };
@@ -911,12 +1027,6 @@ public class PlayerScript2D : MonoBehaviour
             string[] temp = new string[] { "0You:I can't travel to a place that I haven't found yet." };
             dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
         }
-        else if (curNote.scene == SceneManager.GetActiveScene().name && Vector3.Distance(transform.position, curNote.pos) <= 10)
-        {
-            
-            string[] temp = new string[] { "0You:I'm too close to where I found the note to justify traveling there." };
-            dialogueManager.StartDialogue("Player", temp, 0, GetComponent<SpriteRenderer>().sprite);
-        }
         else
         {
             roomName = curNote.noteTitle;
@@ -924,6 +1034,7 @@ public class PlayerScript2D : MonoBehaviour
             moving = false;
             transform.position = curNote.pos;
             spawnPoint = curNote.pos;
+            invManager.UpdateInfo();
             if(curNote.scene != SceneManager.GetActiveScene().name)
             {
                 invManager.RemovePuzzleStuff();
@@ -986,6 +1097,7 @@ public class PlayerScript2D : MonoBehaviour
     }
     public IEnumerator SwitchScene(string sceneName)
     {
+        follower = null;
         oldScene = SceneManager.GetActiveScene().name;
         yield return null;
         isLoading = true;
@@ -994,16 +1106,16 @@ public class PlayerScript2D : MonoBehaviour
         {
             isLoading = false;
             SwitchSong(sceneName);
-            dialogueManager.eventScript.RunPastEvents();
-            invManager.UpdateInfo();
             if (finishedPuzzle)
             {
-                if (puzzleName != "rand")
+                if (!puzzleName.Contains("#"))
                 {
                     completedPuzzles.Add(puzzleName);
                 }
                 finishedPuzzle = false;
             }
+            dialogueManager.eventScript.RunPastEvents();
+            invManager.UpdateInfo();
             foreach (string puz in completedPuzzles)
             {
                 GameObject puzzle = GameObject.Find(puz);
@@ -1027,3 +1139,4 @@ public class PlayerScript2D : MonoBehaviour
 
     }
 }
+

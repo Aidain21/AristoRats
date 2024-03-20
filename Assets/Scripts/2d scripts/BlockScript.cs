@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class BlockScript : MonoBehaviour
+public class BlockScript : MoveableObject
 {
     public bool moving;
+    public bool rotatable;
     public string type = "push";
-    public bool inserted;
     public IEnumerator move;
     public bool[] walls = { false, false, false, false }; //ULDR
     public GameObject player;
+    public GameObject currentCollider;
     public int id = 0;
     // Start is called before the first frame update
     void Start()
@@ -19,53 +21,23 @@ public class BlockScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    public IEnumerator Moving(Vector3 goal, float time)
-    {
-        
-        while (new Vector3(transform.position.x, transform.position.y, transform.position.z) != goal)
-        {
-            moving = true;
-            transform.position = Vector3.MoveTowards(transform.position, goal, time * Time.deltaTime);
-            yield return new WaitForEndOfFrame();
-        }
-        if (id > 0 && GetComponent<SpriteRenderer>().sprite != null && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == -1)
-        {
-            transform.position += new Vector3(0, 0, 1);
-        }
-        transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), Mathf.Round(transform.position.z));
-        moving = false;
-        if (inserted)
-        {
-            if (id > 0 && GetComponent<SpriteRenderer>().sprite != null)
-            {
-                transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft -= 1;
-            }
-            transform.position += new Vector3(0, 0, 1);
-            Destroy(GetComponent<BoxCollider2D>());
-            Destroy(GetComponent<BlockScript>());
-            Destroy(transform.GetChild(0).gameObject);
-            if (id > 0 && GetComponent<SpriteRenderer>().sprite != null && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft == 0)
-            {
-                transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
-            }
-        }        
-    }
-
     public void Push(Vector3 direction)
     {
         if (type == "push")
         {
-            walls = WallChecker();
-            if ((!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right))
+            walls = WallChecker(gameObject);
+            if (((!walls[0] && direction == Vector3.up) || (!walls[1] && direction == Vector3.left) || (!walls[2] && direction == Vector3.down) || (!walls[3] && direction == Vector3.right)) && !moving)
             {
-                StartCoroutine(Moving(transform.position + direction, 2.5f));
+                player.GetComponent<AudioSource>().PlayOneShot(player.GetComponent<PlayerScript2D>().sfx[0]);
+                StartCoroutine(GridMove(gameObject, transform.position + direction, 0.3f));
             }
             else if (!player.GetComponent<PlayerScript2D>().moving)
             {
-                bool[] pwalls = player.GetComponent<PlayerScript2D>().WallChecker();
-                if ((!pwalls[0] && direction == Vector3.down) || (!pwalls[1] && direction == Vector3.right) || (!pwalls[2] && direction == Vector3.up) || (!pwalls[3] && direction == Vector3.left))
+                bool[] pwalls = WallChecker(player);
+                if (((!pwalls[0] && direction == Vector3.down) || (!pwalls[1] && direction == Vector3.right) || (!pwalls[2] && direction == Vector3.up) || (!pwalls[3] && direction == Vector3.left)) && !moving)
                 {
-                    StartCoroutine(Moving(transform.position - direction, 2.5f));
+                    player.GetComponent<AudioSource>().PlayOneShot(player.GetComponent<PlayerScript2D>().sfx[0]);
+                    StartCoroutine(GridMove(gameObject, transform.position - direction, 0.3f));
                     string temp;
                     if (direction == Vector3.up)
                     {
@@ -83,7 +55,7 @@ public class BlockScript : MonoBehaviour
                     {
                         temp = "Right";
                     }
-                    StartCoroutine(player.GetComponent<PlayerScript2D>().GridMove(player, player.transform.position - direction, 0.3f, temp));
+                    StartCoroutine(GridMove(player, player.transform.position - direction, 0.3f, temp));
                 }
 
             }
@@ -92,14 +64,30 @@ public class BlockScript : MonoBehaviour
         {
             player.GetComponent<PlayerScript2D>().menuManager.OpenPuzzle();
         }
+        else if (type == "swap")
+        {
+            for (int i = 0; i < transform.parent.childCount; i++)
+            {
+                if (transform.parent.GetChild(i).name == "PushBlock(Clone)" && transform.parent.GetChild(i).position == transform.position + player.GetComponent<PlayerScript2D>().direction)
+                {
+                    player.GetComponent<AudioSource>().PlayOneShot(player.GetComponent<PlayerScript2D>().sfx[0]);
+                    Vector3 temp = transform.parent.GetChild(i).position;
+                    transform.parent.GetChild(i).position = transform.position;
+                    transform.position = temp;
+                    break;
+                }
+            }
+        }
         else if (type == "control")
         {
+            player.GetComponent<AudioSource>().PlayOneShot(player.GetComponent<PlayerScript2D>().sfx[0]);
             player.GetComponent<PlayerScript2D>().vcam.Follow = gameObject.transform;
             player.GetComponent<PlayerScript2D>().invManager.blockControlText.GetComponent<Canvas>().enabled = true;
             player.GetComponent<PlayerScript2D>().controllingBlock = true;
         }
         else if (type == "shuffle")
         {
+            player.GetComponent<AudioSource>().PlayOneShot(player.GetComponent<PlayerScript2D>().sfx[0]);
             for (int i = 0; i < transform.parent.childCount; i++) 
             {
                 if (transform.parent.GetChild(i).name == "PushBlock(Clone)")
@@ -152,17 +140,65 @@ public class BlockScript : MonoBehaviour
             }
         }
     }
-    public bool[] WallChecker()
+
+    public void Rotate()
     {
-        RaycastHit2D hitData = Physics2D.Raycast(transform.position + Vector3.up * 0.51f, Vector2.up, 0.5f);
-        bool up = hitData.collider != null;
-        hitData = Physics2D.Raycast(transform.position + Vector3.left * 0.51f, Vector2.left, 0.5f);
-        bool left = hitData.collider != null;
-        hitData = Physics2D.Raycast(transform.position + Vector3.down * 0.51f, Vector2.down, 0.5f);
-        bool down = hitData.collider != null;
-        hitData = Physics2D.Raycast(transform.position + Vector3.right * 0.51f, Vector2.right, 0.5f);
-        bool right = hitData.collider != null;
-        return new bool[] { up, left, down, right };
+        if (type == "push" || type == "control")
+        {
+            transform.localRotation *= Quaternion.Euler(0, 0, 90);
+            transform.localRotation = Quaternion.Euler(0, 0, Mathf.RoundToInt(transform.localRotation.eulerAngles.z));
+        }
+
+
+        if (currentCollider != null && id != 0)
+        {
+            if (id.ToString() == currentCollider.GetComponent<SwitchScript>().switchData && transform.localRotation.eulerAngles == currentCollider.transform.localRotation.eulerAngles)
+            {
+                rotatable = false;
+                currentCollider.GetComponent<SwitchScript>().affectedObjects[0] = gameObject;
+                currentCollider.GetComponent<SwitchScript>().UseSwitch();
+                
+                if (type == "control")
+                {
+                    player.GetComponent<PlayerScript2D>().vcam.Follow = player.transform;
+                    player.GetComponent<PlayerScript2D>().invManager.blockControlText.GetComponent<Canvas>().enabled = false;
+                    player.GetComponent<PlayerScript2D>().controllingBlock = false;
+                }
+
+                if (SceneManager.GetActiveScene().name == "ImagePuzzle" && transform.parent.gameObject.GetComponent<ImagePuzzleScript>().piecesLeft <= 0)
+                {
+                    transform.parent.gameObject.GetComponent<ImagePuzzleScript>().EndPuzzle();
+                }
+                player.GetComponent<PlayerScript2D>().currentTarget = null;
+                Destroy(this);
+            }
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && type == "swap")
+        {
+            collision.GetComponent<PlayerScript2D>().currentTarget = gameObject;
+        }
+        if (collision.GetComponent<SwitchScript>() != null && collision.GetComponent<SwitchScript>().switchType == "floor")
+        {
+            currentCollider = collision.gameObject;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && type == "swap")
+        {
+            if (collision.GetComponent<PlayerScript2D>().currentTarget == gameObject)
+            {
+                collision.GetComponent<PlayerScript2D>().currentTarget = null;
+            }
+        }
+        if (collision.GetComponent<SwitchScript>() != null && collision.GetComponent<SwitchScript>().switchType == "floor" && currentCollider == collision.gameObject)
+        {
+            currentCollider = null;
+        }
     }
 
 }

@@ -23,6 +23,7 @@ public class InventoryManager : MonoBehaviour
     public GameObject TextArray;
     public TMP_Text def;
     public Image def2;
+    public int lastPieceCount;
 
     // Start is called before the first frame update
     void Start()
@@ -52,15 +53,31 @@ public class InventoryManager : MonoBehaviour
         Destroy(def2);
     }
 
-    public void UpdateInfo()
+    public void UpdateInfo(int pieces = -2)
     {
-        itemsText.text = "Cheese: " + cheese + "\nInventory: " + inventory.Count + "/15";
+        itemsText.text = "Cheese: " + cheese + "\nInventory: " + inventory.Count + "/15" + "\nNot in Puzzle";
         locationText.text = SceneManager.GetActiveScene().name + " - " + playerScript.roomName;
         if (SceneManager.GetActiveScene().name == "ImagePuzzle")
         {
-            locationText.text = "Puzzle";
+            if (pieces != -2)
+            {
+                lastPieceCount = pieces;
+            }
+            locationText.text = "Mode: (" + playerScript.puzzleType + ")";
+            if (playerScript.puzzleType != "Shuffle+" && playerScript.puzzleType != "Swap+" && (playerScript.menuManager.optionSelector.selections[6].x == 0 || playerScript.menuManager.optionSelector.selections[6].x == 1))
+            {
+                locationText.text += " - Pieces Left: " + lastPieceCount;
+            }
+            if (!playerScript.finishedPuzzle)
+            {
+                itemsText.text = "Cheese: " + cheese + "\nInventory: " + inventory.Count + "/15" + "\nTime: " + playerScript.lastPTimerInt + " sec";
+            }
+            else
+            {
+                itemsText.text = "Cheese: " + cheese + "\nInventory: " + inventory.Count + "/15" + "\n" + playerScript.endMessage;
+            }
         }
-        progressText.text = "Friends: " + playerScript.dialogueManager.eventScript.fullyTalkedTo + "/" + playerScript.dialogueManager.eventScript.npcsInScene + "\nNotes: " + playerScript.dialogueManager.eventScript.collectedNotes + "/" + playerScript.dialogueManager.eventScript.notesInScene;
+        progressText.text = "Friends: " + playerScript.dialogueManager.eventScript.fullyTalkedTo + "/" + playerScript.dialogueManager.eventScript.npcsInScene + "\nNotes: " + playerScript.dialogueManager.eventScript.collectedNotes + "/" + playerScript.dialogueManager.eventScript.notesInScene + "\nPuzzles: " + playerScript.dialogueManager.eventScript.completedPuzzlesInScene + "/" + playerScript.dialogueManager.eventScript.puzzlesInScene;
     }
     public void OpenInventory()
     {

@@ -10,14 +10,19 @@ using TMPro;
 public class MenuMapManager : MonoBehaviour
 {
     public Selector menuSelector = new(1,6);
-    public Selector optionSelector = new(new int[] {1,3,5,3,5,5},6);
+    public Selector optionSelector = new(new int[] {1,3,5,3,5,5,3},7);
     public Selector puzzleSelector = new(5,5);
     public List<Image> puzzleImages;
     public string[] menuChoices;
     public Canvas menu;
     public Canvas stats;
+    public GameObject statsPanel;
+    public GameObject puzzlePanel;
+    public Canvas input;
+    public TMP_InputField typeBox;
     public List<List<object>> collection = new();
     public int trackedSceneNumber = 5;
+    public int totalModesNumber;
     public TMP_Text puzzleText;
     public Canvas options;
     //public Canvas map;
@@ -26,6 +31,7 @@ public class MenuMapManager : MonoBehaviour
     public GameObject optionsTextArray;
     public GameObject puzzleTextArray;
     public GameObject statsTextArray;
+    public GameObject modesTextArray;
     public TMP_Text defOpt;
     public TMP_Text defMenu;
     public TMP_Text defPuzzle;
@@ -36,12 +42,15 @@ public class MenuMapManager : MonoBehaviour
     void Start()
     {
         trackedSceneNumber = 5;
+        totalModesNumber = playerScript.ALL_PUZZLE_MODES.Length;
         Canvas.ForceUpdateCanvases();   
         menuChoices = new string[] { "Continue", "Options", "Progress Stats", "Silly Button", "Respawn", "Quit (Won't Save)" };
         menu.GetComponent<Canvas>().enabled = false;
         stats.GetComponent<Canvas>().enabled = false;
         options.GetComponent<Canvas>().enabled = false;
         puzzle.GetComponent<Canvas>().enabled = false;
+        input.GetComponent<Canvas>().enabled = false;
+        typeBox.DeactivateInputField(true);
         int count = 0;
         for (int i = 0; i < menuSelector.textArray.Length; i++)
         {
@@ -56,7 +65,7 @@ public class MenuMapManager : MonoBehaviour
             }
         }
         count = 0;
-        menuChoices = new string[] { "Back", "Hold to Run", "Toggle Between", "Hold to Walk", "Snail", "Slow", "Normal", "Fast", "Cheetah", "Spam Space", "Hold Space", "Disabled", "Very In", "In", "Default", "Out", "Very Out", "0%", "25%", "50%", "75%", "100%" };
+        menuChoices = new string[] { "Back", "Hold to Run", "Toggle Between", "Hold to Walk", "Snail", "Slow", "Normal", "Fast", "Cheetah", "Spam Space", "Hold Space", "Disabled", "Very In", "In", "Default", "Out", "Very Out", "0%", "25%", "50%", "75%", "100%", "Show Location", "Show Pieces Left", "None" };
         for (int i = 0; i < optionSelector.textArray.Length; i++)
         {
             for (int j = 0; j < optionSelector.textArray[i].Length; j++)
@@ -66,7 +75,7 @@ public class MenuMapManager : MonoBehaviour
                 if (j == 0)
                 {
                     text.rectTransform.localPosition = new Vector2(0, -110 * i);
-                    if (i != 4 && i != 2 && i != 5 && i != 3)
+                    if (i != 4 && i != 2 && i != 5 && i != 3 && i != 6)
                     {
                         text.color = Color.yellow;
                     }
@@ -74,7 +83,7 @@ public class MenuMapManager : MonoBehaviour
                 else
                 {
                     text.rectTransform.localPosition = new Vector2(optionSelector.textArray[i][j-1].rectTransform.localPosition.x + optionSelector.textArray[i][j - 1].preferredWidth + 30, -110 * i);
-                    if ((i == 2 && j == 3) || (i == 4 && j == 2) || (i == 5 && j == 2) || (i == 3 && j == 2))
+                    if ((i == 2 && j == 3) || (i == 4 && j == 2) || (i == 5 && j == 2) || (i == 3 && j == 2) || (i == 6 && j == 1))
                     {
                         optionSelector.selections[i] = new Vector2(j,i);
                         text.color = Color.yellow;
@@ -87,13 +96,18 @@ public class MenuMapManager : MonoBehaviour
                 
             }
         }
-        for (int i = 0; i < trackedSceneNumber; i++)
+        for (int i = 0; i < trackedSceneNumber + 1; i++)
         {
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < 4; j++)
             {
                 TMP_Text text = Instantiate(defMenu, statsTextArray.transform);
-                text.rectTransform.localPosition = new Vector2(j * 300 - 300, -100 * i + 25);
+                text.rectTransform.localPosition = new Vector2(j * 300 - 450, -85 * i + 25);
             }
+        }
+        for (int i = 0; i < totalModesNumber; i++)
+        {
+            TMP_Text text = Instantiate(defMenu, modesTextArray.transform);
+            text.rectTransform.localPosition = new Vector2((i%3) * 400 - 400, -150 * (i/3) + 125);
         }
         MakePuzzleMenu();
         Destroy(defOpt);
@@ -112,6 +126,22 @@ public class MenuMapManager : MonoBehaviour
         menu.GetComponent<Canvas>().enabled = false;    
         playerScript.inMenu = false;
     }
+    public void OpenInput()
+    {
+        input.GetComponent<Canvas>().enabled = true;
+        playerScript.eventSystem.gameObject.SetActive(true);
+        typeBox.enabled = true;
+        typeBox.text = "";
+        typeBox.ActivateInputField();
+        playerScript.typing = true;
+    }
+    public void CloseInput()
+    {
+        playerScript.invManager.UpdateInfo();
+        typeBox.enabled = false;
+        playerScript.eventSystem.gameObject.SetActive(false);
+        input.GetComponent<Canvas>().enabled = false;
+    }
 
     public void OpenStats()
     {
@@ -121,27 +151,63 @@ public class MenuMapManager : MonoBehaviour
         {
             if (collection[i][0].ToString() == SceneManager.GetActiveScene().name)
             {
-                playerScript.menuManager.collection[i] = new List<object> { SceneManager.GetActiveScene().name, playerScript.dialogueManager.eventScript.fullyTalkedTo, playerScript.dialogueManager.eventScript.npcsInScene, playerScript.dialogueManager.eventScript.collectedNotes, playerScript.dialogueManager.eventScript.notesInScene };
+                collection[i] = new List<object> { SceneManager.GetActiveScene().name, playerScript.dialogueManager.eventScript.fullyTalkedTo, playerScript.dialogueManager.eventScript.npcsInScene, playerScript.dialogueManager.eventScript.collectedNotes, playerScript.dialogueManager.eventScript.notesInScene, playerScript.dialogueManager.eventScript.completedPuzzlesInScene, playerScript.dialogueManager.eventScript.puzzlesInScene };
                 break;
             }
         }
-        int foundObjects = 0;
-        int totalObjects = 0;
-        for(int i = 0; i < collection.Count; i++)
+        int foundFriends = 0;
+        int totalFriends = 0;
+        int foundNotes = 0;
+        int totalNotes = 0;
+        int foundPuzzles = 0;
+        int totalPuzzles = 0;
+        for (int i = 0; i < collection.Count; i++)
         {
-            foundObjects += (int) collection[i][1] + (int) collection[i][3];
-            totalObjects += (int)collection[i][2] + (int)collection[i][4];
-            statsTextArray.transform.GetChild(i*3).GetComponent<TMP_Text>().text = collection[i][0].ToString();
-            statsTextArray.transform.GetChild(i*3+1).GetComponent<TMP_Text>().text = collection[i][1].ToString() + "/" + collection[i][2].ToString();
-            statsTextArray.transform.GetChild(i*3+2).GetComponent<TMP_Text>().text = collection[i][3].ToString() + "/" + collection[i][4].ToString();
+            foundFriends += (int)collection[i][1];
+            totalFriends += (int)collection[i][2];
+            foundNotes += (int)collection[i][3];
+            totalNotes += (int)collection[i][4];
+            foundPuzzles += (int)collection[i][5];
+            totalPuzzles += (int)collection[i][6];
+            statsTextArray.transform.GetChild(i*4).GetComponent<TMP_Text>().text = collection[i][0].ToString();
+            statsTextArray.transform.GetChild(i*4+1).GetComponent<TMP_Text>().text = collection[i][1].ToString() + "/" + collection[i][2].ToString();
+            statsTextArray.transform.GetChild(i*4+2).GetComponent<TMP_Text>().text = collection[i][3].ToString() + "/" + collection[i][4].ToString();
+            statsTextArray.transform.GetChild(i*4+3).GetComponent<TMP_Text>().text = collection[i][5].ToString() + "/" + collection[i][6].ToString();
         }
-        string percentage = ((float)foundObjects / totalObjects * 100).ToString();
+        statsTextArray.transform.GetChild(statsTextArray.transform.childCount - 4).GetComponent<TMP_Text>().text = "Total";
+        statsTextArray.transform.GetChild(statsTextArray.transform.childCount - 3).GetComponent<TMP_Text>().text = foundFriends + "/" + totalFriends;
+        statsTextArray.transform.GetChild(statsTextArray.transform.childCount - 2).GetComponent<TMP_Text>().text = foundNotes + "/" + totalNotes;
+        statsTextArray.transform.GetChild(statsTextArray.transform.childCount - 1).GetComponent<TMP_Text>().text = foundPuzzles + "/" + totalPuzzles;
+        string percentage = ((float)(foundPuzzles+ foundFriends + foundNotes) / (totalPuzzles + totalNotes + totalFriends) * 100).ToString();
         if (percentage.Contains(".") && percentage[(percentage.IndexOf(".") + 1)..].Length > 2)
         {
             percentage = percentage.Substring(0, percentage.IndexOf(".") + 1) + percentage.Substring(percentage.IndexOf(".") + 1, 2);
         }
         percent.text = "Completion: " + percentage + "%";
+        int curModes = 0;
+        for (int i = 0; i < playerScript.oldPuzzles.Count; i+=2)
+        {
+            modesTextArray.transform.GetChild(i / 2).GetComponent<TMP_Text>().color = Color.yellow;
+            if (playerScript.puzzleType == playerScript.oldPuzzles[i])
+            {
+                modesTextArray.transform.GetChild(i / 2).GetComponent<TMP_Text>().color = Color.green;
+            }
+            modesTextArray.transform.GetChild(i/2).GetComponent<TMP_Text>().text = playerScript.oldPuzzles[i] + "\nBest: " + playerScript.oldPuzzles[i+1] + " sec";
+            if (playerScript.oldPuzzles[i + 1] == "999999")
+            {
+                modesTextArray.transform.GetChild(i / 2).GetComponent<TMP_Text>().text = playerScript.oldPuzzles[i] + "\nNot Solved";
+            }
+            curModes++;
+        }
+        for (int i = curModes; i < totalModesNumber; i++)
+        {
+            modesTextArray.transform.GetChild(i).GetComponent<TMP_Text>().text = "???" + "\nNot Solved";
+        }
+
+        statsPanel.SetActive(true);
+        puzzlePanel.SetActive(false);
     }
+
     public void CloseStats()
     {
         playerScript.invManager.UpdateInfo();
