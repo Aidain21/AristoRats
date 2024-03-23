@@ -209,6 +209,11 @@ public class DialogueEvents : MoveableObject
             }
         }
 
+        if (Enumerable.SequenceEqual(dialogueData, new string[] { "WizardRat", "1", "0" }))
+            {
+                SelectItem("TutorialKey", 3, 1);
+              
+            }
         if (Enumerable.SequenceEqual(dialogueData, new string[] { "SillyButton", "0", "0" }))
         {
             playerScript.menuManager.OpenMenu();
@@ -276,6 +281,8 @@ public class DialogueEvents : MoveableObject
                     playerScript.invManager.cheese -= 2;
                 }
             }
+            //Wizard Rat (Tutorial) Spawns key
+           
         }
         else if (SceneManager.GetActiveScene().name == "Forest")
         {
