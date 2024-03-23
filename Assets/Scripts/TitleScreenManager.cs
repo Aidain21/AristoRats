@@ -21,21 +21,27 @@ public class TileScreenButtons : MonoBehaviour
             SceneManager.LoadScene("Forest");
         }
     }
-    public void StartButtonPressed()
+    //public void StartButtonPressed()
+    //{
+    //    if (input.text.Length > 0)
+    //    {
+    //        PlayerPrefs.SetString("name", input.text);
+    //        PlayerPrefs.Save();
+    //        SceneManager.LoadScene("SampleScene");
+    //    }
+    //    else
+    //    {
+    //        PlayerPrefs.SetString("name", "WhyDidn'tYouEnterAName?");
+    //        PlayerPrefs.Save();
+    //        SceneManager.LoadScene("SampleScene");
+    //    }
+    //}
+
+    public void NextScene()
     {
-        if (input.text.Length > 0)
-        {
-            PlayerPrefs.SetString("name", input.text);
-            PlayerPrefs.Save();
-            SceneManager.LoadScene("SampleScene");
-        }
-        else
-        {
-            PlayerPrefs.SetString("name", "WhyDidn'tYouEnterAName?");
-            PlayerPrefs.Save();
-            SceneManager.LoadScene("SampleScene");
-        }
+        SceneManager.LoadScene("SampleScene");
     }
+
     public void QuitButtonPressed()
     {
         //UnityEditor.EditorApplication.isPlaying = false;
