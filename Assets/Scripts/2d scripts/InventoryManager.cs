@@ -12,6 +12,7 @@ public class InventoryManager : MonoBehaviour
     public Canvas inventoryBox;
     public Canvas blockControlText;
     public Canvas infoDisplay;
+    public Canvas mazeDarkness;
     public TMP_Text itemsText;
     public TMP_Text progressText;
     public TMP_Text locationText;
@@ -32,6 +33,8 @@ public class InventoryManager : MonoBehaviour
         images = new List<Image>();
         inventoryBox.GetComponent<Canvas>().enabled = false;
         blockControlText.GetComponent<Canvas>().enabled = false;
+        mazeDarkness.transform.GetChild(0).gameObject.SetActive(false);
+        mazeDarkness.transform.GetChild(1).gameObject.SetActive(false);
         cheese = 0;
         for (int i = 0; i < selector.textArray.Length; i++)
         {

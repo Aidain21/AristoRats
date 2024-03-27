@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/Scenes/ImagePuzzle.unity
     guid: 0711148b2fd49454ea63220547ba40af
   - enabled: 1
-    path: Assets/Scenes/MazeScene.unity
+    path: Assets/Scenes/Maze.unity
     guid: 2fa68353b824b7f47babc16bce064477
   - enabled: 1
     path: Assets/Scenes/ComputerUi.unity

@@ -1106,6 +1106,24 @@ public class PlayerScript2D : MoveableObject
         {
             isLoading = false;
             SwitchSong(sceneName);
+            if (sceneName == "Maze")
+            {
+                if (HasItem("Lantern"))
+                {
+                    invManager.mazeDarkness.transform.GetChild(0).gameObject.SetActive(false);
+                    invManager.mazeDarkness.transform.GetChild(1).gameObject.SetActive(true);
+                }
+                else
+                {
+                    invManager.mazeDarkness.transform.GetChild(0).gameObject.SetActive(true);
+                    invManager.mazeDarkness.transform.GetChild(1).gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                invManager.mazeDarkness.transform.GetChild(0).gameObject.SetActive(false);
+                invManager.mazeDarkness.transform.GetChild(1).gameObject.SetActive(false);
+            }
             if (finishedPuzzle)
             {
                 if (!puzzleName.Contains("#"))
